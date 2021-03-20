@@ -1,0 +1,24 @@
+[{
+  "city": "ventura",
+  "lat": 34,
+  "lng": -118,
+  "weight": 12
+},
+  {
+    "city": "ventura",
+    "lat": 33.92,
+    "lng": -118.11,
+    "weight": 5
+  },
+  {
+    "city": "ventura",
+    "lat": 33.99,
+    "lng": -118.02,
+    "weight": 8
+  },
+  {
+    "city": "ventura",
+    "lat": 34.05,
+    "lng": -117.97,
+    "weight": 10
+  }]
