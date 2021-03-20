@@ -1,0 +1,506 @@
+[
+	{
+		"city_name": "agoura_hills",
+		"center_lat": 34.14791,
+		"center_long": -118.7657042,
+		"radius": 527.18
+	}, 
+	{
+		"city_name": "alhambra",
+		"center_lat": 34.093042,
+		"center_long": -118.12706,
+		"radius": 4.04
+	},
+	{
+		"city_name": "arcadia",
+		"center_lat": 34.1362075,
+		"center_long": -118.0401497,
+		"radius": 6.65
+	}, 
+	{
+		"city_name": "artesia",
+		"center_lat": 33.8690197,
+		"center_long": -118.0796195,
+		"radius": 2.00
+	}, 
+	{
+		"city_name": "avalon",
+		"center_lat": 33.34221,
+		"center_long": -118.3272612,
+		"radius": 6.22
+	}, 
+	{
+		"city_name": "azusa",
+		"center_lat": 34.1338751,
+		"center_long": -117.9056046,
+		"radius": 3.49
+	}, 
+	{
+		"city_name": "baldwin_park",
+		"center_lat": 34.0854739,
+		"center_long": -117.9611761,
+		"radius": 5.16
+	}, 
+	{
+		"city_name": "bell",
+		"center_lat": 33.9747806,
+		"center_long": -118.1866361,
+		"radius": 3.59
+	}, 
+	{
+		"city_name": "bell_gardens",
+		"center_lat": 33.9694561,
+		"center_long": -118.1503953,
+		"radius": 2.07
+	}, 
+	{
+		"city_name": "bellflower",
+		"center_lat": 33.8825705,
+		"center_long": -118.1167679,
+		"radius": 3.04
+	}, 
+	{
+		"city_name": "beverly_hills",
+		"center_lat": 34.0696501,
+		"center_long": -118.3963062,
+		"radius": 2.41
+	}, 
+	{
+		"city_name": "bradbury",
+		"center_lat": 34.1469511,
+		"center_long": -117.9708982,
+		"radius": 2.20
+	}, 
+	{
+		"city_name": "burbank",
+		"center_lat": 34.1816482,
+		"center_long": -118.3258554,
+		"radius": 4.99
+	}, 
+	{
+		"city_name": "calabasas",
+		"center_lat": 34.1446643,
+		"center_long": -118.6440973,
+		"radius": 7.46
+	}, 
+	{
+		"city_name": "carson",
+		"center_lat": 33.8322043,
+		"center_long": -118.2517547,
+		"radius": 6.05
+	}, 
+	{
+		"city_name": "cerritos",
+		"center_lat": 33.8644291,
+		"center_long": -118.0539323,
+		"radius": 4.98
+	}, 
+	{
+		"city_name": "claremont",
+		"center_lat": 34.0966764,
+		"center_long": -117.7197785,
+		"radius": 7.46
+	}, 
+	{
+		"city_name": "commerce",
+		"center_lat": 34.002581,
+		"center_long": -118.156586,
+		"radius": 37.18
+	}, 
+	{
+		"city_name": "compton",
+		"center_lat": 33.894927,
+		"center_long": -118.226624,
+		"radius": 3.43
+	}, 
+	{
+		"city_name": "covina",
+		"center_lat": 34.0877926,
+		"center_long": -117.8891164,
+		"radius": 4.25
+	}, 
+	{
+		"city_name": "cudahy",
+		"center_lat": 33.9620584,
+		"center_long": -118.1835395,
+		"radius": 1.91
+	}, 
+	{
+		"city_name": "culver_city",
+		"center_lat": 34.0211224,
+		"center_long": -118.396466,
+		"radius": 5.01
+	}, 
+	{
+		"city_name": "diamond_bar",
+		"center_lat": 34.0286226,
+		"center_long": -117.8103367,
+		"radius": 7.92
+	}, 
+	{
+		"city_name": "downey",
+		"center_lat": 33.942215,
+		"center_long": -118.1235646,
+		"radius": 3.81
+	}, 
+	{
+		"city_name": "duarte",
+		"center_lat": 34.1394513,
+		"center_long": -117.9772873,
+		"radius": 7.28
+	}, 
+	{
+		"city_name": "el_segundo",
+		"center_lat": 33.917028,
+		"center_long": -118.4156337,
+		"radius": 3.78
+	}, 
+	{
+		"city_name": "gardena",
+		"center_lat": 33.8963593,
+		"center_long": -118.3053037,
+		"radius": 3.43
+	}, 
+	{
+		"city_name": "glendale",
+		"center_lat": 34.1469416,
+		"center_long": -118.2478471,
+		"radius": 13.33
+	}, 
+	{
+		"city_name": "glendora",
+		"center_lat": 34.1361187,
+		"center_long": -117.865339,
+		"radius": 8.09
+	}, 
+	{
+		"city_name": "hawaiian_gardens",
+		"center_lat": 33.8284787,
+		"center_long": -118.0743137,
+		"radius": 1.13
+	}, 
+	{
+		"city_name": "hawthorne",
+		"center_lat": 33.9188589,
+		"center_long": -118.3483256,
+		"radius": 3.86
+	}, 
+	{
+		"city_name": "hermosa_beach",
+		"center_lat": 33.86428,
+		"center_long": -118.39591,
+		"radius": 5.03
+	}, 
+	{
+		"city_name": "hidden_hills",
+		"center_lat": 34.164091,
+		"center_long": -118.657837,
+		"radius": 1.59
+	}, 
+	{
+		"city_name": "huntington_park",
+		"center_lat": 33.9827043,
+		"center_long": -118.2120343,
+		"radius": 2.96
+	}, 
+	{
+		"city_name": "industry",
+		"center_lat": 34.0197335,
+		"center_long": -117.9586754,
+		"radius": 12.83
+	}, 
+	{
+		"city_name": "inglewood",
+		"center_lat": 33.9562003,
+		"center_long": -118.353132,
+		"radius": 4.16
+	}, 
+	{
+		"city_name": "irwindale",
+		"center_lat": 34.1069927,
+		"center_long": -117.9342148,
+		"radius": 4.16
+	}, 
+	{
+		"city_name": "la_canada_flintridge",
+		"center_lat": 34.1998302,
+		"center_long": -118.2005236,
+		"radius": 5.18
+	}, 
+	{
+		"city_name": "la_habra_heights",
+		"center_lat": 33.9604546,
+		"center_long": -117.9504255,
+		"radius": 3.24
+	}, 
+	{
+		"city_name": "la_mirada",
+		"center_lat": 33.9060971,
+		"center_long": -118.0107092,
+		"radius": 3.69
+	}, 
+	{
+		"city_name": "la_puente",
+		"center_lat": 34.01979,
+		"center_long": -117.9503677,
+		"radius": 4.49
+	}, 
+	{
+		"city_name": "la_verne",
+		"center_lat": 34.1008426,
+		"center_long": -117.7678355,
+		"radius": 7.03
+	}, 
+	{
+		"city_name": "lakewood",
+		"center_lat":  33.84476,
+		"center_long": -118.08586,
+		"radius": 7.96
+	}, 
+	{
+		"city_name": "lancaster",
+		"center_lat": 34.69993,
+		"center_long": -118.13192,
+		"radius": 18.25
+	}, 
+	{
+		"city_name": "lawndale",
+		"center_lat": 33.88771,
+		"center_long": -118.35648,
+		"radius": 1.80
+	}, 
+	{
+		"city_name": "lomita",
+		"center_lat": 33.79132,
+		"center_long": -118.31797,
+		"radius": 12.68
+	}, 
+	{
+		"city_name": "long_beach",
+		"center_lat": 33.78815,
+		"center_long": -118.15612,
+		"radius": 10.86
+	}, 
+	{
+		"city_name": "los_angeles",
+		"center_lat": 34.08702,
+		"center_long": -118.26791,
+		"radius": 5.86
+	}, 
+	{
+		"city_name": "lynwood",
+		"center_lat": 33.92528,
+		"center_long": -118.20351,
+		"radius": 2.57
+	}, 
+	{
+		"city_name": "malibu",
+		"center_lat": 33.00706,
+		"center_long": -118.76091,
+		"radius": 110.67
+	}, 
+	{
+		"city_name": "manhattan_beach",
+		"center_lat": 33.88376,
+		"center_long": -118.42720,
+		"radius": 3.62
+	}, 
+	{
+		"city_name": "maywood",
+		"center_lat": 33.98834,
+		"center_long": -118.1872,
+		"radius": 1.67
+	}, 
+	{
+		"city_name": "monrovia",
+		"center_lat": 34.14856,
+		"center_long": -117.98214,
+		"radius": 5.00
+	}, 
+	{
+		"city_name": "montebello",
+		"center_lat": 34.0103,
+		"center_long": -118.10837,
+		"radius": 4.19
+	}, 
+	{
+		"city_name": "monterey_park",
+		"center_lat": 33.90689,
+		"center_long": -118.07684,
+		"radius": 3.5
+	}, 
+	{
+		"city_name": "palmdale",
+		"center_lat": 34.58546,
+		"center_long": -118.47107,
+		"radius": 51.38
+	}, 
+	{
+		"city_name": "palos_verdes_estates",
+		"center_lat": 33.77977,
+		"center_long": -118.41984,
+		"radius": 6.67
+	}, 
+	{
+		"city_name": "paramount",
+		"center_lat": 33.89927,
+		"center_long": -118.16582,
+		"radius": 2.70
+	}, 
+	{
+		"city_name": "pasadena",
+		"center_lat": 34.18458,
+		"center_long": -118.13181,
+		"radius": 8.93
+	}, 
+	{
+		"city_name": "pico_rivera",
+		"center_lat": 33.98967,
+		"center_long": -118.08179,
+		"radius": 4.43
+	}, 
+	{
+		"city_name": "pomona",
+		"center_lat": 34.11185,
+		"center_long": -117.75222,
+		"radius": 0.43
+	}, 
+	{
+		"city_name": "rancho_palos_verdes",
+		"center_lat": 33.72833,
+		"center_long": -118.43188,
+		"radius": 5.62
+	}, 
+	{
+		"city_name": "redondo_beach",
+		"center_lat":  33.85459,
+		"center_long": -118.50471,
+		"radius": 5.28
+	}, 
+	{
+		"city_name": "rolling_hills",
+		"center_lat": 33.76104,
+		"center_long": -118.34783,
+		"radius": 2.12
+	}, 
+	{
+		"city_name": "rolling_hills_estates",
+		"center_lat": 33.76104,
+		"center_long": -118.34893,
+		"radius": 2.00
+	}, 
+	{
+		"city_name": "san_dimas",
+		"center_lat": 34.15594,
+		"center_long": -117.78706,
+		"radius": 1.22
+	}, 
+	{
+		"city_name": "san_fernando",
+		"center_lat": 34.30708,
+		"center_long": -118.42271,
+		"radius": 0.91
+	}, 
+	{
+		"city_name": "san_gabriel",
+		"center_lat": 34.09325,
+		"center_long": -118.09918,
+		"radius": 2.38
+	}, 
+	{
+		"city_name": "san_marino",
+		"center_lat": 34.12115,
+		"center_long": -118.11505,
+		"radius": 2.43
+	}, 
+	{
+		"city_name": "santa_clarita",
+		"center_lat":  34.41881,
+		"center_long": -118.49604,
+		"radius": 10.50
+	}, 
+	{
+		"city_name": "santa_fe_springs",
+		"center_lat": 33.92228,
+		"center_long": -118.05822,
+		"radius": 4.72
+	}, 
+	{
+		"city_name": "santa_monica",
+		"center_lat": 33.98719,
+		"center_long": -118.52719,
+		"radius": 2.35
+	}, 
+	{
+		"city_name": "sierra_madre",
+		"center_lat": 34.17317,
+		"center_long": -118.03843,
+		"radius": 0.85
+	}, 
+	{
+		"city_name": "signal_hill",
+		"center_lat": 33.80436,
+		"center_long": -118.16714,
+		"radius": 2.22
+	}, 
+	{
+		"city_name": "south_gate",
+		"center_lat": 33.9463456,
+		"center_long": -118.200981,
+		"radius": 5.52
+	}, 
+	{
+		"city_name": "south_pasadena",
+		"center_lat": 34.1133062,
+		"center_long": -118.1478291,
+		"radius": 3.21
+	}, 
+	{
+		"city_name": "temple_city",
+		"center_lat": 34.1082994,
+		"center_long": -118.0577568,
+		"radius": 2.55
+	}, 
+	{
+		"city_name": "torrance",
+		"center_lat": 33.8358492,
+		"center_long": -118.3406288,
+		"radius": 12.85
+	}, 
+	{
+		"city_name": "vernon",
+		"center_lat": 34.007135,
+		"center_long": -118.22525,
+		"radius": 5.34
+	}, 
+	{
+		"city_name": "walnut",
+		"center_lat": 34.0202894,
+		"center_long": -117.8653386,
+		"radius": 5.84
+	}, 
+	{
+		"city_name": "west_covina",
+		"center_lat": 34.0686208,
+		"center_long": -117.9389526,
+		"radius": 9.50
+	}, 
+	{
+		"city_name": "west_hollywood",
+		"center_lat": 34.0923014,
+		"center_long": -118.3692894,
+		"radius": 2.39
+	}, 
+	{
+		"city_name": "westlake_village",
+		"center_lat": 34.1460234,
+		"center_long": -118.8061794,
+		"radius": 5.16
+	}, 
+	{
+		"city_name": "whittier",
+		"center_lat": 33.9708782,
+		"center_long": -118.0308396,
+		"radius": 6.87
+	}
+]
