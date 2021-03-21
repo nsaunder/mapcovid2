@@ -15,5 +15,13 @@
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/title_notifications" />
+    <item
+        android:id="@+id/navigation_covid"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_covid" />
+    <item
+        android:id="@+id/navigation_testing"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_testing" />
 
 </menu>

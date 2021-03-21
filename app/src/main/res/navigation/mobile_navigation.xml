@@ -18,8 +18,14 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_covid"
         android:name="com.example.mapcovid.ui.covidmap.MapsFragment"
         android:label="CovidMap"
+        tools:layout="@layout/fragment_maps" />
+
+    <fragment
+        android:id="@+id/navigation_testing"
+        android:name="com.example.mapcovid.ui.covidmap.MapsFragment"
+        android:label="TestingMap"
         tools:layout="@layout/fragment_maps" />
 </navigation>
