@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -69,18 +70,26 @@ public class MapsFragment extends Fragment {
 
             Marker melbourne = mMap.addMarker(
                     new MarkerOptions()
-                            .position(losAngeles)
-                            .title("CurrentLocation"));
+                            .position(new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
-            constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
 
+            constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
+                Marker currentMarker = null;
                 @Override
                 public void onCurrentLocationChange() {
-                        Marker currentLocation = mMap.addMarker(new MarkerOptions()
+                        if(currentMarker != null)
+                            currentMarker.remove();
+                        else
+                            melbourne.remove();
+
+                        currentMarker = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                                .title("Current Location"));
-                        currentLocation.showInfoWindow();
+                                .title("Current Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        currentMarker.showInfoWindow();
                 }
 
             });
