@@ -14,11 +14,9 @@ import android.content.Context;
 
 public class Constant {
     private static ArrayList<City> cities;
-    private static ArrayList<DayPath> paths;
+    private String currentLocation;
+    private String lastLocation;
 
-    public Constant() {
-        this.paths = new ArrayList<DayPath>();
-    }
     public void set_cities(Context context) {
         try {
             InputStream is = context.getAssets().open("city_data.json");
@@ -33,12 +31,20 @@ public class Constant {
         }
     }
 
-    public void set_paths(ArrayList<DayPath> paths) {
-        this.paths = paths;
+    public void setCurrentLocation(String location) {
+        currentLocation = location;
     }
 
-    public ArrayList<City> get_cities() {
-        return this.cities;
+    public void setLastLocation(String location) {
+        lastLocation = location;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public String getLastLocation() {
+        return lastLocation;
     }
 
     public City get_city(String city) {
@@ -50,23 +56,4 @@ public class Constant {
         return null;
     }
 
-    public ArrayList<DayPath> get_paths() {
-        return this.paths;
-    }
-
-    public void printPaths() {
-        if(this.paths.size() == 0) {
-            System.out.println("Didn't travel anywhere");
-        } else {
-            System.out.println("Paths:");
-            for (DayPath day : this.paths) {
-                System.out.println("Date: " + day.getDate());
-                System.out.print("Cities: ");
-                for (PathItem item : day.getPath()) {
-                    System.out.print(item.getCity());
-                }
-                System.out.println();
-            }
-        }
-    }
 }
