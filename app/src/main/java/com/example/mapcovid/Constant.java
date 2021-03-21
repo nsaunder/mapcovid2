@@ -14,8 +14,10 @@ import android.content.Context;
 
 public class Constant {
     private static ArrayList<City> cities;
-    private String currentLocation;
-    private String lastLocation;
+    private static String currentLocation;
+    private static String lastLocation;
+    private static Double current_lat;
+    private static Double current_lon;
 
     public void set_cities(Context context) {
         try {
@@ -35,12 +37,28 @@ public class Constant {
         currentLocation = location;
     }
 
+    public void setCurrentLat(Double lat) {
+        current_lat = lat;
+    }
+
+    public void setCurrentLon(Double lon) {
+        current_lon = lon;
+    }
+
     public void setLastLocation(String location) {
         lastLocation = location;
     }
 
     public String getCurrentLocation() {
         return currentLocation;
+    }
+
+    public Double getCurrentLat() {
+        return current_lat;
+    }
+
+    public Double getCurrentLon() {
+        return current_lon;
     }
 
     public String getLastLocation() {
