@@ -9,7 +9,6 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,19 +31,20 @@ interface currentLocationChangedListener {
     public void onCurrentLocationChange();
 }
 
+interface getPathCallback {
+    void onCallback(ArrayList<PathItem> path);
+}
+
 public class Constant {
     private static String appId;
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static boolean newLocation;
-
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static String lastLocation;
     private static Double current_lat;
     private static Double current_lon;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-
-    ArrayList<PathItem> path = new ArrayList<PathItem>();
 
     //constructor for fragments
     public Constant() { }
@@ -137,55 +137,26 @@ public class Constant {
     }
 
     //get path for day passed into function from firebase
-    /*public void getPath(String day) {
-
-        database.child(appId).child("paths").child(day).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+    public void getPath(String day, final getPathCallback callBack) {
+        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(!task.isSuccessful()) {
-                    Log.d("Constant Class", "Error Reading Path for " + day);
-                }
-                else {
-                    for(DataSnapshot postSnapshot: task.getResult().getChildren()) {
-                        PathItem city = postSnapshot.getValue(PathItem.class);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<PathItem> path = new ArrayList<PathItem>();
+                for(DataSnapshot ds: snapshot.getChildren()) {
+                    PathItem city = ds.getValue(PathItem.class);
+                    if(city != null) {
                         path.add(city);
                     }
                 }
+                //use callback to make call synchronous --> return path AFTER all data has been fetched
+                callBack.onCallback(path);
             }
-        });
-//        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for(DataSnapshot postSnapshot: snapshot.getChildren()) {
-//                    PathItem city = postSnapshot.getValue(PathItem.class);
-//                    path.add(city);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.d("Constant Class", "Error Reading Path for " + day);
-//            }
-//        });
 
-    }*/
-
-    public ArrayList<PathItem> getPath(String day) {
-        database.child(appId).child("paths").child(day).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(!task.isSuccessful()) {
-                    Log.d("Constant Class", "Error Reading Path for " + day);
-                }
-                else {
-                    for(DataSnapshot postSnapshot: task.getResult().getChildren()) {
-                        PathItem city = postSnapshot.getValue(PathItem.class);
-                        path.add(city);
-                    }
-                }
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Constant Class", "Error Reading Path for " + day);
             }
         });
-        return path;
     }
+
 }
