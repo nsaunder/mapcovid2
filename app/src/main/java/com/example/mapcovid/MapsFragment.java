@@ -1,4 +1,4 @@
-package com.example.mapcovid.ui.covidmap;
+package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.example.mapcovid.City;
 import com.example.mapcovid.Constant;
+import com.example.mapcovid.PathItem;
 import com.example.mapcovid.R;
+import com.example.mapcovid.getPathCallback;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +86,17 @@ public class MapsFragment extends Fragment {
                             .title("CurrentLocation"));
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+
+            System.out.println("------------------------Loading from firebase");
+            String day = LocalDate.now().toString();
+            constants.getPath(day, new getPathCallback() {
+                @Override
+                public void onCallback(ArrayList<PathItem> path) {
+                    for(PathItem p: path) {
+                        System.out.println("---------------You visited " + p.getCity() + " at " + p.getTime()); 
+                    }
+                }
+            });
 
 
             List<City> cities = null;

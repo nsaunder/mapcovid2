@@ -31,6 +31,10 @@ interface currentLocationChangedListener {
     public void onCurrentLocationChange();
 }
 
+interface getPathCallback {
+    void onCallback(ArrayList<PathItem> path);
+}
+
 public class Constant {
     private static String appId;
     private static ArrayList<City> cities;
@@ -41,8 +45,6 @@ public class Constant {
     private static Double current_lat;
     private static Double current_lon;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-
-    private ArrayList<PathItem> path = new ArrayList<PathItem>();
 
     //constructor for fragments
     public Constant() { }
@@ -135,14 +137,19 @@ public class Constant {
     }
 
     //get path for day passed into function from firebase
-    public ArrayList<PathItem> getPath(String day) {
+    public void getPath(String day, final getPathCallback callBack) {
         database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    PathItem city = postSnapshot.getValue(PathItem.class);
-                    path.add(city);
+                ArrayList<PathItem> path = new ArrayList<PathItem>();
+                for(DataSnapshot ds: snapshot.getChildren()) {
+                    PathItem city = ds.getValue(PathItem.class);
+                    if(city != null) {
+                        path.add(city);
+                    }
                 }
+                //use callback to make call synchronous --> return path AFTER all data has been fetched
+                callBack.onCallback(path);
             }
 
             @Override
@@ -150,8 +157,6 @@ public class Constant {
                 Log.d("Constant Class", "Error Reading Path for " + day);
             }
         });
-
-        return path; 
     }
 
 }
