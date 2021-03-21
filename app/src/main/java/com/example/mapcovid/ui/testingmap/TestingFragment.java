@@ -5,13 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mapcovid.City;
-import com.example.mapcovid.Constant;
 import com.example.mapcovid.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,22 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,20 +76,6 @@ public class TestingFragment extends Fragment {
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
 
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-
-                    // TODO Auto-generated method stub
-                    if(marker.equals(melbourne)){
-                        System.out.println("\n1\n2\n3\n4\n6");
-                        return true;
-                    }
-                    return false;
-
-                }
-            });
-
 
             List<TestingLocation> testingLocations = null;
             // Get the data: latitude/longitude positions of police stations.
@@ -129,11 +103,40 @@ public class TestingFragment extends Fragment {
                 mark.showInfoWindow();
 
             }
+           /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    TestingLocation loc = testingMap.get(marker.getTitle());
+                    AlertDialog ad = new AlertDialog.Builder(getContext())
+                            .create();
+                    ad.setCancelable(false);
+                    ad.setTitle(loc.getName());
+                    ad.setMessage("\nDrive-through: " + loc.getDriveUp() +
+                            "\nWalk-in: " + loc.getWalkUp()+
+                            "\nDirections: www.google.com");
+                    ad.setButton("okay", new DialogInterface.OnClickListener() {
 
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show();
+                    return true;
+
+                }
+            });*/
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
         }
     };
 
+    /*public void openDialog(TestingLocation loc){
+        InfoDialog info = new InfoDialog();
+        info.setTitle(loc.getName());
+        info.setInformation("\nDrive-through: " + loc.getDriveUp() +
+                            "\nWalk-in: " + loc.getWalkUp()+
+                            "\nDirections: www.google.com");
+        info.onCreateDialog(new Bundle());
+    }*/
     private List<TestingLocation> readItems(String filename) throws JSONException, IOException {
         List<TestingLocation> result = new ArrayList<>();
         InputStream inputStream = getContext().getAssets().open(filename);
