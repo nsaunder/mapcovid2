@@ -4,21 +4,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mapcovid.City;
+import com.example.mapcovid.Constant;
 import com.example.mapcovid.R;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
@@ -26,15 +39,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 public class MapsFragment extends Fragment {
 
+    private LocationRequest locationRequest;
+    private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
+    private long FASTEST_INTERVAL = 2000; /*2 secs*/
+    private Constant constants;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -49,36 +72,59 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
-
+            constants = new Constant();
+            HashMap<String, City> citiesMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
             LatLng losAngeles = new LatLng(34, -118);
-            mMap.addMarker(new MarkerOptions().position(losAngeles).title(""));
 
             Marker melbourne = mMap.addMarker(
                     new MarkerOptions()
                             .position(losAngeles)
-                            .title("LA")
-                            .snippet("Population: 4,137,400\nI hate htis"));
+                            .title("CurrentLocation"));
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
 
 
-            List<WeightedLatLng> latLngs = null;
-
+            List<City> cities = null;
+            List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
             try {
-                latLngs = readItems("city_boundaries.json");
+                cities = readItems("city_data.json");
             } catch (JSONException e) {
                 System.err.println(e);
             } catch (IOException e) {
                 System.err.println(e);
+            }
+
+            for(int i = 0; i < cities.size(); i++)
+            {
+                //citiesMap -> (cityName, City)
+                citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+
+                //Create a LatLng
+                LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
+                        cities.get(i).get_center_long());
+
+                //Create the weightedlatlng
+                WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
+                latLngs.add(temp);  //Add to latLngs arraylist
+
+                //Add map marker to to map with the city name that can be shown by clicking
+                //This will be helpful for onMarkerClickListener
+                Marker mark = mMap.addMarker(
+                        new MarkerOptions()
+                                .position(citypos)
+                                .title(cities.get(i).get_city_name()));
+
+                mark.showInfoWindow();
+
             }
             // Create a heat map tile provider, passing it the latlngs of the police stations.
             HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                     .weightedData(latLngs)
                     .opacity(0.7)
                     .radius(30)
-                    .maxIntensity(12)
+                    .maxIntensity(9)
                     .build();
 
             // Add a tile overlay to the map, using the heat map tile provider.
@@ -87,21 +133,20 @@ public class MapsFragment extends Fragment {
         }
     };
 
-    private List<WeightedLatLng> readItems(String filename) throws JSONException, IOException {
-        List<WeightedLatLng> result = new ArrayList<>();
-        InputStream inputStream = getContext().getAssets().open(filename);
-        String json = new Scanner(inputStream).useDelimiter("\\A").next();
-        JSONArray array = new JSONArray(json);
-        Random rand = new Random();
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            double lat = object.getDouble("center_lat");
-            double lng = object.getDouble("center_long");
-            double weight = rand.nextInt(9)+4;
-            LatLng temp = new LatLng(lat, lng);
-            result.add(new WeightedLatLng(temp, weight));
+    private List<City> readItems(String filename) throws JSONException, IOException {
+        List<City> cities = new ArrayList<>();
+        try {
+            InputStream is = getContext().getAssets().open("city_data.json");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+            Gson gson = new Gson();
+            Type cityList = new TypeToken<ArrayList<City>>(){}.getType();
+            cities = gson.fromJson(reader,cityList);
+            reader.close();
+        } catch(Exception e) {
+            System.err.println(e);
         }
-        return result;
+        return cities;
     }
 
     @Nullable

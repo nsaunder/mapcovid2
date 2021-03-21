@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Constant constants;
 
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database = constants.getDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
         //initialize constant data structures
-        constants = new Constant();
-        constants.set_cities(getApplicationContext());
+        constants = new Constant(getApplicationContext());
 
         //create GoogleApiClient
         createGoogleApi();
@@ -272,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
                 if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
+                    constants.setNewLocation(true);
                     if(lastLocation != null) {
                         createNotification();
                     }
@@ -287,19 +287,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String date = LocalDate.now().toString();
         String time = LocalTime.now().toString();
         String city = constants.getCurrentLocation();
-        PathItem newCity = new PathItem(time, city);
+        Double lat = constants.getCurrentLat();
+        Double lon = constants.getCurrentLon();
+
+        PathItem newCity = new PathItem(time, city, lat, lon);
+        String appID = constants.getAppId();
 
         //pushes new city location to date's path
-        database.child("paths").child(date).push().setValue(newCity);
+        database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
+
             if(city != null) {
                 Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
+                constants.setCurrentLat(location.getLatitude());
+                constants.setCurrentLon(location.getLongitude());
             }
         } catch(IOException ioe) {
             Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
@@ -356,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         //gets city that user just moved into
-        City city = constants.get_city(constants.getCurrentLocation().replaceAll(" ", "_").toLowerCase());
+        City city = constants.get_city(constants.getCurrentLocation());
         if(city == null) {
             System.out.println("Moved into city that doesn't exist or isn't in LA County!");
             return;

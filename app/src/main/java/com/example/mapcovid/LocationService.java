@@ -59,8 +59,7 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //initialize constant data structures
-        constants = new Constant();
-        constants.set_cities(getApplicationContext());
+        constants = new Constant(getApplicationContext());
 
         prepareForegroundNotification();
         startLocationUpdates();
@@ -138,7 +137,10 @@ public class LocationService extends Service {
         String date = LocalDate.now().toString();
         String time = LocalTime.now().toString();
         String city = constants.getCurrentLocation();
-        PathItem newCity = new PathItem(time, city);
+        Double lat = constants.getCurrentLat();
+        Double lon = constants.getCurrentLon();
+
+        PathItem newCity = new PathItem(time, city, lat, lon);
 
         //pushes new city location to date's path
         database.child("paths").child(date).push().setValue(newCity);
@@ -207,7 +209,7 @@ public class LocationService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         //gets city that user just moved into
-        City city = constants.get_city(constants.getCurrentLocation().replaceAll(" ", "_").toLowerCase());
+        City city = constants.get_city(constants.getCurrentLocation());
         if(city == null) {
             System.out.println("Moved into city that doesn't exist or isn't in LA County!");
             return;

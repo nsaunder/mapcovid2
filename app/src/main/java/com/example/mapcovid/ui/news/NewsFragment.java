@@ -41,6 +41,11 @@ public class NewsFragment extends Fragment {
 
     private NewsViewModel mViewModel;
 
+    public static NewsFragment newInstance() {
+
+        return new NewsFragment();
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

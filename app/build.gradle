@@ -66,6 +66,7 @@ dependencies {
     api 'com.github.ok2c.hc4.android:httpclient-android:0.1.0'
     implementation group: 'cz.msebera.android' , name: 'httpclient', version: '4.5.8'
     implementation 'com.github.redouane59.twitter:twittered:1.21'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
