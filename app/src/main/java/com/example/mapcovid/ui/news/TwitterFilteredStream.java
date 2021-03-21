@@ -13,6 +13,7 @@ import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.client.utils.URIBuilder;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.CloseableHttpClient;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpRequestRetryHandler;
 import cz.msebera.android.httpclient.impl.client.HttpClients;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import cz.msebera.android.httpclient.HttpHeaders;
@@ -42,8 +43,7 @@ public class TwitterFilteredStream extends Thread {
         String bearerToken = "AAAAAAAAAAAAAAAAAAAAAADOGAEAAAAAFjb0h4FR3Tx0pq0LIxAdR1ycabA%3DwsY4twYrLfRSc8o9MkBikSxl3tSETn7NddIR1hCoEMaqbI94ot";
         if (null != bearerToken) {
             Map<String, String> rules = new HashMap<>();
-            rules.put("cats has:images", "cat images");
-            rules.put("dogs has:images", "dog images");
+            rules.put("covid lang:en", "covidrule");
             try {
                 setupRules(bearerToken, rules);
             } catch (IOException e) {
@@ -67,10 +67,10 @@ public class TwitterFilteredStream extends Thread {
      * This method calls the filtered stream endpoint and streams Tweets from it
      * */
     private static void connectStream(String bearerToken) throws IOException, URISyntaxException {
-
         HttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                        .setSocketTimeout(30000).setConnectTimeout(5000).setCookieSpec(CookieSpecs.STANDARD).build())
+                .setRetryHandler(new DefaultHttpRequestRetryHandler(5, true))
                 .build();
 
         URIBuilder uriBuilder = new URIBuilder("https://api.twitter.com/2/tweets/search/stream");
@@ -80,13 +80,21 @@ public class TwitterFilteredStream extends Thread {
 
         HttpResponse response = httpClient.execute(httpGet);
         HttpEntity entity = response.getEntity();
-        if (null != entity) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader((entity.getContent())));
-            String line = reader.readLine();
-            while (line != null) {
-                System.out.println(line);
-                line = reader.readLine();
+
+        try {
+            if (null != entity) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader((entity.getContent())));
+                String line = reader.readLine();
+                int counter = 0;
+                while (line != null && counter < 50) {
+                    System.out.println(line);
+                    line = reader.readLine();
+                    counter += 1;
+                }
+                httpGet.releaseConnection();
             }
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
         }
 
     }
@@ -99,7 +107,6 @@ public class TwitterFilteredStream extends Thread {
         if (existingRules.size() > 0) {
             deleteRules(bearerToken, existingRules);
         } else {
-            System.out.println("bob");
             createRules(bearerToken, rules);
         }
     }
