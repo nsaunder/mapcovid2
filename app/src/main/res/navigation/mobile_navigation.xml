@@ -3,19 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
-
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.mapcovid.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.mapcovid.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+    app:startDestination="@+id/navigation_covid">
 
     <fragment
         android:id="@+id/navigation_covid"
@@ -25,7 +13,26 @@
 
     <fragment
         android:id="@+id/navigation_testing"
-        android:name="com.example.mapcovid.ui.covidmap.MapsFragment"
+        android:name="com.example.mapcovid.ui.testingmap.TestingFragment"
         android:label="TestingMap"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_testing" />
+
+    <fragment
+        android:id="@+id/navigation_path"
+        android:name="com.example.mapcovid.ui.path.PathFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_path" />
+
+    <fragment
+        android:id="@+id/navigation_news"
+        android:name="com.example.mapcovid.ui.news.NewsFragment"
+        android:label="@string/title_news"
+        tools:layout="@layout/news_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.mapcovid.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+
 </navigation>
