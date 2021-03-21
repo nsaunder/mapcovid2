@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Constant constants;
 
-    private DatabaseReference database = constants.getDatabase();
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +258,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //check whether location settings are satisfied
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+
+
 
         //gets current location and handles storing location changes to display in user path
         getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {

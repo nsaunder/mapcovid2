@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.gson.Gson;
@@ -37,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +67,9 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
+
             constants = new Constant();
+
             HashMap<String, City> citiesMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
             LatLng losAngeles = new LatLng(34, -118);
@@ -75,15 +81,40 @@ public class MapsFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
-
+            String today = LocalDate.now().toString();
+            //constants.getPath(today);
+            ArrayList<PathItem> a  = constants.getPath(today);
+            for(PathItem p: a)
+            {
+                System.out.println(p.getCity());
+            }
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(34, -118), new LatLng(35, -117))
+                    .width(5)
+                    .color(Color.RED));
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker currentMarker = null;
+
                 @Override
                 public void onCurrentLocationChange() {
-                        if(currentMarker != null)
+                        if(currentMarker != null) {
                             currentMarker.remove();
-                        else
+                        }
+                        else {
                             melbourne.remove();
+                            ArrayList<PathItem> b = constants.getPath(today);
+                            LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                            for(PathItem p: b)
+                            {
+                                System.out.println(p.getCity());
+                                LatLng temp = new LatLng(p.getLat(), p.getLon());
+                                Polyline line = mMap.addPolyline(new PolylineOptions()
+                                        .add(temp, lastCoordinates)
+                                        .width(10)
+                                        .color(Color.RED));
+                                lastCoordinates = temp;
+                            }
+                        }
 
                         currentMarker = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
