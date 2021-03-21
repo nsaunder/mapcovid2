@@ -37,22 +37,11 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TwitterFilteredStream extends Thread{
-
+public class TwitterFilteredStream extends Thread {
     public void run() {
-        System.out.println("BLAHHHHH");
-        TwitterClient twitterClient = new TwitterClient(TwitterCredentials.builder()
-                .accessToken("1576654423-KgOk2VJz3DPhpgBeagkEFgZ8dRsHynLhGufIWza")
-                .accessTokenSecret("jsP2Y2KyOZjraZP66wvp2LK0p6ZeqmPWnv3YijhkcBW9W")
-                .apiKey("qjOD2aAccxXGPi1OhKQMOjstl")
-                .apiSecretKey("qTyzmd7VAWPo0PG0G9PdAimfFAtjPeBaPOMDpiLjKIifpxaZeG")
-                .build());
-        String bearerToken = twitterClient.getBearerToken();
-//        List<StreamRule> myRules = twitterClient.
-
+        String bearerToken = "AAAAAAAAAAAAAAAAAAAAAADOGAEAAAAAFjb0h4FR3Tx0pq0LIxAdR1ycabA%3DwsY4twYrLfRSc8o9MkBikSxl3tSETn7NddIR1hCoEMaqbI94ot";
         if (null != bearerToken) {
-            System.out.println("WE MADE IT HERE");
-            ConcurrentHashMap<String, String> rules = new ConcurrentHashMap<>();
+            Map<String, String> rules = new HashMap<>();
             rules.put("cats has:images", "cat images");
             rules.put("dogs has:images", "dog images");
             try {
@@ -60,8 +49,6 @@ public class TwitterFilteredStream extends Thread{
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
@@ -75,19 +62,10 @@ public class TwitterFilteredStream extends Thread{
             System.out.println("There was a problem getting you bearer token. Please make sure you set the BEARER_TOKEN environment variable");
         }
 
-        try {
-            connectStream(bearerToken);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-//        twitterClient.addFilteredStreamRule("cat has:images", "cat images");
-//        twitterClient.addFilteredStreamRule("dogs has:images", "dog images");
-//        twitterClient.startFilteredStream();
     }
-
+    /*
+     * This method calls the filtered stream endpoint and streams Tweets from it
+     * */
     private static void connectStream(String bearerToken) throws IOException, URISyntaxException {
 
         HttpClient httpClient = HttpClients.custom()
@@ -95,7 +73,6 @@ public class TwitterFilteredStream extends Thread{
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
 
-        System.out.println("IN CONNECT STREAM");
         URIBuilder uriBuilder = new URIBuilder("https://api.twitter.com/2/tweets/search/stream");
 
         HttpGet httpGet = new HttpGet(uriBuilder.build());
@@ -117,16 +94,14 @@ public class TwitterFilteredStream extends Thread{
     /*
      * Helper method to setup rules before streaming data
      * */
-    private static void setupRules(String bearerToken, Map<String, String> rules) throws IOException, URISyntaxException, JSONException {
-        System.out.println("IN SETUP");
+    private static void setupRules(String bearerToken, Map<String, String> rules) throws IOException, URISyntaxException {
         List<String> existingRules = getRules(bearerToken);
-        for(String rule: existingRules) {
-            System.out.println(rule);
-        }
         if (existingRules.size() > 0) {
             deleteRules(bearerToken, existingRules);
+        } else {
+            System.out.println("bob");
+            createRules(bearerToken, rules);
         }
-        createRules(bearerToken, rules);
     }
 
     /*
@@ -138,7 +113,6 @@ public class TwitterFilteredStream extends Thread{
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
 
-        System.out.println("IN Create");
         URIBuilder uriBuilder = new URIBuilder("https://api.twitter.com/2/tweets/search/stream/rules");
 
         HttpPost httpPost = new HttpPost(uriBuilder.build());
@@ -147,24 +121,24 @@ public class TwitterFilteredStream extends Thread{
         StringEntity body = new StringEntity(getFormattedString("{\"add\": [%s]}", rules));
         httpPost.setEntity(body);
         HttpResponse response = httpClient.execute(httpPost);
+        System.out.println("FLAG");
+        System.out.println(response);
         HttpEntity entity = response.getEntity();
         if (null != entity) {
             System.out.println(EntityUtils.toString(entity, "UTF-8"));
         }
-        System.out.println("Entity is Null");
     }
 
     /*
      * Helper method to get existing rules
      * */
-    private static List<String> getRules(String bearerToken) throws URISyntaxException, IOException, JSONException {
+    private static List<String> getRules(String bearerToken) throws URISyntaxException, IOException {
         List<String> rules = new ArrayList<>();
         HttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
 
-        System.out.println("IN GET RULES");
         URIBuilder uriBuilder = new URIBuilder("https://api.twitter.com/2/tweets/search/stream/rules");
 
         HttpGet httpGet = new HttpGet(uriBuilder.build());
@@ -173,14 +147,16 @@ public class TwitterFilteredStream extends Thread{
         HttpResponse response = httpClient.execute(httpGet);
         HttpEntity entity = response.getEntity();
         if (null != entity) {
-            JSONObject json = new JSONObject(EntityUtils.toString(entity, "UTF-8"));
-            if (json.length() > 1) {
-                JSONArray array = (JSONArray) json.get("data");
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject jsonObject = (JSONObject) array.get(i);
-                    rules.add(jsonObject.getString("id"));
+            try {
+                JSONObject json = new JSONObject(EntityUtils.toString(entity, "UTF-8"));
+                if (json.length() > 1) {
+                    JSONArray array = (JSONArray) json.get("data");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonObject = (JSONObject) array.get(i);
+                        rules.add(jsonObject.getString("id"));
+                    }
                 }
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
         return rules;
     }
