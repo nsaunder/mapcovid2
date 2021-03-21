@@ -4,10 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.mapcovid.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,7 +59,8 @@ public class TestingFragment extends Fragment {
         public boolean getWalkUp(){return walkup;}
         public boolean getDriveUp(){return driveup;}
     }
-
+    private double currentX = 34;
+    private double currentY = -118;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -69,11 +79,6 @@ public class TestingFragment extends Fragment {
             // Add a marker in Sydney and move the camera
             LatLng losAngeles = new LatLng(34, -118);
 
-            Marker melbourne = mMap.addMarker(
-                    new MarkerOptions()
-                            .position(losAngeles)
-                            .title("CurrentLocation"));
-            melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
 
 
@@ -103,28 +108,49 @@ public class TestingFragment extends Fragment {
                 mark.showInfoWindow();
 
             }
-           /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+           mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @SuppressLint("PotentialBehaviorOverride")
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    TestingLocation loc = testingMap.get(marker.getTitle());
-                    AlertDialog ad = new AlertDialog.Builder(getContext())
-                            .create();
-                    ad.setCancelable(false);
-                    ad.setTitle(loc.getName());
-                    ad.setMessage("\nDrive-through: " + loc.getDriveUp() +
-                            "\nWalk-in: " + loc.getWalkUp()+
-                            "\nDirections: www.google.com");
-                    ad.setButton("okay", new DialogInterface.OnClickListener() {
+                    if(!marker.getTitle().equals("CurrentLocation"))
+                    {
+                        TestingLocation loc = testingMap.get(marker.getTitle());
+                        String endpoint = "https://www.google.com/maps/dir/?api=1&origin ="+currentX+","+currentY+"&destination="+loc.getPosition().latitude+","+loc.getPosition().longitude;
+                        System.out.println(endpoint);
+                        AlertDialog ad = new AlertDialog.Builder(getContext())
+                                .create();
+                        ad.setCancelable(false);
+                        ad.setTitle(loc.getName());
+                        ad.setMessage("\nDrive-through: " + loc.getDriveUp() +
+                                "\nWalk-in: " + loc.getWalkUp());
+                        ad.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
 
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    ad.show();
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.setButton(DialogInterface.BUTTON_NEGATIVE,"Directions", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(endpoint));
+                                startActivity(browserIntent);
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.setButton(DialogInterface.BUTTON_NEUTRAL,"Website", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://covid19.lacounty.gov/testing/"));
+                                startActivity(browserIntent);
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }
                     return true;
 
                 }
-            });*/
+            });
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
         }
     };

@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.mapcovid.City;
 import com.example.mapcovid.Constant;
 import com.example.mapcovid.R;
+import com.example.mapcovid.ui.testingmap.TestingFragment;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -119,6 +122,32 @@ public class MapsFragment extends Fragment {
                 mark.showInfoWindow();
 
             }
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    if(!marker.getTitle().equals("CurrentLocation"))
+                    {
+                        City loc = citiesMap.get(marker.getTitle());
+                        AlertDialog ad = new AlertDialog.Builder(getContext())
+                                .create();
+                        ad.setCancelable(false);
+                        ad.setTitle(loc.get_city_name());
+                        ad.setMessage("\nNew Cases: " + loc.get_new_cases() +
+                                "\nNew Deaths: " + loc.get_new_deaths()+
+                                "\nTotal Cases: "+ loc.get_total_cases() +
+                                "\nTotal Deaths: " + loc.get_total_deaths());
+                        ad.setButton("OK", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }
+                    return true;
+
+                }
+            });
             // Create a heat map tile provider, passing it the latlngs of the police stations.
             HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                     .weightedData(latLngs)
