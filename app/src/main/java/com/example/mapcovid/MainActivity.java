@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
                 if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
+                    constants.setNewLocation(true);
                     if(lastLocation != null) {
                         createNotification();
                     }

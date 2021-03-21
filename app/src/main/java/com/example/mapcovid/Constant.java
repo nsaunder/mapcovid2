@@ -25,6 +25,7 @@ public class Constant {
     private static String appId;
     private static ArrayList<City> cities;
     private static String currentLocation;
+    private static boolean newLocation;
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static String lastLocation;
     private static Double current_lat;
@@ -61,6 +62,10 @@ public class Constant {
 
     public void setCurrentLocation(String location) {
         currentLocation = location;
+    }
+
+    public void setNewLocation(boolean b) {
+        newLocation = b;
 
         for(currentLocationChangedListener l: currentLocationListeners) {
             l.onCurrentLocationChange();
