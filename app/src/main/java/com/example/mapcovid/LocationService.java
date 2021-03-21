@@ -59,8 +59,7 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //initialize constant data structures
-        constants = new Constant();
-        constants.set_cities(getApplicationContext());
+        constants = new Constant(getApplicationContext());
 
         prepareForegroundNotification();
         startLocationUpdates();

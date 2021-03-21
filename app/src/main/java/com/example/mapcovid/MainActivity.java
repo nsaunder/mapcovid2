@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
         //initialize constant data structures
-        constants = new Constant();
-        constants.set_cities(getApplicationContext());
+        constants = new Constant(getApplicationContext());
 
         //create GoogleApiClient
         createGoogleApi();
@@ -291,9 +290,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Double lon = constants.getCurrentLon();
 
         PathItem newCity = new PathItem(time, city, lat, lon);
+        String appID = constants.getAppId();
 
         //pushes new city location to date's path
-        database.child("paths").child(date).push().setValue(newCity);
+        database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {
