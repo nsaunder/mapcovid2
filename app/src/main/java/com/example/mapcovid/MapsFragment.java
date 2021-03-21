@@ -1,14 +1,12 @@
-package com.example.mapcovid.ui.covidmap;
+package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +14,11 @@ import android.view.ViewGroup;
 import com.example.mapcovid.City;
 import com.example.mapcovid.Constant;
 import com.example.mapcovid.R;
-import com.example.mapcovid.ui.testingmap.TestingFragment;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,9 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,8 +39,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -86,7 +73,17 @@ public class MapsFragment extends Fragment {
                             .title("CurrentLocation"));
             melbourne.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+            constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
 
+                @Override
+                public void onCurrentLocationChange() {
+                        Marker currentLocation = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                                .title("Current Location"));
+                        currentLocation.showInfoWindow();
+                }
+
+            });
 
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
@@ -125,7 +122,7 @@ public class MapsFragment extends Fragment {
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    if(!marker.getTitle().equals("CurrentLocation"))
+                    if(!marker.getTitle().equals("Current Location"))
                     {
                         City loc = citiesMap.get(marker.getTitle());
                         AlertDialog ad = new AlertDialog.Builder(getContext())

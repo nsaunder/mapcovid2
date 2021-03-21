@@ -1,4 +1,4 @@
-package com.example.mapcovid.ui.testingmap;
+package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mapcovid.Constant;
 import com.example.mapcovid.R;
+import com.example.mapcovid.currentLocationChangedListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -61,6 +63,8 @@ public class TestingFragment extends Fragment {
     }
     private double currentX = 34;
     private double currentY = -118;
+    private Constant constants;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -80,6 +84,21 @@ public class TestingFragment extends Fragment {
             LatLng losAngeles = new LatLng(34, -118);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+            constants = new Constant();
+
+
+            constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
+                @Override
+                public void onCurrentLocationChange() {
+                    Marker currentLocation = mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(constants.getCurrentLat(),constants.getCurrentLon()))
+                                        .title("Current Location"));
+                }
+
+            });
+
+
+
 
 
             List<TestingLocation> testingLocations = null;
@@ -108,11 +127,12 @@ public class TestingFragment extends Fragment {
                 mark.showInfoWindow();
 
             }
+
            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @SuppressLint("PotentialBehaviorOverride")
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    if(!marker.getTitle().equals("CurrentLocation"))
+                    if(!marker.getTitle().equals("Current Location"))
                     {
                         TestingLocation loc = testingMap.get(marker.getTitle());
                         String endpoint = "https://www.google.com/maps/dir/?api=1&origin ="+currentX+","+currentY+"&destination="+loc.getPosition().latitude+","+loc.getPosition().longitude;

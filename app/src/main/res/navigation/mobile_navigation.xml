@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_covid"
-        android:name="com.example.mapcovid.ui.covidmap.MapsFragment"
+        android:name="com.example.mapcovid.MapsFragment"
         android:label="CovidMap"
         tools:layout="@layout/fragment_maps" />
 
     <fragment
         android:id="@+id/navigation_testing"
-        android:name="com.example.mapcovid.ui.testingmap.TestingFragment"
+        android:name="com.example.mapcovid.TestingFragment"
         android:label="TestingMap"
         tools:layout="@layout/fragment_testing" />
 

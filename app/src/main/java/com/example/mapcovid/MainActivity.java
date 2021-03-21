@@ -270,7 +270,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //new location is different from last recorded location
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
+
                 if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
+                    //
                     if(lastLocation != null) {
                         createNotification();
                     }
@@ -308,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 constants.setCurrentLon(location.getLongitude());
             }
         } catch(IOException ioe) {
-            Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
+            Log.d(TAG, ioe+"    -   Couldn't retrieve city from updated location coordinates");
         }
     }
 
@@ -326,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             String city = getCityByCoordinates(lat, lon);
                             if(city != null) constants.setLastLocation(city);
                         } catch(IOException ioe) {
-                            Log.d(TAG, "getLastLocation() failed");
+                            Log.d(TAG, ioe + "  -  getLastLocation() failed");
                         }
 
                     }
