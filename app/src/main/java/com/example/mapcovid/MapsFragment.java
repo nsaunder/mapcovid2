@@ -72,59 +72,62 @@ public class MapsFragment extends Fragment {
 
             HashMap<String, City> citiesMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
-            LatLng losAngeles = new LatLng(34, -118);
+            LatLng tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
-            Marker melbourne = mMap.addMarker(
+            Marker tempMarker = mMap.addMarker(
                     new MarkerOptions()
-                            .position(new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                            .position(tempLocation)
                             .title("Current Location")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
-            melbourne.showInfoWindow();
+            tempMarker.showInfoWindow();
 
 
             String day = LocalDate.now().toString();
-
             constants.getPath(day, new getPathCallback() {
+                boolean newPath = false;
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
-                    LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    if (newPath == false){
+                        LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
-                    for(int i = path.size()-1; i >= 0; i--) {
-                        PathItem p = path.get(i);
-                        System.out.println(p.getCity());
-                        LatLng temp = new LatLng(p.getLat(), p.getLon());
-                        Polyline line = mMap.addPolyline(new PolylineOptions()
+                        for (int i = path.size() - 1; i >= 0; i--) {
+                            PathItem p = path.get(i);
+                            LatLng temp = new LatLng(p.getLat(), p.getLon());
+                            Polyline line = mMap.addPolyline(new PolylineOptions()
                                     .add(temp, lastCoordinates)
                                     .width(10)
-                                    .color(Color.RED));
-                        lastCoordinates = temp;
+                                    .color(Color.BLUE));
+                            lastCoordinates = temp;
+                            newPath = true;
+                        }
                     }
                 }
             });
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker currentMarker = null;
-                LatLng latestPosition = null;
+                LatLng latestPosition = tempLocation;
                 @Override
                 public void onCurrentLocationChange() {
-                        if(currentMarker != null) {
-                            Polyline line = mMap.addPolyline(new PolylineOptions()
-                                    .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                                    .width(10)
-                                    .color(Color.RED));
-                            currentMarker.remove();
-                        }
-                        else {
-                            melbourne.remove();
-                        }
+                    if(currentMarker != null) {
+                        currentMarker.remove();
+                    }
+                    else {
+                        tempMarker.remove();
+                    }
+                    Polyline line = mMap.addPolyline(new PolylineOptions()
+                            .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                            .width(10)
+                            .color(Color.BLUE));
 
-                        latestPosition = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    latestPosition = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
-                        currentMarker = mMap.addMarker(new MarkerOptions()
-                                .position(latestPosition)
-                                .title("Current Location")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                        currentMarker.showInfoWindow();
+                    currentMarker = mMap.addMarker(new MarkerOptions()
+                            .position(latestPosition)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    currentMarker.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latestPosition, 10f));
                 }
 
             });
@@ -199,7 +202,7 @@ public class MapsFragment extends Fragment {
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
         }
     };
 
