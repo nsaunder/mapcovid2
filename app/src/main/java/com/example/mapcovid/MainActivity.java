@@ -287,28 +287,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String date = LocalDate.now().toString();
         String time = LocalTime.now().toString();
         String city = constants.getCurrentLocation();
-        PathItem newCity = new PathItem(time, city);
+        Double lat = constants.getCurrentLat();
+        Double lon = constants.getCurrentLon();
+
+        PathItem newCity = new PathItem(time, city, lat, lon);
 
         //pushes new city location to date's path
         database.child("paths").child(date).push().setValue(newCity);
-    }
-
-    //updates current location in firebase database for use in MapFragment
-    public void updateCurrentLocation(double lat, double lon) {
-        database.child("current_location").child("latitude").setValue(lat);
-        database.child("current_location").child("longitude").setValue(lon);
     }
 
     public void onLocationChanged(Location location) {
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
-            //update current location in firebase database
-            updateCurrentLocation(location.getLatitude(), location.getLongitude());
-            
+
             if(city != null) {
                 Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
+                constants.setCurrentLat(location.getLatitude());
+                constants.setCurrentLon(location.getLongitude());
             }
         } catch(IOException ioe) {
             Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
@@ -365,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         //gets city that user just moved into
-        City city = constants.get_city(constants.getCurrentLocation().replaceAll(" ", "_").toLowerCase());
+        City city = constants.get_city(constants.getCurrentLocation());
         if(city == null) {
             System.out.println("Moved into city that doesn't exist or isn't in LA County!");
             return;
