@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Constant constants;
 
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database = constants.getDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
