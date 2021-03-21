@@ -293,10 +293,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         database.child("paths").child(date).push().setValue(newCity);
     }
 
+    //updates current location in firebase database for use in MapFragment
+    public void updateCurrentLocation(double lat, double lon) {
+        database.child("current_location").child("latitude").setValue(lat);
+        database.child("current_location").child("longitude").setValue(lon);
+    }
+
     public void onLocationChanged(Location location) {
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
+            //update current location in firebase database
+            updateCurrentLocation(location.getLatitude(), location.getLongitude());
+            
             if(city != null) {
                 Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);

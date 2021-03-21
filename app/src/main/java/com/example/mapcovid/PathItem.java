@@ -4,7 +4,7 @@ public class PathItem {
     private String time;
     private String city;
 
-    //default constructor required for calls to DataSnapshot.getValue(DayPath.class)
+    //default constructor required for calls to DataSnapshot.getValue(PathItem.class)
     public PathItem() { }
 
     public PathItem(String time, String city) {

@@ -14,8 +14,8 @@ import android.content.Context;
 
 public class Constant {
     private static ArrayList<City> cities;
-    private String currentLocation;
-    private String lastLocation;
+    private static String currentLocation;
+    private static String lastLocation;
 
     public void set_cities(Context context) {
         try {
