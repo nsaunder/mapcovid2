@@ -3,4 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_covid">CovidMap</string>
+    <string name="title_testing">TestingMap</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_news">News</string>
+    <string name="title_path">Path</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.mapcovid.ui.covidmap;
+package com.example.mapcovid.ui.testingmap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class MapsFragment extends Fragment {
+public class TestingFragment extends Fragment {
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -109,7 +109,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        return inflater.inflate(R.layout.fragment_testing, container, false);
     }
 
     @Override
@@ -121,6 +121,4 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
     }
-
-
 }
