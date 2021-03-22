@@ -68,17 +68,17 @@ public class NewsFragment extends Fragment {
 //                            tweetLayout.addView(body);
 //                            tweetLayout.addView(date);
 //                            System.out.println(tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
-                            temp.setText("@" + tweet.getUser().getDisplayedName() + "\n\""+tweet.getText() + "\"\n" +
-                                    tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
-                            temp.setBackgroundColor(Color.GRAY);
-                            temp.setBackgroundResource(R.drawable.back);
-                            temp.setLayoutParams(params);
+                               temp.setPadding(30,30,30,30);
+                               temp.setText("@" + tweet.getUser().getName() + "\n\n" + tweet.getText() + "\n\n" + tweet.getCreatedAt().getMonth() + " " + tweet.getCreatedAt().getDayOfMonth()+", "+tweet.getCreatedAt().getYear());
+                               temp.setBackgroundColor(Color.GRAY);
+                               temp.setBackgroundResource(R.drawable.back);
+                               temp.setLayoutParams(params);
                         }
                     });
                     ll.post(new Runnable() {
                         @Override
                         public void run() {
-                            ll.addView(tweetLayout);
+                            ll.addView(temp);
                         }
                     });
                     System.out.println(tweet.getText());
