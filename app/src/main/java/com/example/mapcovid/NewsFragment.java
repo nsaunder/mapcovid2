@@ -1,5 +1,6 @@
 package com.example.mapcovid;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,12 +41,19 @@ public class NewsFragment extends Fragment {
             public void onListener() {
                 ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
                 LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(10,10,10,10);
+
                 for (Tweet tweet : t1.getTweets()) {
                     TextView temp = new TextView(getContext());
                     temp.post(new Runnable() {
                         @Override
                         public void run() {
-                            temp.setText(tweet.getUser().getDisplayedName() + "\n" + tweet.getText());
+                            temp.setText("@" + tweet.getUser().getDisplayedName() + "\n\""+tweet.getText() + "\"\n" +
+                                    tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
+                            temp.setBackgroundColor(Color.GRAY);
+                            temp.setBackgroundResource(R.drawable.back);
+                            temp.setLayoutParams(params);
                         }
                     });
                     ll.post(new Runnable() {
