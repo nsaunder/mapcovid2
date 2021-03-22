@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Locations"
+        android:text="Cities"
         android:textSize="16sp"
         android:fontFamily="sans-serif-medium"
         android:layout_marginStart="84dp"
