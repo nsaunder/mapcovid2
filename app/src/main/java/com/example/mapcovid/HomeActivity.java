@@ -1,7 +1,12 @@
 package com.example.mapcovid;
 
+import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -39,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
+        getSupportActionBar().setTitle("MapCovid");
+
         constants = new Constant();
 
         // Passing each menu ID as a set of Ids because each
@@ -66,49 +73,100 @@ public class HomeActivity extends AppCompatActivity {
 
             String date = year+"-"+month+"-"+day;
             Context cc = this;
-            getInfo(date, cc, ll);
+            boolean tf = false;
+            if(tf == false) {
+                getInfo(date, cc, ll, false);
+                tf = true;
+            }
             System.out.println("finished");
         }
     }
 
-    public void getInfo(String day, Context cc, LinearLayout ll) {
+    public void getInfo(String day, Context cc, LinearLayout ll, final boolean tf) {
         constants.getPath(day, new getPathCallback() {
+                boolean t = tf; //Make it only call once only when the above method is called
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
-                    Set<String> visits = new HashSet<>();
-                    HashMap<String, Integer> map = new HashMap<>();
-                    int maxNum = 0;
-                    String popCity = "";
+                    if (t == false) {
+                        Set<String> visits = new HashSet<>();
+                        HashMap<String, Integer> map = new HashMap<>();
+                        int maxNum = 0;
+                        String popCity = "";
 
-                    for(PathItem p: path)
-                    {
-                        TextView temp = new TextView(cc);
-                        temp.setGravity(Gravity.CENTER);
-                        temp.setText(p.getCity() + "------"+p.getTime());
-                        ll.addView(temp);
+                        for (PathItem p : path) {
+                            TextView temp = new TextView(cc);
+                            temp.setGravity(Gravity.CENTER);
+                            temp.setText(p.getCity() + "------" + p.getTime());
+                            ll.addView(temp); //add view to linear layout
 
-                        visits.add(p.getCity());
-                        int count = map.getOrDefault(p.getCity(), 0);
-                        map.put(p.getCity(), count+1);
-                        if(count + 1 > maxNum)
-                        {
-                            maxNum = count + 1;
-                            popCity = p.getCity();
+                            visits.add(p.getCity());
+                            int count = map.getOrDefault(p.getCity(), 0);
+                            map.put(p.getCity(), count + 1);
+                            if (count + 1 > maxNum) {
+                                maxNum = count + 1;
+                                popCity = p.getCity();
+                            }
+                        }
+                        TextView numLoc = (TextView) findViewById(R.id.numLocations);
+                        TextView pop = (TextView) findViewById(R.id.popCity);
+                        if (numLoc == null || pop == null) {
+                            System.out.println(numLoc + " " + pop);
+                        } else {
+                            if (!visits.isEmpty() && !map.isEmpty()) {
+                                numLoc.setText((visits.size() + ""));
+                                pop.setText(popCity);
+                            } else {
+                                numLoc.setText("0");
+                                pop.setText("---");
+                            }
                         }
                     }
-
-                    TextView numLoc = (TextView) findViewById(R.id.numLocations);
-                    numLoc.setText((visits.size()+""));
-
-                    TextView pop = (TextView) findViewById(R.id.popCity);
-                    pop.setText(popCity);
+                    t = true;
                 }
         });
     }
 
     //when user clicks on button, deletes all path data for user from firebase
     public void deletePath(View view){
-        database.child(constants.getAppId()).removeValue();
+        AlertDialog ad = new AlertDialog.Builder(this)
+                .create();
+        ad.setCancelable(false);
+        ad.setTitle("ALERT");
+        ad.setMessage("You are about to delete your path history...");
+        boolean tf = false;
+        if(tf == false) {
+            ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    database.child(constants.getAppId()).removeValue();
+                    dialog.dismiss();
+                }
+            });
+            ad.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            tf = true;
+        }
+        ad.show();
+    }
+
+    public void showAbout(View view){
+        AlertDialog ad = new AlertDialog.Builder(this)
+                .create();
+        ad.setCancelable(false);
+        ad.setTitle("About");
+        ad.setMessage("Version: 1.0"+"\n\nWhat's new: ---\n\n"
+                    +"Developers: \nCarson Greengrove\nCatherine Phu\nCyprien Toffa\nNicholas Saunders\nRahul Mehta\nSmrithi Balebail\n");
+        ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ad.show();
     }
 
 }

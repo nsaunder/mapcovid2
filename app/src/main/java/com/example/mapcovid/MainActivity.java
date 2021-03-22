@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         constants.setNewLocation(true);
                     }
                     writeToDatabase();
+
                 }
 
             }

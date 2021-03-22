@@ -1,5 +1,6 @@
 package com.example.mapcovid;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,12 +41,38 @@ public class NewsFragment extends Fragment {
             public void onListener() {
                 ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
                 LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                params.setMargins(10,10,10,10);
+
                 for (Tweet tweet : t1.getTweets()) {
                     TextView temp = new TextView(getContext());
+                    LinearLayout tweetLayout = new LinearLayout(getContext());
                     temp.post(new Runnable() {
                         @Override
                         public void run() {
-                            temp.setText(tweet.getUser().getDisplayedName() + "\n" + tweet.getText());
+//                            tweetLayout.setLayoutParams(params);
+//                            TextView username = new TextView(getContext());
+//                            TextView body = new TextView(getContext());
+//                            TextView date = new TextView(getContext());
+//                            username.setText("@" + tweet.getUser().getDisplayedName());
+//                            body.setText(tweet.getText());
+//                            //Somehow insert _______
+//                            date.setText(tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
+//
+//                            username.setBackgroundColor(Color.GRAY);
+//                            date.setBackgroundColor(Color.BLUE);
+//                            tweetLayout.setBackgroundResource(R.drawable.back);
+//                            tweetLayout.addView(username);
+//                            tweetLayout.addView(body);
+//                            tweetLayout.addView(date);
+//                            System.out.println(tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
+                               temp.setPadding(30,30,30,30);
+                               temp.setText("@" + tweet.getUser().getName() + "\n\n" + tweet.getText() + "\n\n" + tweet.getCreatedAt().getMonth() + " " + tweet.getCreatedAt().getDayOfMonth()+", "+tweet.getCreatedAt().getYear());
+                               temp.setBackgroundColor(Color.GRAY);
+                               temp.setBackgroundResource(R.drawable.back);
+                               temp.setLayoutParams(params);
                         }
                     });
                     ll.post(new Runnable() {

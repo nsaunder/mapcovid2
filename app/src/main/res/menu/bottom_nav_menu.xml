@@ -4,11 +4,11 @@
     <item
         android:id="@+id/navigation_covid"
         android:icon="@drawable/ic_map_orange_icon"
-        android:title="@string/title_covid" />
+        android:title="Covid Map" />
     <item
         android:id="@+id/navigation_testing"
         android:icon="@drawable/maps_icon"
-        android:title="@string/title_testing" />
+        android:title="Testing Map" />
     <item
         android:id="@+id/navigation_path"
         android:icon="@drawable/path_icon"
@@ -19,7 +19,7 @@
         android:title="@string/title_news" />
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:icon="@drawable/ic_settings_icon"
+        android:title="Settings" />
 
 </menu>

@@ -87,14 +87,23 @@ public class TestingFragment extends Fragment {
             constants = new Constant();
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
-            LatLng tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+            LatLng tempLocation = null;
+            Marker tempMarker = null;
 
-            Marker tempMarker = mMap.addMarker(
-                    new MarkerOptions()
-                            .position(tempLocation)
-                            .title("Current Location")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
-            tempMarker.showInfoWindow();
+            if(constants.getCurrentLat() != null) {
+                tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+
+                tempMarker = mMap.addMarker(
+                        new MarkerOptions()
+                                .position(tempLocation)
+                                .title("Current Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                tempMarker.showInfoWindow();
+            }
+
+            LatLng tt = tempLocation;
+            Marker tm = tempMarker;
 
 
             String day = LocalDate.now().toString();
@@ -102,6 +111,7 @@ public class TestingFragment extends Fragment {
                 boolean newPath = false;
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
+                    System.out.println(day);
                     if (newPath == false){
                         LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
@@ -121,19 +131,21 @@ public class TestingFragment extends Fragment {
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker currentMarker = null;
-                LatLng latestPosition = tempLocation;
+                LatLng latestPosition = tt;
+
                 @Override
                 public void onCurrentLocationChange() {
-                    if(currentMarker != null) {
+                    if (currentMarker != null) {
                         currentMarker.remove();
+                    } else {
+                        tm.remove();
                     }
-                    else {
-                        tempMarker.remove();
+                    if(latestPosition != null) {
+                        Polyline line = mMap.addPolyline(new PolylineOptions()
+                                .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                                .width(10)
+                                .color(Color.BLUE));
                     }
-                    Polyline line = mMap.addPolyline(new PolylineOptions()
-                            .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                            .width(10)
-                            .color(Color.BLUE));
 
                     latestPosition = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
@@ -220,8 +232,12 @@ public class TestingFragment extends Fragment {
                     }
                     }
             });
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
+            if(tempLocation != null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
+            }
+            else {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(34, -118), 10f));
+            }
         }
     };
 
