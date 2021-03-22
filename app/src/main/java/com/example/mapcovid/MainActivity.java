@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
