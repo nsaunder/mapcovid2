@@ -1,6 +1,8 @@
 package com.example.mapcovid;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        ArrayList<Tweet> tweets_mainview = new ArrayList<Tweet>();
         TwitterFilteredStream t1 = new TwitterFilteredStream();
         t1.start();
 
@@ -35,19 +38,28 @@ public class NewsFragment extends Fragment {
         t1.addListeners(new TweetListener() {
             @Override
             public void onListener() {
-                //ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
-                //LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
-                for (Tweet tweet: t1.getTweets()) {
-                    //TextView temp = new TextView(getContext());
-                    //temp.setText(tweet.getUser().getDisplayedName() + "\n" + tweet.getText());
-                    //ll.addView(temp);
+                ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
+                LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
+                for (Tweet tweet : t1.getTweets()) {
+                    TextView temp = new TextView(getContext());
+                    temp.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            temp.setText(tweet.getUser().getDisplayedName() + "\n" + tweet.getText());
+                        }
+                    });
+                    ll.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ll.addView(temp);
+                        }
+                    });
                     System.out.println(tweet.getText());
                 }
             }
         });
-
         return view;
-    }
+        }
 
 //    public void setText(ArrayList<Tweet> tweets, View view) {
 //        ScrollView sv = (ScrollView) view.findViewById(R.id.tweet_scroll_view);
