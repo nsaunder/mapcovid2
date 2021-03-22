@@ -53,7 +53,7 @@
         android:text="3"
         android:textSize="20sp"
         android:fontFamily="sans-serif-black"
-        android:layout_marginStart="120dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
@@ -61,13 +61,15 @@
 
     <TextView
         android:id="@+id/popCity"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="244dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif-black"
-        android:text="---"
-        android:textSize="20sp"
+        android:gravity="center"
+        android:text="Los Angeles"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
         app:srcCompat="@drawable/path_top_container" />
@@ -130,10 +132,11 @@
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="413dp"
-        android:layout_height="189dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="440dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/linear_layout"
