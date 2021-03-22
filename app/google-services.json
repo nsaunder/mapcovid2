@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "768616515864",
+    "project_id": "mapcovid-d1e3a",
+    "storage_bucket": "mapcovid-d1e3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768616515864:android:e1b536e9ef8cb28d08b66d",
+        "android_client_info": {
+          "package_name": "com.example.mapcovid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768616515864-9uemabvpa38h2ucm7952t7ub85lrtuoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_4qSF9Zx7Dt_JTfHUf4cxQQkKP4nuFGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768616515864-9uemabvpa38h2ucm7952t7ub85lrtuoq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

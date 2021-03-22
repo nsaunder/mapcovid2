@@ -6,19 +6,61 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import android.content.Context;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+//interface to implement listener for when current location changes
+interface currentLocationChangedListener {
+    public void onCurrentLocationChange();
+}
+
+interface getPathCallback {
+    void onCallback(ArrayList<PathItem> path);
+}
 
 public class Constant {
+    private static String appId;
     private static ArrayList<City> cities;
-    private static ArrayList<DayPath> paths;
+    private static String currentLocation;
+    private static boolean newLocation;
+    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
+    private static String lastLocation;
+    private static Double current_lat;
+    private static Double current_lon;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-    public Constant() {
-        this.paths = new ArrayList<DayPath>();
+    //constructor for fragments
+    public Constant() { }
+
+    public Constant(Context context) {
+        //initialize list of City Objects
+        set_cities(context);
+        //get unique ID for application
+        FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                appId = s;
+            }
+        });
     }
+
     public void set_cities(Context context) {
         try {
             InputStream is = context.getAssets().open("city_data.json");
@@ -33,12 +75,52 @@ public class Constant {
         }
     }
 
-    public void set_paths(ArrayList<DayPath> paths) {
-        this.paths = paths;
+    public void setCurrentLocation(String location) {
+        currentLocation = location;
     }
 
-    public ArrayList<City> get_cities() {
-        return this.cities;
+    public void setNewLocation(boolean b) {
+        newLocation = b;
+
+        for(currentLocationChangedListener l: currentLocationListeners) {
+            l.onCurrentLocationChange();
+        }
+    }
+
+    public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
+        currentLocationListeners.add(l);
+    }
+
+    public void setCurrentLat(Double lat) {
+        current_lat = lat;
+    }
+
+    public void setCurrentLon(Double lon) {
+        current_lon = lon;
+    }
+
+    public void setLastLocation(String location) {
+        lastLocation = location;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public Double getCurrentLat() {
+        return current_lat;
+    }
+
+    public Double getCurrentLon() {
+        return current_lon;
+    }
+
+    public String getLastLocation() {
+        return lastLocation;
     }
 
     public City get_city(String city) {
@@ -50,23 +132,31 @@ public class Constant {
         return null;
     }
 
-    public ArrayList<DayPath> get_paths() {
-        return this.paths;
+    public DatabaseReference getDatabase() {
+        return database;
     }
 
-    public void printPaths() {
-        if(this.paths.size() == 0) {
-            System.out.println("Didn't travel anywhere");
-        } else {
-            System.out.println("Paths:");
-            for (DayPath day : this.paths) {
-                System.out.println("Date: " + day.getDate());
-                System.out.print("Cities: ");
-                for (PathItem item : day.getPath()) {
-                    System.out.print(item.getCity());
+    //get path for day passed into function from firebase
+    public void getPath(String day, final getPathCallback callBack) {
+        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<PathItem> path = new ArrayList<PathItem>();
+                for(DataSnapshot ds: snapshot.getChildren()) {
+                    PathItem city = ds.getValue(PathItem.class);
+                    if(city != null) {
+                        path.add(city);
+                    }
                 }
-                System.out.println();
+                //use callback to make call synchronous --> return path AFTER all data has been fetched
+                callBack.onCallback(path);
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Constant Class", "Error Reading Path for " + day);
+            }
+        });
     }
+
 }

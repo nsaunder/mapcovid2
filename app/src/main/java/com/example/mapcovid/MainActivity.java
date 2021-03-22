@@ -18,6 +18,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -29,6 +30,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,15 +46,23 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -77,20 +87,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private LocationRequest locationRequest;
     private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
-    private String currentLocation;
-    private String lastLocation;
 
     private Constant constants;
+
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //get shared preferences
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("my_preferences", MODE_PRIVATE);
+        //check if onboarding_complete is false
+        if(!preferences.getBoolean("onboarding_complete", false)) {
+            //start onboarding activity
+            Intent onboarding = new Intent(this, OnboardingActivity.class);
+            startActivity(onboarding);
+            //close main activity
+            finish();
+            return;
+        }
         //initialize constant data structures
-        constants = new Constant();
-        constants.set_cities(getApplicationContext());
-        System.out.println(getFilesDir());
+        constants = new Constant(getApplicationContext());
 
         //create GoogleApiClient
         createGoogleApi();
@@ -253,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
+
+
         //gets current location and handles storing location changes to display in user path
         getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
             @Override
@@ -262,56 +282,50 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //gets last location and updates "lastLocation" data member
                 getLastLocation();
                 //new location is different from last recorded location
+                String currentLocation = constants.getCurrentLocation();
+                String lastLocation = constants.getLastLocation();
+
                 if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
                     if(lastLocation != null) {
                         createNotification();
+                        constants.setNewLocation(true);
                     }
-                    updatePath();
+                    writeToDatabase();
+
                 }
 
             }
         }, Looper.myLooper());
     }
 
-    //updates path in json file if there is change in location
-    private void updatePath() {
-        String currentDate = LocalDate.now().toString();
-        String currentTime = LocalTime.now().toString();
-        String city = currentLocation.replaceAll(" ", "_").toLowerCase();
+    //writes new path location to firebase database
+    public void writeToDatabase() {
+        String date = LocalDate.now().toString();
+        String time = LocalTime.now().toString();
+        String city = constants.getCurrentLocation();
+        Double lat = constants.getCurrentLat();
+        Double lon = constants.getCurrentLon();
 
-        boolean dayExists = false;
-        //iterate through paths and update to account for location change
-        ArrayList<DayPath> paths = constants.get_paths();
-        if(paths.size() > 0) {
-            for(DayPath day: paths) {
-                if(day.getDate() == currentDate) {
-                    ArrayList<PathItem> path = day.getPath();
-                    path.add(new PathItem(currentTime, city));
-                    dayExists = true;
-                    break;
-                }
-            }
-        }
-        if(paths.size() == 0 || !dayExists) {
-            ArrayList<PathItem> path = new ArrayList<PathItem>();
-            path.add(new PathItem(currentTime, city));
-            DayPath day = new DayPath(currentDate, path);
-            paths.add(day);
-        }
-        constants.set_paths(paths);
-        //constants.printPaths();
+        PathItem newCity = new PathItem(time, city, lat, lon);
+        String appID = constants.getAppId();
+
+        //pushes new city location to date's path
+        database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
+
             if(city != null) {
-                Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
-                currentLocation = city;
+                //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
+                constants.setCurrentLocation(city);
+                constants.setCurrentLat(location.getLatitude());
+                constants.setCurrentLon(location.getLongitude());
             }
         } catch(IOException ioe) {
-            Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
+            Log.d(TAG, ioe+"    -   Couldn't retrieve city from updated location coordinates");
         }
     }
 
@@ -327,9 +341,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         double lon = location.getLongitude();
                         try {
                             String city = getCityByCoordinates(lat, lon);
-                            if(city != null) lastLocation = city;
+                            if(city != null) constants.setLastLocation(city);
                         } catch(IOException ioe) {
-                            Log.d(TAG, "getLastLocation() failed");
+                            Log.d(TAG, ioe + "  -  getLastLocation() failed");
                         }
 
                     }
@@ -365,14 +379,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         //gets city that user just moved into
-        City city = constants.get_city(currentLocation.replaceAll(" ", "_").toLowerCase());
+        City city = constants.get_city(constants.getCurrentLocation());
         if(city == null) {
             System.out.println("Moved into city that doesn't exist or isn't in LA County!");
             return;
         }
 
         //notification text
-        String content_title = "Covid19 Statistics for " + currentLocation;
+        String content_title = "Covid19 Statistics for " + constants.getCurrentLocation();
         String msg = city.city_notification_message();
         String title_and_msg = content_title + "\n" + msg;
 
@@ -435,6 +449,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
     }
-
-
 }
