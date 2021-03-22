@@ -14,6 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -28,6 +30,8 @@ import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     private Constant constants;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +93,11 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
         });
+    }
+
+    //when user clicks on button, deletes all path data for user from firebase
+    public void deletePath(View view){
+        database.child(constants.getAppId()).removeValue();
     }
 
 }
