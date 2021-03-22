@@ -1,5 +1,7 @@
 package com.example.mapcovid;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mapcovid.ui.path.PathViewModel;
 
 public class Onboarding extends Fragment {
-
     private Button b1;
     private PathViewModel mViewModel;
 
@@ -31,4 +32,5 @@ public class Onboarding extends Fragment {
         mViewModel = new ViewModelProvider(this).get(PathViewModel.class);
         // TODO: Use the ViewModel
     }
+
 }
