@@ -95,19 +95,23 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
                     System.out.println(day);
-                    if (newPath == false){
-                        LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    try {
+                        if (newPath == false) {
+                            LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
-                        for (int i = path.size() - 1; i >= 0; i--) {
-                            PathItem p = path.get(i);
-                            LatLng temp = new LatLng(p.getLat(), p.getLon());
-                            Polyline line = mMap.addPolyline(new PolylineOptions()
-                                    .add(temp, lastCoordinates)
-                                    .width(10)
-                                    .color(Color.BLUE));
-                            lastCoordinates = temp;
-                            newPath = true;
+                            for (int i = path.size() - 1; i >= 0; i--) {
+                                PathItem p = path.get(i);
+                                LatLng temp = new LatLng(p.getLat(), p.getLon());
+                                Polyline line = mMap.addPolyline(new PolylineOptions()
+                                        .add(temp, lastCoordinates)
+                                        .width(10)
+                                        .color(Color.BLUE));
+                                lastCoordinates = temp;
+                                newPath = true;
+                            }
                         }
+                    } catch (Exception e){
+                        System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
                     }
                 }
             });

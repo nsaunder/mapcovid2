@@ -10,5 +10,16 @@ Build instructions:
 8. Give the application location permissions
 9. Click continue anyways when prompted to change settings
 10. Click launch (You may recieve a runtime error on this first try)
-10b. If you recieve a runtime error please repeat steps 7 through 10 this is a bug
-     and fixes itself upon recompiling once or twice.
+10b. If you receive a runtime error, please repeat steps 7 through 10. This is a bug, and it fixes itself upon 
+	 recompiling once or twice.
+
+Errors that may occur when compiling:
+	1. Something about SDK location: go to local.properties and enter the correct path to your mapcovid
+	2. Anything else: Delete the orange '.gradle' folder and the orange 'build' folder
+	3. If those don't work contact team 16 please
+
+Errors when running:
+	1. Try recompiling it will work eventually
+	2. If the 'run' console is outputting something like "grpc - failed" and/or the emulator is 
+	   not responding go to AVD manager again like in step 2, click on the white upside down triangle
+	   on the row of the emulator. Close the emulator click the triangle and choose "Wipe Data"
