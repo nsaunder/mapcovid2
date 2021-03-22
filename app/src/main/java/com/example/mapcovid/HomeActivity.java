@@ -23,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,15 +72,22 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
                     Set<String> visits = new HashSet<>();
-                    //Set<Integer> days = new HashSet<>();
-
+                    HashMap<String, Integer> popLocation = new HashMap<>();
+                    int currMax = 0;
+                    String popCity = "";
                     for(PathItem p: path)
                     {
                         TextView temp = new TextView(cc);
                         temp.setGravity(Gravity.CENTER);
                         temp.setText(p.getCity() + "------"+p.getTime());
                         ll.addView(temp);
-
+                        int count = popLocation.getOrDefault(p.getCity(), 0);
+                        popLocation.put(p.getCity(), count+1);
+                        if(count + 1 > currMax)
+                        {
+                            currMax = count+1;
+                            popCity = p.getCity();
+                        }
                         visits.add(p.getCity());
                         //String n = p.getTime(); Parse string for day then add to days update days at the end
                     }
@@ -87,8 +95,15 @@ public class HomeActivity extends AppCompatActivity {
                     TextView numLoc = (TextView) findViewById(R.id.numLocations);
                     numLoc.setText((visits.size()+""));
 
+                    TextView pop = (TextView) findViewById(R.id.popCity);
+                    pop.setText(popCity);
+
                 }
         });
+    }
+
+    public void deletePath(View view){
+
     }
 
 }
