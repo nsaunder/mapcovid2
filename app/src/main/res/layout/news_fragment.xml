@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.news.NewsFragment">
+    tools:context=".NewsFragment">
 
-    <TextView
+    <ScrollView
+        android:id="@+id/tweet_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/tweet_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="username" />
+
+            <TextView
+                android:id="@+id/textView_content"
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:text="tweet content" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <ScrollView
         android:layout_width="match_parent"

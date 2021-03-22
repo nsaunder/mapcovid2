@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion 30
@@ -17,6 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             minifyEnabled false
@@ -27,6 +31,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
+
 }
 
 dependencies {
@@ -47,8 +63,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-database:19.2.1'
+    api 'com.github.ok2c.hc4.android:httpclient-android:0.1.0'
+    implementation group: 'cz.msebera.android' , name: 'httpclient', version: '4.5.8'
+    implementation 'com.github.redouane59.twitter:twittered:1.21'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+
