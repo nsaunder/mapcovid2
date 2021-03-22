@@ -76,24 +76,25 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
                     Set<String> visits = new HashSet<>();
-                    HashMap<String, Integer> popLocation = new HashMap<>();
-                    int currMax = 0;
+                    HashMap<String, Integer> map = new HashMap<>();
+                    int maxNum = 0;
                     String popCity = "";
+
                     for(PathItem p: path)
                     {
                         TextView temp = new TextView(cc);
                         temp.setGravity(Gravity.CENTER);
                         temp.setText(p.getCity() + "------"+p.getTime());
                         ll.addView(temp);
-                        int count = popLocation.getOrDefault(p.getCity(), 0);
-                        popLocation.put(p.getCity(), count+1);
-                        if(count + 1 > currMax)
+
+                        visits.add(p.getCity());
+                        int count = map.getOrDefault(p.getCity(), 0);
+                        map.put(p.getCity(), count+1);
+                        if(count + 1 > maxNum)
                         {
-                            currMax = count+1;
+                            maxNum = count + 1;
                             popCity = p.getCity();
                         }
-                        visits.add(p.getCity());
-                        //String n = p.getTime(); Parse string for day then add to days update days at the end
                     }
 
                     TextView numLoc = (TextView) findViewById(R.id.numLocations);
@@ -101,7 +102,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     TextView pop = (TextView) findViewById(R.id.popCity);
                     pop.setText(popCity);
-
                 }
         });
     }
