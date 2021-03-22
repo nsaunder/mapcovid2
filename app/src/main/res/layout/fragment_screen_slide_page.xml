@@ -10,10 +10,9 @@
 
         <ImageView
             android:lineSpacingMultiplier="1.2"
-            android:id="@+id/onboarding1"
+            android:id="@+id/screen"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:src="@drawable/onboarding1"/>
+            android:layout_height="fill_parent"/>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

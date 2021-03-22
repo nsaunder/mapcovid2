@@ -9,18 +9,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 public class ScreenSlidePagerActivity extends FragmentActivity {
-    private static final int NUM_PAGES = 7;
-
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
     private ViewPager2 viewPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    private FragmentStateAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +22,8 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(this);
-        viewPager.setAdapter(pagerAdapter);
+        OnboardAdapter adapter = new OnboardAdapter(this);
+        this.viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -42,26 +35,6 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         } else {
             // Otherwise, select the previous step.
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-        }
-    }
-
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
-        public ScreenSlidePagerAdapter(FragmentActivity fa) {
-            super(fa);
-        }
-
-        @Override
-        public Fragment createFragment(int position) {
-            return new ScreenSlidePageFragment();
-        }
-
-        @Override
-        public int getItemCount() {
-            return NUM_PAGES;
         }
     }
 
