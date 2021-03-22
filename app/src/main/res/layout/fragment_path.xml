@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.path.PathFragment">
+    tools:context=".PathFragment">
 
     <TextView
         android:id="@+id/text_notifications"
@@ -97,10 +97,11 @@
         android:layout_marginStart="80dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/date_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Button"
@@ -109,7 +110,21 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:onClick="setDate"
-        />
+        android:onClick="setDate"/>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="413dp"
+        android:layout_height="189dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

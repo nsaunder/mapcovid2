@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_path"
-        android:name="com.example.mapcovid.ui.path.PathFragment"
+        android:name="com.example.mapcovid.PathFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_path" />
 

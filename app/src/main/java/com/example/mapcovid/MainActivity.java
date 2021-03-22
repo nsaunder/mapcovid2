@@ -29,6 +29,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -306,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
 
             if(city != null) {
-                Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
                 constants.setCurrentLat(location.getLatitude());
                 constants.setCurrentLon(location.getLongitude());
@@ -436,6 +437,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
     }
-
-
 }

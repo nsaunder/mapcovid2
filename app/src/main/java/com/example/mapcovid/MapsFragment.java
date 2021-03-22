@@ -72,6 +72,7 @@ public class MapsFragment extends Fragment {
 
             HashMap<String, City> citiesMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
+
             LatLng tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
             Marker tempMarker = mMap.addMarker(
@@ -87,6 +88,7 @@ public class MapsFragment extends Fragment {
                 boolean newPath = false;
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
+                    System.out.println(day);
                     if (newPath == false){
                         LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
