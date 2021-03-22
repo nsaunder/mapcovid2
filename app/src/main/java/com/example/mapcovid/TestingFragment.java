@@ -172,16 +172,17 @@ public class TestingFragment extends Fragment {
                 Marker mark = mMap.addMarker(
                         new MarkerOptions()
                                 .position(testingLocations.get(i).getPosition())
-                                .title(testingLocations.get(i).getName()));
+                                .title(testingLocations.get(i).getName())
+                                .snippet("More info..."));
 
                 mark.showInfoWindow();
 
             }
 
-           mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @SuppressLint("PotentialBehaviorOverride")
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
                 @Override
-                public boolean onMarkerClick(Marker marker) {
+                public void onInfoWindowClick(Marker marker) {
                     if(!marker.getTitle().equals("Current Location"))
                     {
                         TestingLocation loc = testingMap.get(marker.getTitle());
@@ -217,10 +218,9 @@ public class TestingFragment extends Fragment {
                         });
                         ad.show();
                     }
-                    return true;
-
-                }
+                    }
             });
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
         }
     };

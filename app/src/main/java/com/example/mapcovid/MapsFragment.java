@@ -12,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mapcovid.City;
-import com.example.mapcovid.Constant;
-import com.example.mapcovid.R;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -163,14 +160,16 @@ public class MapsFragment extends Fragment {
                 Marker mark = mMap.addMarker(
                         new MarkerOptions()
                                 .position(citypos)
-                                .title(cities.get(i).get_city_name()));
+                                .title(cities.get(i).get_city_name())
+                                .snippet("More info..."));
 
                 mark.showInfoWindow();
 
             }
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
                 @Override
-                public boolean onMarkerClick(Marker marker) {
+                public void onInfoWindowClick(Marker marker) {
                     if(!marker.getTitle().equals("Current Location"))
                     {
                         City loc = citiesMap.get(marker.getTitle());
@@ -190,8 +189,6 @@ public class MapsFragment extends Fragment {
                         });
                         ad.show();
                     }
-                    return true;
-
                 }
             });
             // Create a heat map tile provider, passing it the latlngs of the police stations.

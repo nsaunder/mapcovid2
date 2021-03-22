@@ -3,6 +3,7 @@ package com.example.mapcovid;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -22,6 +23,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     private Constant constants;
@@ -57,26 +60,35 @@ public class HomeActivity extends AppCompatActivity {
                 month = "0" + month;
 
             String date = year+"-"+month+"-"+day;
-            TextView temp = new TextView(this);
-            ll.addView(temp);
             Context cc = this;
-            constants.getPath(day, new getPathCallback() {
+            getInfo(date, cc, ll);
+            System.out.println("finished");
+        }
+    }
+
+    public void getInfo(String day, Context cc, LinearLayout ll) {
+        constants.getPath(day, new getPathCallback() {
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
-                    System.out.println(date);
-                    System.out.println(path);
+                    Set<String> visits = new HashSet<>();
+                    //Set<Integer> days = new HashSet<>();
+
                     for(PathItem p: path)
                     {
-
                         TextView temp = new TextView(cc);
+                        temp.setGravity(Gravity.CENTER);
                         temp.setText(p.getCity() + "------"+p.getTime());
                         ll.addView(temp);
-                        System.out.println(p.getCity() + "------"+p.getTime());
+
+                        visits.add(p.getCity());
+                        //String n = p.getTime(); Parse string for day then add to days update days at the end
                     }
+
+                    TextView numLoc = (TextView) findViewById(R.id.numLocations);
+                    numLoc.setText((visits.size()+""));
+
                 }
-            });
-            System.out.println("HEREE");
-        }
+        });
     }
 
 }
