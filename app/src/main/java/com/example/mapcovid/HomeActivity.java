@@ -150,4 +150,20 @@ public class HomeActivity extends AppCompatActivity {
         ad.show();
     }
 
+    public void showAbout(View view){
+        AlertDialog ad = new AlertDialog.Builder(this)
+                .create();
+        ad.setCancelable(false);
+        ad.setTitle("About");
+        ad.setMessage("Version: 1.0"+"\n\nWhat's new: ---\n\n"
+                    +"Developers: \nCarson Greengrove\nCatherine Phu\nCyprien Toffa\nNicholas Saunders\nRahul Mehta\nSmrithi Balebail\n");
+        ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ad.show();
+    }
+
 }
