@@ -46,6 +46,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 public class MapsFragment extends Fragment {
 
+
     private LocationRequest locationRequest;
     private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
