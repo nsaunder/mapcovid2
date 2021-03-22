@@ -92,12 +92,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //get shared preferences
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("my_preferences", MODE_PRIVATE);
         //check if onboarding_complete is false
@@ -109,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             finish();
             return;
         }
-
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
 
@@ -294,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         constants.setNewLocation(true);
                     }
                     writeToDatabase();
+
                 }
 
             }

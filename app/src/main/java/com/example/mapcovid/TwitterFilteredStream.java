@@ -47,8 +47,9 @@ public class TwitterFilteredStream extends Thread {
 
         tweets = new ArrayList<Tweet>();
 
-        StreamMeta stream_meta = twitterClient.deleteFilteredStreamRule("covid");
-        StreamRule covid_rule = twitterClient.addFilteredStreamRule("covid", "funny things");
+        StreamMeta stream_meta = twitterClient.deleteFilteredStreamRule("covid OR coronavirus OR covid-19 lang:en is:verified");
+
+        StreamRule s_r1 = twitterClient.addFilteredStreamRule("covid OR coronavirus OR covid-19 lang:en is:verified", "language1");
 
         startStream(twitterClient, new TweetStream() {
             @Override
