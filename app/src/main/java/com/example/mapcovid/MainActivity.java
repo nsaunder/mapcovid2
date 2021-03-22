@@ -29,6 +29,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private Constant constants;
 
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,6 +260,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
+
+
         //gets current location and handles storing location changes to display in user path
         getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
             @Override
@@ -271,10 +273,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //new location is different from last recorded location
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
+
                 if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
-                    constants.setNewLocation(true);
                     if(lastLocation != null) {
                         createNotification();
+                        constants.setNewLocation(true);
                     }
                     writeToDatabase();
                 }
@@ -304,13 +307,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
 
             if(city != null) {
-                Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
                 constants.setCurrentLat(location.getLatitude());
                 constants.setCurrentLon(location.getLongitude());
             }
         } catch(IOException ioe) {
-            Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
+            Log.d(TAG, ioe+"    -   Couldn't retrieve city from updated location coordinates");
         }
     }
 
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             String city = getCityByCoordinates(lat, lon);
                             if(city != null) constants.setLastLocation(city);
                         } catch(IOException ioe) {
-                            Log.d(TAG, "getLastLocation() failed");
+                            Log.d(TAG, ioe + "  -  getLastLocation() failed");
                         }
 
                     }
@@ -434,6 +437,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
     }
-
-
 }

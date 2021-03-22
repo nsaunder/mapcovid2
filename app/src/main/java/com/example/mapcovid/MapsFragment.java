@@ -1,33 +1,28 @@
-package com.example.mapcovid.ui.covidmap;
+package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mapcovid.City;
-import com.example.mapcovid.Constant;
-import com.example.mapcovid.R;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.gson.Gson;
@@ -35,20 +30,17 @@ import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -72,18 +64,72 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
+
             constants = new Constant();
+
             HashMap<String, City> citiesMap = new HashMap<>();
             // Add a marker in Sydney and move the camera
-            LatLng losAngeles = new LatLng(34, -118);
 
-            Marker melbourne = mMap.addMarker(
+            LatLng tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+            Marker tempMarker = mMap.addMarker(
                     new MarkerOptions()
-                            .position(losAngeles)
-                            .title("CurrentLocation"));
-            melbourne.showInfoWindow();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+                            .position(tempLocation)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
+            tempMarker.showInfoWindow();
 
+
+            String day = LocalDate.now().toString();
+            constants.getPath(day, new getPathCallback() {
+                boolean newPath = false;
+                @Override
+                public void onCallback(ArrayList<PathItem> path) {
+                    System.out.println(day);
+                    if (newPath == false){
+                        LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+                        for (int i = path.size() - 1; i >= 0; i--) {
+                            PathItem p = path.get(i);
+                            LatLng temp = new LatLng(p.getLat(), p.getLon());
+                            Polyline line = mMap.addPolyline(new PolylineOptions()
+                                    .add(temp, lastCoordinates)
+                                    .width(10)
+                                    .color(Color.BLUE));
+                            lastCoordinates = temp;
+                            newPath = true;
+                        }
+                    }
+                }
+            });
+
+            constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
+                Marker currentMarker = null;
+                LatLng latestPosition = tempLocation;
+                @Override
+                public void onCurrentLocationChange() {
+                    if(currentMarker != null) {
+                        currentMarker.remove();
+                    }
+                    else {
+                        tempMarker.remove();
+                    }
+                    Polyline line = mMap.addPolyline(new PolylineOptions()
+                            .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                            .width(10)
+                            .color(Color.BLUE));
+
+                    latestPosition = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+                    currentMarker = mMap.addMarker(new MarkerOptions()
+                            .position(latestPosition)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    currentMarker.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latestPosition, 10f));
+                }
+
+            });
 
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
@@ -114,11 +160,37 @@ public class MapsFragment extends Fragment {
                 Marker mark = mMap.addMarker(
                         new MarkerOptions()
                                 .position(citypos)
-                                .title(cities.get(i).get_city_name()));
+                                .title(cities.get(i).get_city_name())
+                                .snippet("More info..."));
 
                 mark.showInfoWindow();
 
             }
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    if(!marker.getTitle().equals("Current Location"))
+                    {
+                        City loc = citiesMap.get(marker.getTitle());
+                        AlertDialog ad = new AlertDialog.Builder(getContext())
+                                .create();
+                        ad.setCancelable(false);
+                        ad.setTitle(loc.get_city_name());
+                        ad.setMessage("\nNew Cases: " + loc.get_new_cases() +
+                                "\nNew Deaths: " + loc.get_new_deaths()+
+                                "\nTotal Cases: "+ loc.get_total_cases() +
+                                "\nTotal Deaths: " + loc.get_total_deaths());
+                        ad.setButton("OK", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }
+                }
+            });
             // Create a heat map tile provider, passing it the latlngs of the police stations.
             HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                     .weightedData(latLngs)
@@ -129,7 +201,7 @@ public class MapsFragment extends Fragment {
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
         }
     };
 
