@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
@@ -39,17 +41,26 @@ interface mapFragmentListener {
     void fragmentReady();
 }
 
+interface permissionsListener {
+    void onPermissionsChange();
+}
+
 public class Constant {
+    //PERMISSION//
+    private static boolean permissionsGranted = false;
+    //DATA TINGS//
     private static String appId;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private static ArrayList<City> cities;
     private static String currentLocation;
-    private static boolean newLocation;
-    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
-    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static String lastLocation;
     private static Double current_lat;
     private static Double current_lon;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private static boolean newLocation;
+    //LISTENERS//
+    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
+    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
+    private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
     public Constant() { }
@@ -104,6 +115,18 @@ public class Constant {
         for(mapFragmentListener l: mapFragmentListeners) {
             l.fragmentReady();
         }
+    }
+
+    public void setPermissionsGranted(boolean b) {
+        permissionsGranted = b;
+
+        for(permissionsListener l: permissionsListeners) {
+            l.onPermissionsChange();
+        }
+    }
+
+    public void addPermissionListener(permissionsListener l) {
+        permissionsListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {

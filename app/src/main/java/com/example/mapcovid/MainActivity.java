@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.INTERNET
     };
-
     private static final int PERMISSION_CODE = 100;
 
     private static final String CHANNEL_ID = "moved location";
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     //function to check and request permissions
-    private boolean checkPermissions() {
+    public boolean checkPermissions() {
         List<String> permissions_needed = new ArrayList<String>();
         //check which permissions are granted
         for (String p : appPermissions) {
@@ -209,11 +208,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
             //all permissions are granted
             if (deniedCount == 0) {
+                constants.setPermissionsGranted(true);
                 //starts background location tracking
                 startLocationUpdates();
             }
             //check if all permissions are granted
             if (deniedCount != 0) {
+                constants.setPermissionsGranted(false);
                 for (Map.Entry<String, Integer> e : permissionResults.entrySet()) {
                     String permission_name = e.getKey();
                     int permission_result = e.getValue();
