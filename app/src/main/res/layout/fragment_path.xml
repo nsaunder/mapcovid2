@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,6 +9,7 @@
     <TextView
         android:id="@+id/header1"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
@@ -18,11 +18,12 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="40dp" />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/header2"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="430dp"
         android:layout_marginEnd="8dp"
@@ -31,8 +32,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="40dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -50,11 +50,11 @@
         android:id="@+id/numLocations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-black"
         android:layout_marginStart="100dp"
         android:layout_marginTop="28dp"
+        android:fontFamily="sans-serif-black"
+        android:text="---"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
         app:srcCompat="@drawable/path_top_container" />
@@ -64,11 +64,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="30dp"
         android:fontFamily="sans-serif-black"
         android:gravity="center"
-        android:text="Los Angeles"
+        android:text="---"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
@@ -79,24 +79,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Cities"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
         android:layout_marginStart="84dp"
         android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Cities"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
         app:srcCompat="@drawable/path_top_container" />
+
     <TextView
         android:id="@+id/days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Top City"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
         android:layout_marginStart="230dp"
         android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Top City"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
         app:srcCompat="@drawable/path_top_container" />
@@ -105,38 +106,38 @@
         android:id="@+id/datePicker"
         android:layout_width="240dp"
         android:layout_height="140dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="8dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
         android:spinnersShown="true"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/date_button"
-        android:layout_height="wrap_content"
-        android:text="Update Info"
         android:layout_width="200dp"
-        android:background="#FE947F"
-        android:textColor="@color/white"
-        android:layout_marginTop="360dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="110dp"
+        android:layout_marginTop="360dp"
         android:layout_marginEnd="8dp"
+        android:background="#FE947F"
+        android:onClick="setDate"
+        android:text="Update Info"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="setDate"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="413dp"
         android:layout_height="240dp"
-        android:layout_marginTop="440dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/header2"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:id="@+id/linear_layout"

@@ -35,12 +35,17 @@ interface getPathCallback {
     void onCallback(ArrayList<PathItem> path);
 }
 
+interface mapFragmentListener {
+    void fragmentReady();
+}
+
 public class Constant {
     private static String appId;
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static boolean newLocation;
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
+    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static String lastLocation;
     private static Double current_lat;
     private static Double current_lon;
@@ -89,6 +94,16 @@ public class Constant {
 
     public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
         currentLocationListeners.add(l);
+    }
+
+    public void addMapFragmentListener(mapFragmentListener l) {
+        mapFragmentListeners.add(l);
+    }
+
+    public void fragmentReady() {
+        for(mapFragmentListener l: mapFragmentListeners) {
+            l.fragmentReady();
+        }
     }
 
     public void setCurrentLat(Double lat) {

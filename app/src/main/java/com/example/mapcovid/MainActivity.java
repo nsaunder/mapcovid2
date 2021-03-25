@@ -121,6 +121,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //starts background location tracking
         startLocationUpdates();
+
+        //when MapsFragment is created, send signal that we received first location update 
+        constants.addMapFragmentListener(new mapFragmentListener() {
+            @Override
+            public void fragmentReady() {
+                constants.setNewLocation(true);
+            }
+        });
     }
 
     //launches next Activity after user selects 'Launch' button

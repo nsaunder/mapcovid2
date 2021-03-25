@@ -146,6 +146,9 @@ public class MapsFragment extends Fragment {
 
             });
 
+            //send signal to MainActivity that fragment is created and can handle first location update
+            constants.fragmentReady();
+
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.

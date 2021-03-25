@@ -89,44 +89,72 @@ public class HomeActivity extends AppCompatActivity {
         constants.getPath(day, new getPathCallback() {
                 boolean t = tf; //Make it only call once only when the above method is called
                 @Override
-                public void onCallback(ArrayList<PathItem> path) {
-                    if (t == false) {
-                        Set<String> visits = new HashSet<>();
-                        HashMap<String, Integer> map = new HashMap<>();
-                        int maxNum = 0;
-                        String popCity = "";
+                public void onCallback(ArrayList<PathItem> oldPath) {
+                    ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
 
-                        for (PathItem p : path) {
-                            TextView temp = new TextView(cc);
-                            temp.setGravity(Gravity.CENTER);
-                            temp.setText(p.getCity() + "------" + p.getTime());
-                            ll.addView(temp); //add view to linear layout
-
-                            visits.add(p.getCity());
-                            int count = map.getOrDefault(p.getCity(), 0);
-                            map.put(p.getCity(), count + 1);
-                            if (count + 1 > maxNum) {
-                                maxNum = count + 1;
-                                popCity = p.getCity();
-                            }
-                        }
-                        TextView numLoc = (TextView) findViewById(R.id.numLocations);
-                        TextView pop = (TextView) findViewById(R.id.popCity);
-                        if (numLoc == null || pop == null) {
-                            System.out.println(numLoc + " " + pop);
-                        } else {
-                            if (!visits.isEmpty() && !map.isEmpty()) {
-                                numLoc.setText((visits.size() + ""));
-                                pop.setText(popCity);
-                            } else {
-                                numLoc.setText("0");
-                                pop.setText("---");
-                            }
-                        }
+                    if(path.size() == 0) {
+                        ll.removeAllViews();
                     }
-                    t = true;
+                    else {
+                        if (t == false) {
+                            Set<String> visits = new HashSet<>();
+                            HashMap<String, Integer> map = new HashMap<>();
+                            int maxNum = 0;
+                            String popCity = "";
+
+                            for (PathItem p : path) {
+                                TextView temp = new TextView(cc);
+                                temp.setGravity(Gravity.CENTER);
+                                temp.setText(p.getCity() + "------" + p.getTime());
+                                ll.addView(temp); //add view to linear layout
+
+                                visits.add(p.getCity());
+                                int count = map.getOrDefault(p.getCity(), 0);
+                                map.put(p.getCity(), count + 1);
+                                if (count + 1 > maxNum) {
+                                    maxNum = count + 1;
+                                    popCity = p.getCity();
+                                }
+                            }
+                            TextView numLoc = (TextView) findViewById(R.id.numLocations);
+                            TextView pop = (TextView) findViewById(R.id.popCity);
+                            if (numLoc == null || pop == null) {
+                                System.out.println(numLoc + " " + pop);
+                            } else {
+                                if (!visits.isEmpty() && !map.isEmpty()) {
+                                    numLoc.setText((visits.size() + ""));
+                                    pop.setText(popCity);
+                                } else {
+                                    numLoc.setText("0");
+                                    pop.setText("---");
+                                }
+                            }
+                        }
+                        t = true;
+                    }
                 }
         });
+    }
+
+    public ArrayList<PathItem> removeConsecutiveDuplicates(ArrayList<PathItem> p) {
+        //if path is empty or only contains one city, no need to remove anything
+        if(p.size() <= 1) {
+            return p;
+        }
+
+        ArrayList<PathItem> toDelete = new ArrayList<PathItem>();
+        PathItem prevCity = p.get(0);
+        for(int i=1; i < p.size(); i++) {
+            //if current city and prev city are same city, then add current city to list of cities to delete
+            if(p.get(i).getCity().compareTo(prevCity.getCity()) == 0) {
+                toDelete.add(p.get(i));
+            }
+            prevCity = p.get(i);
+        }
+
+        //remove all cities marked to be deleted from p
+        p.removeAll(toDelete);
+        return p;
     }
 
     //when user clicks on button, deletes all path data for user from firebase
