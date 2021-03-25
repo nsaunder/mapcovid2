@@ -2,10 +2,13 @@ package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,8 +56,8 @@ public class MapsFragment extends Fragment {
     private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
     private Constant constants;
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
     private GoogleMap mMap;
+    private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -134,12 +137,37 @@ public class MapsFragment extends Fragment {
             });
 
             ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+
+            System.out.println(constants.getPermissionsGranted()+"--");
+            if(!constants.getPermissionsGranted()) {
+                button.setVisibility(View.VISIBLE);
+            }
+            else {
+                button.setVisibility(View.GONE);
+            }
+
+
             button.setOnClickListener(new View.OnClickListener()
             {
+                Marker marky = null;
                 @Override
                 public void onClick(View v)
                 {
+                    if(marky != null) {
+                        marky.remove();
+                    }
+                    marky = markerPlace(false);
+                }
+            });
 
+            constants.addPermissionListener(new permissionsListener() {
+                @Override
+                public void onPermissionsChange() {
+                    System.out.println(constants.getPermissionsGranted()+"--");
+                    if(constants.getPermissionsGranted() == false)
+                        button.setVisibility(View.VISIBLE);
+                    else
+                        button.setVisibility(View.GONE);
                 }
             });
 
@@ -147,27 +175,6 @@ public class MapsFragment extends Fragment {
 
 //            View b = findViewById(R.id.button);
 //b.setVisibility(View.GONE);
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-            {
-                Marker currentLocation = null;
-                @Override
-                public void onMapClick(LatLng arg0)
-                {
-                    System.out.println(constants.getPermissionsGranted());
-                    System.out.println(arg0);
-                    if(!constants.getPermissionsGranted()) {
-                        if (currentLocation != null) {
-                            currentLocation.remove();
-                        }
-                        currentLocation = mMap.addMarker(new MarkerOptions()
-                                .position(arg0)
-                                .title("Current Location")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                        currentLocation.showInfoWindow();
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
-                    }
-                }
-            });
 
 
             List<City> cities = null;
@@ -278,8 +285,29 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    public void markerPlace(View view){
-
+    public Marker markerPlace(final boolean tf){
+        final Marker[] marky = {null};
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            Marker currentLocation = null;
+            boolean placeOnce = tf;
+            @Override
+            public void onMapClick(LatLng arg0) {
+                if (placeOnce == false) {
+                    if (currentLocation != null) {
+                        currentLocation.remove();
+                    }
+                    currentLocation = mMap.addMarker(new MarkerOptions()
+                            .position(arg0)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    currentLocation.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
+                    marky[0] = currentLocation;
+                    placeOnce = true;
+                }
+            }
+        });
+        return marky[0];
     }
 
 }
