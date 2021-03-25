@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                         checkPermissions();
                                     }
                                 },
-                                "No, Exit App",
+                                "No, continue...",
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog_interface, int i) {
