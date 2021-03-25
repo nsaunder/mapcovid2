@@ -149,6 +149,8 @@ public class TestingFragment extends Fragment {
             constants.fragmentReady();
 
 
+            //
+
 
 
 
@@ -221,6 +223,7 @@ public class TestingFragment extends Fragment {
                     }
                     }
             });
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
 
