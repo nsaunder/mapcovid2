@@ -9,12 +9,14 @@ Build instructions:
 7. Now press the green triangle button in the top left to begin running the application (The project may take a few minutes please wait until it loads)
 8. Give the application location permissions
 9. Click continue anyways when prompted to change settings
-10. Click launch (You may recieve a runtime error on this first try)
+10. Click launch (You may receive a runtime error on this first try)
 10b. If you receive a runtime error, please repeat steps 7 through 10. This is a bug, and it fixes itself upon 
 	 recompiling once or twice.
 
 Errors that may occur when compiling:
-	1. Something about SDK location: go to local.properties and enter the correct path to your mapcovid
+	1. Something about SDK location: go to local.properties and enter the correct path to your mapcovid (remove the quotations)
+	    -C\:\\Users\\"YOUR USERNAME"\\AppData\\Local\\Android\\Sdk <-Windows
+	    - /"YOUR USEERNAME"/nicksaunders/Library/Android/sdk   <- Mac
 	2. Anything else: Delete the orange '.gradle' folder and the orange 'build' folder
 	3. If those don't work contact team 16 please
 
