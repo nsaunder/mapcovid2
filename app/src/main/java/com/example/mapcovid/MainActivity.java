@@ -208,13 +208,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
             //all permissions are granted
             if (deniedCount == 0) {
-                constants.setPermissionsGranted(true);
+                constants.setPermissionsGranted(getApplicationContext(),true);
                 //starts background location tracking
                 startLocationUpdates();
             }
             //check if all permissions are granted
             if (deniedCount != 0) {
-                constants.setPermissionsGranted(false);
+                constants.setPermissionsGranted(getApplicationContext(), false);
                 for (Map.Entry<String, Integer> e : permissionResults.entrySet()) {
                     String permission_name = e.getKey();
                     int permission_result = e.getValue();

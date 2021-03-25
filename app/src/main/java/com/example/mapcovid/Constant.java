@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -46,8 +47,8 @@ interface permissionsListener {
 }
 
 public class Constant {
-    //PERMISSION//
-    private static boolean permissionsGranted = false;
+    //PERMISSIONS//
+    private static boolean permissionsGranted;
     //DATA TINGS//
     private static String appId;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -75,6 +76,14 @@ public class Constant {
                 appId = s;
             }
         });
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //check permissions saved from last run
+        if(preferences.getBoolean("permissionsGranted", true)) {
+            setPermissionsGranted(context, true);
+        } else {
+            setPermissionsGranted(context, false);
+        }
     }
 
     public void set_cities(Context context) {
@@ -117,7 +126,11 @@ public class Constant {
         }
     }
 
-    public void setPermissionsGranted(boolean b) {
+    public void setPermissionsGranted(Context context, boolean b) {
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //set permissions to boolean 
+        preferences.edit().putBoolean("permissionsGranted", b).apply();
         permissionsGranted = b;
         for(permissionsListener l: permissionsListeners) {
             l.onPermissionsChange();
