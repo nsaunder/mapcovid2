@@ -41,6 +41,10 @@ interface mapFragmentListener {
     void fragmentReady();
 }
 
+interface permissionsListener {
+    void onPermissionsChange();
+}
+
 public class Constant {
     //PERMISSION//
     private static boolean permissionsGranted = false;
@@ -56,6 +60,7 @@ public class Constant {
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
+    private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
     public Constant() { }
@@ -114,6 +119,14 @@ public class Constant {
 
     public void setPermissionsGranted(boolean b) {
         permissionsGranted = b;
+
+        for(permissionsListener l: permissionsListeners) {
+            l.onPermissionsChange();
+        }
+    }
+
+    public void addPermissionListener(permissionsListener l) {
+        permissionsListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {
