@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return false;
         }
         //app has all permissions
+        System.out.println("--------------------------WTF!");
         //starts background location tracking
         startLocationUpdates();
-
         return true;
     }
 
@@ -206,6 +206,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     permissionResults.put(permissions[i], grantResults[i]);
                     deniedCount++;
                 }
+            }
+            //all permissions are granted
+            if(deniedCount == 0) {
+                //starts background location tracking
+                startLocationUpdates();
             }
             //check if all permissions are granted
             if (deniedCount != 0) {
