@@ -84,8 +84,10 @@ public class TestingFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
+            mMap.setMaxZoomPreference(7.0f);
             constants = new Constant();
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
+
             String day = LocalDate.now().toString();
             constants.getPath(day, new getPathCallback() {
                 boolean newPath = false;
@@ -141,7 +143,7 @@ public class TestingFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });

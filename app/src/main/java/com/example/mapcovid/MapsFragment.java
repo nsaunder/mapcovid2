@@ -65,6 +65,7 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
+            mMap.setMinZoomPreference(7.0f);
 
             constants = new Constant();
 
@@ -125,19 +126,33 @@ public class MapsFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });
 
             constants.fragmentReady();
 
-            constants.addPermissionListener(new permissionsListener() {
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+            {
+                Marker currentLocation = null;
                 @Override
-                public void onPermissionsChange() {
-                    
+                public void onMapClick(LatLng arg0)
+                {
+                    System.out.println(constants.getPermissionsGranted());
+                    System.out.println(arg0);
+                    if(!constants.getPermissionsGranted()) {
+                        if (currentLocation != null) {
+                            currentLocation.remove();
+                        }
+                        currentLocation = mMap.addMarker(new MarkerOptions()
+                                .position(arg0)
+                                .title("Current Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        currentLocation.showInfoWindow();
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
+                    }
                 }
-
             });
 
 
