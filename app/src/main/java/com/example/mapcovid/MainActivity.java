@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         checkPermissions();
 
         //starts background location tracking
-        startLocationUpdates();
+        //startLocationUpdates();
 
         //when MapsFragment is created, send signal that we received first location update 
         constants.addMapFragmentListener(new mapFragmentListener() {
@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return false;
         }
         //app has all permissions
+        System.out.println("Work please");
+        startLocationUpdates();
+
         return true;
     }
 
@@ -228,14 +231,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                     @Override
                                     public void onClick(DialogInterface dialog_interface, int i) {
                                         dialog_interface.dismiss();
-                                        finish();
+                                        //finish();
                                     }
                                 }, false
                         );
                     }
                     //permission is denied and never ask again is checked
                     //shouldShowRequestPermissionRationale will return false
-                    else {
+                    /*else {
                         showDialog("",
                                 "You have denied some permissions. Allow permissions at [Setting] -> [Permissions]",
                                 "Go to Settings",
@@ -255,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 }, false
                         );
                         break;
-                    }
+                    }*/
                 }
             }
         }
