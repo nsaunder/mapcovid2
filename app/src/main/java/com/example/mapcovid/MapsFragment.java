@@ -69,84 +69,67 @@ public class MapsFragment extends Fragment {
             constants = new Constant();
 
             HashMap<String, City> citiesMap = new HashMap<>();
-            // Add a marker in Sydney and move the camera
-            LatLng tempLocation = null;
-            Marker tempMarker = null;
-
-            if(constants.getCurrentLat() != null) {
-                tempLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
-
-
-                tempMarker = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(tempLocation)
-                                .title("Current Location")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                tempMarker.showInfoWindow();
-            }
-
-            LatLng tt = tempLocation;
-            Marker tm = tempMarker;
-
 
             String day = LocalDate.now().toString();
             constants.getPath(day, new getPathCallback() {
                 boolean newPath = false;
                 @Override
                 public void onCallback(ArrayList<PathItem> path) {
-                    System.out.println(day);
-                    try {
-                        if (newPath == false) {
-                            LatLng lastCoordinates = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    if(path != null) {
+                        try {
+                            if (newPath == false) {
+                                LatLng lastCoordinates = new LatLng(path.get(path.size() - 1).getLat(), path.get(path.size() - 1).getLon());
 
-                            for (int i = path.size() - 1; i >= 0; i--) {
-                                PathItem p = path.get(i);
-                                LatLng temp = new LatLng(p.getLat(), p.getLon());
-                                Polyline line = mMap.addPolyline(new PolylineOptions()
-                                        .add(temp, lastCoordinates)
-                                        .width(10)
-                                        .color(Color.BLUE));
-                                lastCoordinates = temp;
+                                for (int i = path.size() - 2; i >= 0; i--) {
+                                    PathItem p = path.get(i);
+                                    LatLng temp = new LatLng(p.getLat(), p.getLon());
+                                    Polyline line = mMap.addPolyline(new PolylineOptions()
+                                            .add(temp, lastCoordinates)
+                                            .width(10)
+                                            .color(Color.BLUE));
+                                    lastCoordinates = temp;
+                                }
                                 newPath = true;
                             }
+                        } catch (Exception e) {
+                            System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
                         }
-                    } catch (Exception e){
-                        System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
                     }
                 }
             });
+            //Original: constants.getCurrentLat() would return null causing app to crash
+            //This was because we called ^ before we fetched first location...
+            //Fixed by moving the currentlocation code to here and adding a line in mainactivity so the listner knows to fetch first location
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
-                Marker currentMarker = null;
-                LatLng latestPosition = tt;
+                Marker lastMarker = null;
+                LatLng lastLocation = null;
 
-                    @Override
-                    public void onCurrentLocationChange() {
-                        if (currentMarker != null) {
-                            currentMarker.remove();
-                        } else {
-                            tm.remove();
-                        }
-                        if(latestPosition != null) {
-                            Polyline line = mMap.addPolyline(new PolylineOptions()
-                                    .add(latestPosition, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                                    .width(10)
-                                    .color(Color.BLUE));
-                        }
-
-                        latestPosition = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
-
-                        currentMarker = mMap.addMarker(new MarkerOptions()
-                                .position(latestPosition)
-                                .title("Current Location")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                        currentMarker.showInfoWindow();
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latestPosition, 10f));
+                @Override
+                public void onCurrentLocationChange() {
+                    //If lastLocation is not null then remove lastlocation
+                    //Otherwise create a "current Location"
+                    //Follow same logic
+                    if (lastMarker != null) {   //If there exists a last location
+                        lastMarker.remove();
+                        Polyline line = mMap.addPolyline(new PolylineOptions()
+                                .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                                .width(10)
+                                .color(Color.BLUE));
                     }
+
+                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    lastMarker = mMap.addMarker(new MarkerOptions()
+                            .position(lastLocation)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    lastMarker.showInfoWindow();
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                }
 
             });
 
-            //send signal to MainActivity that fragment is created and can handle first location update
             constants.fragmentReady();
 
             List<City> cities = null;
@@ -219,11 +202,7 @@ public class MapsFragment extends Fragment {
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-            if(tempLocation != null){
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 10f));
-            }else {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(34, -118), 10f));
-            }
+
         }
     };
 

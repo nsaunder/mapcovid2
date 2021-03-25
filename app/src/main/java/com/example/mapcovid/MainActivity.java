@@ -231,14 +231,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                     @Override
                                     public void onClick(DialogInterface dialog_interface, int i) {
                                         dialog_interface.dismiss();
-                                        finish();
+                                        //finish();
                                     }
                                 }, false
                         );
                     }
                     //permission is denied and never ask again is checked
                     //shouldShowRequestPermissionRationale will return false
-                    else {
+                    /*else {
                         showDialog("",
                                 "You have denied some permissions. Allow permissions at [Setting] -> [Permissions]",
                                 "Go to Settings",
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 }, false
                         );
                         break;
-                    }
+                    }*/
                 }
             }
         }
