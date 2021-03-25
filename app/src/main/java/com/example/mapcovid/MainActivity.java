@@ -74,12 +74,13 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    //list of all permissions we need for app
-    String[] appPermissions = {
+    String [] appPermissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            Manifest.permission.INTERNET
     };
+
     private static final int PERMISSION_CODE = 100;
+
     private static final String CHANNEL_ID = "moved location";
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient googleApiClient;
@@ -116,13 +117,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //create notification channel
         createNotificationChannel();
 
-        //check and request permission for fine location and background location
+        //check and request permission for fine location, background location, and internet
         checkPermissions();
 
-        //starts background location tracking
-        startLocationUpdates();
-
-        //when MapsFragment is created, send signal that we received first location update 
+        //when MapsFragment is created, send signal that we received first location update
         constants.addMapFragmentListener(new mapFragmentListener() {
             @Override
             public void fragmentReady() {
@@ -171,19 +169,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     //function to check and request permissions
     private boolean checkPermissions() {
-        List<String> permissions_needed = new ArrayList<>();
+        List<String> permissions_needed = new ArrayList<String>();
         //check which permissions are granted
         for (String p : appPermissions) {
             if (ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
+                System.out.println("----------------------------" + p + " DENIED!");
                 permissions_needed.add(p);
             }
         }
         //ask for non-granted permissions
         if (!permissions_needed.isEmpty()) {
+            System.out.println("----------------------------PERMISSIONS DENIED");
             ActivityCompat.requestPermissions(this, permissions_needed.toArray(new String[permissions_needed.size()]), PERMISSION_CODE);
             return false;
         }
         //app has all permissions
+        //starts background location tracking
+        startLocationUpdates();
+
         return true;
     }
 
