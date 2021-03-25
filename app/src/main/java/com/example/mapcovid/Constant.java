@@ -161,6 +161,8 @@ public class Constant {
         return lastLocation;
     }
 
+    public boolean getPermissionsGranted() { return permissionsGranted; }
+
     public City get_city(String city) {
         for(City c: cities) {
             if(c.get_city_name().compareTo(city) == 0) {
