@@ -5,4 +5,16 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsFragment" />
+    tools:context=".MapsFragment">
+
+    <ImageButton
+        android:id="@+id/markerbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/marker_button"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="20dp"
+        />
+
+</fragment>

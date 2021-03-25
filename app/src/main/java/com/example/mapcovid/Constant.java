@@ -119,7 +119,6 @@ public class Constant {
 
     public void setPermissionsGranted(boolean b) {
         permissionsGranted = b;
-
         for(permissionsListener l: permissionsListeners) {
             l.onPermissionsChange();
         }

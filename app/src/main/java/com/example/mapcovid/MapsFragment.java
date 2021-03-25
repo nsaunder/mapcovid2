@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,7 +54,7 @@ public class MapsFragment extends Fragment {
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
     private Constant constants;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
+    private GoogleMap mMap;
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -64,7 +66,7 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            GoogleMap mMap = googleMap;
+            mMap = googleMap;
             mMap.setMinZoomPreference(7.0f);
 
             constants = new Constant();
@@ -131,8 +133,20 @@ public class MapsFragment extends Fragment {
 
             });
 
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+
             constants.fragmentReady();
 
+//            View b = findViewById(R.id.button);
+//b.setVisibility(View.GONE);
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {
                 Marker currentLocation = null;
@@ -264,5 +278,8 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    public void markerPlace(View view){
+
+    }
 
 }
