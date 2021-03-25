@@ -132,6 +132,15 @@ public class MapsFragment extends Fragment {
 
             constants.fragmentReady();
 
+            constants.addPermissionListener(new permissionsListener() {
+                @Override
+                public void onPermissionsChange() {
+                    
+                }
+
+            });
+
+
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
