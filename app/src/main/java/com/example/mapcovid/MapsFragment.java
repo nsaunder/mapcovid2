@@ -2,15 +2,21 @@ package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,8 +57,9 @@ public class MapsFragment extends Fragment {
     private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
     private Constant constants;
+    private GoogleMap mMap;
+    private Marker marky;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -64,7 +71,8 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            GoogleMap mMap = googleMap;
+            mMap = googleMap;
+            mMap.setMinZoomPreference(7.0f);
 
             constants = new Constant();
 
@@ -125,12 +133,49 @@ public class MapsFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });
 
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+
+            System.out.println(constants.getPermissionsGranted()+"--");
+            if(!constants.getPermissionsGranted()) {
+                button.setVisibility(View.VISIBLE);
+            }
+            else {
+                button.setVisibility(View.GONE);
+            }
+
+
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    System.out.println("Hi");
+                    markerPlace(false);
+                }
+
+            });
+
+            constants.addPermissionListener(new permissionsListener() {
+                @Override
+                public void onPermissionsChange() {
+                    System.out.println(constants.getPermissionsGranted()+"--");
+                    if(constants.getPermissionsGranted() == false)
+                        button.setVisibility(View.VISIBLE);
+                    else
+                        button.setVisibility(View.GONE);
+                }
+            });
+
             constants.fragmentReady();
+
+//            View b = findViewById(R.id.button);
+//b.setVisibility(View.GONE);
+
 
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
@@ -202,11 +247,11 @@ public class MapsFragment extends Fragment {
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
 
-    private List<City> readItems(String filename) throws JSONException, IOException {
+    public List<City> readItems(String filename) throws JSONException, IOException {
         List<City> cities = new ArrayList<>();
         try {
             InputStream is = getContext().getAssets().open("city_data.json");
@@ -240,5 +285,27 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    public void markerPlace(final boolean tf){
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            boolean placeOnce = tf;
+            @Override
+            public void onMapClick(LatLng arg0) {
+                if (placeOnce == false) {
+                    if(marky != null)
+                        marky.remove();
+                    marky = mMap.addMarker(new MarkerOptions()
+                            .position(arg0)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    marky.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
+                    placeOnce = true;
+
+
+                }
+            }
+
+        });
+    }
 
 }

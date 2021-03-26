@@ -81,7 +81,6 @@ public class HomeActivity extends AppCompatActivity {
                 getInfo(date, cc, ll, false);
                 tf = true;
             }
-            System.out.println("finished");
         }
     }
 
@@ -91,9 +90,19 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onCallback(ArrayList<PathItem> oldPath) {
                     ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
+                    TextView numLoc = (TextView) findViewById(R.id.numLocations);
+                    TextView pop = (TextView) findViewById(R.id.popCity);
 
                     if(path.size() == 0) {
                         ll.removeAllViews();
+                        if(numLoc != null && pop != null){
+                            numLoc.setText("0");
+                            pop.setText("N/A");
+                        }
+                        TextView nolocations = new TextView(cc);
+                        nolocations.setGravity(Gravity.CENTER);
+                        nolocations.setText("No path available.");
+                        ll.addView(nolocations);
                     }
                     else {
                         if (t == false) {
@@ -116,11 +125,6 @@ public class HomeActivity extends AppCompatActivity {
                                     popCity = p.getCity();
                                 }
                             }
-                            TextView numLoc = (TextView) findViewById(R.id.numLocations);
-                            TextView pop = (TextView) findViewById(R.id.popCity);
-                            if (numLoc == null || pop == null) {
-                                System.out.println(numLoc + " " + pop);
-                            } else {
                                 if (!visits.isEmpty() && !map.isEmpty()) {
                                     numLoc.setText((visits.size() + ""));
                                     pop.setText(popCity);
@@ -132,7 +136,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         t = true;
                     }
-                }
+
         });
     }
 

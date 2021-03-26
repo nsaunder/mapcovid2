@@ -134,7 +134,6 @@ public class Constant {
         //set permissions to boolean
         preferences.edit().putBoolean("permissionsGranted", b).apply();
         permissionsGranted = b;
-
         for(permissionsListener l: permissionsListeners) {
             l.onPermissionsChange();
         }

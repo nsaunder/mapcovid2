@@ -84,8 +84,10 @@ public class TestingFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
+            mMap.setMaxZoomPreference(7.0f);
             constants = new Constant();
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
+
             String day = LocalDate.now().toString();
             constants.getPath(day, new getPathCallback() {
                 boolean newPath = false;
@@ -141,13 +143,15 @@ public class TestingFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });
 
             constants.fragmentReady();
 
+
+            //
 
 
 
@@ -221,6 +225,7 @@ public class TestingFragment extends Fragment {
                     }
                     }
             });
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
 
@@ -232,7 +237,7 @@ public class TestingFragment extends Fragment {
                             "\nDirections: www.google.com");
         info.onCreateDialog(new Bundle());
     }*/
-    private List<TestingLocation> readItems(String filename) throws JSONException, IOException {
+    public List<TestingLocation> readItems(String filename) throws JSONException, IOException {
         List<TestingLocation> result = new ArrayList<>();
         InputStream inputStream = getContext().getAssets().open(filename);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
