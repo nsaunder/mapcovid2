@@ -1,0 +1,226 @@
+[
+	{
+		"testing_location_name": "Edendale Library - Echo Park",
+		"lat": 34.078850,
+		"longitude": -118.262250,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "LA Union Station",
+		"lat": 34.055870,
+		"longitude": -118.236650,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "Angeles Community Health Center - Los Angeles",
+		"lat": 34.263730,
+		"longitude": -119.076710,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "Center for Community Health - JWCH Institute, Inc. Medical Clinic",
+		"lat": 34.043590,
+		"longitude": -118.244250,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "Beach Cities Health District",
+		"lat": 33.85304,
+		"longitude": -118.37937,
+		"walk_up" : false,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "MLK Medical Campus",
+		"lat": 33.922037,
+		"longitude": -118.23915,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "Southern California Medical Center - Long Beach",
+		"lat": 33.78261,
+		"longitude": -118.17127,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Providence Wellness & Activity Center",
+		"lat": 33.7744,
+		"longitude": -118.27639,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "CVS - Lomita",
+		"lat": 33.78892,
+		"longitude": -118.32039,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "City of Carson - Carson Community Center",
+		"lat": 33.83175,
+		"longitude": -118.26096	,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Rite-Aid Gardena",
+		"lat": 33.892333,
+		"longitude": -118.296416,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "CVS - Hermosa Beach",
+		"lat": 33.85633,
+		"longitude": -118.3906,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Wesley Health Centers - Lancaster",
+		"lat": 34.70246,
+		"longitude": -118.14812,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Pomona Fairplex Gate 17",
+		"lat": 34.08094,
+		"longitude": 117.76655,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Palmdale Hammack Center",
+		"lat": 	34.58209,
+		"longitude": -118.11483,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "East LA College",
+		"lat": 34.03886,
+		"longitude": -118.14791,
+		"walk_up" : true,
+		"drive_up" : false 
+	}, 
+	{
+		"testing_location_name": "Exposition Park",
+		"lat": 34.010916,
+		"longitude": -118.287239,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "High Desert Regional Health Center - DHS",
+		"lat": 34.70405,
+		"longitude": -118.124776,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "ChapCare Pasadena",
+		"lat": 34.17329,
+		"longitude": -118.13206,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "Hawthorne Memorial Center - Betty Ainsworth Sports Center",
+		"lat": 33.91642,
+		"longitude": -118.3407,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "The Forum",
+		"lat": 33.95991,
+		"longitude": -118.34181,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Mt. Moriah Baptist Church ",
+		"lat": 34.00568,
+		"longitude": -118.28274,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Pierce College",
+		"lat": 34.18645,
+		"longitude": -118.61462,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "CVS - Alhambra",
+		"lat": 34.0989,
+		"longitude": -118.11809,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "CVS - Arcadia",
+		"lat": 34.10706,
+		"longitude": -118.03741,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Montebello Civic Center",
+		"lat": 34.01943,
+		"longitude": -118.11633,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Comprehensive Community Health Centers, Inc. Glendale",
+		"lat": 34.01943,
+		"longitude": -118.11633,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "CVS - Huntington Park",
+		"lat": 33.97222,
+		"longitude": -118.21019,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Kedren Community Health Center",
+		"lat": 34.00721,
+		"longitude": -118.26528,
+		"walk_up" : true,
+		"drive_up" : false
+	}, 
+	{
+		"testing_location_name": "CVS - Torrance",
+		"lat": 33.813333,
+		"longitude": -118.298637,
+		"walk_up" : false,
+		"drive_up" : true
+	}, 
+	{
+		"testing_location_name": "Venice Family Clinic - Simms/Mann Health and Wellness Center",
+		"lat": 33.813333,
+		"longitude": -118.298637,
+		"walk_up" : false,
+		"drive_up" : true
+	},
+	{
+		"testing_location_name": "Wesley Health Centers - Downey",
+		"lat": 33.93729,
+		"longitude": -118.12892,
+		"walk_up" : true,
+		"drive_up" : false
+	}
+]

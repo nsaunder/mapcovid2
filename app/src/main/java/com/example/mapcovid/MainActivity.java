@@ -18,6 +18,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -73,18 +74,18 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    //list of all permissions we need for app
     String[] appPermissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            Manifest.permission.INTERNET
     };
     private static final int PERMISSION_CODE = 100;
+
     private static final String CHANNEL_ID = "moved location";
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient googleApiClient;
 
     private LocationRequest locationRequest;
-    private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
+    private long UPDATE_INTERVAL = 10 * 1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
 
     private Constant constants;
@@ -95,7 +96,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //get shared preferences
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("my_preferences", MODE_PRIVATE);
+        //check if onboarding_complete is false
+        if (!preferences.getBoolean("onboarding_complete", false)) {
+            //start onboarding activity
+            Intent onboarding = new Intent(this, OnboardingActivity.class);
+            startActivity(onboarding);
+            //close main activity
+            finish();
+            return;
+        }
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
 
@@ -105,11 +116,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //create notification channel
         createNotificationChannel();
 
-        //check and request permission for fine location and background location
+        //check and request permission for fine location, background location, and internet
         checkPermissions();
 
-        //starts background location tracking
-        startLocationUpdates();
+        //make sure permissions are granted before sending signal of first location update when MapFragment is created
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            constants.addMapFragmentListener(new mapFragmentListener() {
+                @Override
+                public void fragmentReady() {
+                    constants.setNewLocation(true);
+                }
+            });
+        }
     }
 
     //launches next Activity after user selects 'Launch' button
@@ -133,14 +152,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //create notification channel to push notifications to user
     private void createNotificationChannel() {
         //create the notification channel, but only in API 26+
-        if(Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) {
             CharSequence name = getString(R.string.common_google_play_services_notification_channel_name);
             String description = "notification channel for moving location notifications";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             channel.setShowBadge(true);
-            channel.setLightColor(Color.rgb(255,153,132));
+            channel.setLightColor(Color.rgb(255, 153, 132));
             channel.getLockscreenVisibility();
             channel.enableVibration(true);
 
@@ -151,8 +170,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     //function to check and request permissions
-    private boolean checkPermissions() {
-        List<String> permissions_needed = new ArrayList<>();
+    public boolean checkPermissions() {
+        List<String> permissions_needed = new ArrayList<String>();
         //check which permissions are granted
         for (String p : appPermissions) {
             if (ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_DENIED) {
@@ -165,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return false;
         }
         //app has all permissions
+        //starts background location tracking
+        startLocationUpdates();
         return true;
     }
 
@@ -185,8 +206,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     deniedCount++;
                 }
             }
+            //all permissions are granted
+            if (deniedCount == 0) {
+                constants.setPermissionsGranted(getApplicationContext(),true);
+                //starts background location tracking
+                startLocationUpdates();
+            }
             //check if all permissions are granted
             if (deniedCount != 0) {
+                constants.setPermissionsGranted(getApplicationContext(), false);
                 for (Map.Entry<String, Integer> e : permissionResults.entrySet()) {
                     String permission_name = e.getKey();
                     int permission_result = e.getValue();
@@ -204,12 +232,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                         checkPermissions();
                                     }
                                 },
-                                "No, Exit App",
+                                "No, Continue",
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog_interface, int i) {
                                         dialog_interface.dismiss();
-                                        finish();
+                                        //finish();
                                     }
                                 }, false
                         );
@@ -243,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     //trigger new location updates at interval
-    @SuppressLint("MissingPermission")
     protected void startLocationUpdates() {
         //create the location request to start receiving location updates
         locationRequest = new LocationRequest();
@@ -260,7 +287,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
+        //if permissions denied, check permissions and request permissions before proceeding
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            checkPermissions();
+            return;
+        }
 
         //gets current location and handles storing location changes to display in user path
         getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
@@ -274,8 +307,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
 
-                if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
-                    if(lastLocation != null) {
+                if (currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
+                    if (lastLocation != null) {
                         createNotification();
                         constants.setNewLocation(true);
                     }
@@ -307,21 +340,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
 
-            if(city != null) {
+            if (city != null) {
                 //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
                 constants.setCurrentLat(location.getLatitude());
                 constants.setCurrentLon(location.getLongitude());
             }
-        } catch(IOException ioe) {
-            Log.d(TAG, ioe+"    -   Couldn't retrieve city from updated location coordinates");
+        } catch (IOException ioe) {
+            Log.d(TAG, ioe + "    -   Couldn't retrieve city from updated location coordinates");
         }
     }
 
-    @SuppressLint("MissingPermission")
     private void getLastLocation() {
+        //if permissions denied, check permissions and request permissions before proceeding
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            checkPermissions();
+            return;
+        }
+
         //get last known recent location
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+
         Task<Location> prevLocation = locationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -330,8 +370,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         double lon = location.getLongitude();
                         try {
                             String city = getCityByCoordinates(lat, lon);
-                            if(city != null) constants.setLastLocation(city);
-                        } catch(IOException ioe) {
+                            if (city != null) constants.setLastLocation(city);
+                        } catch (IOException ioe) {
                             Log.d(TAG, ioe + "  -  getLastLocation() failed");
                         }
 

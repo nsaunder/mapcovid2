@@ -21,7 +21,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -35,16 +38,30 @@ interface getPathCallback {
     void onCallback(ArrayList<PathItem> path);
 }
 
+interface mapFragmentListener {
+    void fragmentReady();
+}
+
+interface permissionsListener {
+    void onPermissionsChange();
+}
+
 public class Constant {
+    //PERMISSIONS//
+    private static boolean permissionsGranted;
+    //DATA TINGS//
     private static String appId;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private static ArrayList<City> cities;
     private static String currentLocation;
-    private static boolean newLocation;
-    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static String lastLocation;
     private static Double current_lat;
     private static Double current_lon;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private static boolean newLocation;
+    //LISTENERS//
+    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
+    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
+    private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
     public Constant() { }
@@ -59,6 +76,14 @@ public class Constant {
                 appId = s;
             }
         });
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //check permissions saved from last run
+        if(preferences.getBoolean("permissionsGranted", true)) {
+            setPermissionsGranted(context, true);
+        } else {
+            setPermissionsGranted(context, false);
+        }
     }
 
     public void set_cities(Context context) {
@@ -89,6 +114,31 @@ public class Constant {
 
     public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
         currentLocationListeners.add(l);
+    }
+
+    public void addMapFragmentListener(mapFragmentListener l) {
+        mapFragmentListeners.add(l);
+    }
+
+    public void fragmentReady() {
+        for(mapFragmentListener l: mapFragmentListeners) {
+            l.fragmentReady();
+        }
+    }
+
+    public void setPermissionsGranted(Context context, boolean b) {
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //set permissions to boolean 
+        preferences.edit().putBoolean("permissionsGranted", b).apply();
+        permissionsGranted = b;
+        for(permissionsListener l: permissionsListeners) {
+            l.onPermissionsChange();
+        }
+    }
+
+    public void addPermissionListener(permissionsListener l) {
+        permissionsListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {
@@ -122,6 +172,8 @@ public class Constant {
     public String getLastLocation() {
         return lastLocation;
     }
+
+    public boolean getPermissionsGranted() { return permissionsGranted; }
 
     public City get_city(String city) {
         for(City c: cities) {

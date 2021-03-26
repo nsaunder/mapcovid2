@@ -2,12 +2,15 @@ package com.example.mapcovid;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
@@ -78,7 +81,6 @@ public class HomeActivity extends AppCompatActivity {
                 getInfo(date, cc, ll, false);
                 tf = true;
             }
-            System.out.println("finished");
         }
     }
 
@@ -86,44 +88,77 @@ public class HomeActivity extends AppCompatActivity {
         constants.getPath(day, new getPathCallback() {
                 boolean t = tf; //Make it only call once only when the above method is called
                 @Override
-                public void onCallback(ArrayList<PathItem> path) {
-                    if (t == false) {
-                        Set<String> visits = new HashSet<>();
-                        HashMap<String, Integer> map = new HashMap<>();
-                        int maxNum = 0;
-                        String popCity = "";
+                public void onCallback(ArrayList<PathItem> oldPath) {
+                    ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
+                    TextView numLoc = (TextView) findViewById(R.id.numLocations);
+                    TextView pop = (TextView) findViewById(R.id.popCity);
 
-                        for (PathItem p : path) {
-                            TextView temp = new TextView(cc);
-                            temp.setGravity(Gravity.CENTER);
-                            temp.setText(p.getCity() + "------" + p.getTime());
-                            ll.addView(temp); //add view to linear layout
-
-                            visits.add(p.getCity());
-                            int count = map.getOrDefault(p.getCity(), 0);
-                            map.put(p.getCity(), count + 1);
-                            if (count + 1 > maxNum) {
-                                maxNum = count + 1;
-                                popCity = p.getCity();
-                            }
+                    if(path.size() == 0) {
+                        ll.removeAllViews();
+                        if(numLoc != null && pop != null){
+                            numLoc.setText("0");
+                            pop.setText("N/A");
                         }
-                        TextView numLoc = (TextView) findViewById(R.id.numLocations);
-                        TextView pop = (TextView) findViewById(R.id.popCity);
-                        if (numLoc == null || pop == null) {
-                            System.out.println(numLoc + " " + pop);
-                        } else {
-                            if (!visits.isEmpty() && !map.isEmpty()) {
-                                numLoc.setText((visits.size() + ""));
-                                pop.setText(popCity);
-                            } else {
-                                numLoc.setText("0");
-                                pop.setText("---");
-                            }
-                        }
+                        TextView nolocations = new TextView(cc);
+                        nolocations.setGravity(Gravity.CENTER);
+                        nolocations.setText("No path available.");
+                        ll.addView(nolocations);
                     }
-                    t = true;
-                }
+                    else {
+                        if (t == false) {
+                            Set<String> visits = new HashSet<>();
+                            HashMap<String, Integer> map = new HashMap<>();
+                            int maxNum = 0;
+                            String popCity = "";
+
+                            for (PathItem p : path) {
+                                TextView temp = new TextView(cc);
+                                temp.setGravity(Gravity.CENTER);
+                                temp.setText(p.getCity() + "------" + p.getTime());
+                                ll.addView(temp); //add view to linear layout
+
+                                visits.add(p.getCity());
+                                int count = map.getOrDefault(p.getCity(), 0);
+                                map.put(p.getCity(), count + 1);
+                                if (count + 1 > maxNum) {
+                                    maxNum = count + 1;
+                                    popCity = p.getCity();
+                                }
+                            }
+                                if (!visits.isEmpty() && !map.isEmpty()) {
+                                    numLoc.setText((visits.size() + ""));
+                                    pop.setText(popCity);
+                                } else {
+                                    numLoc.setText("0");
+                                    pop.setText("---");
+                                }
+                            }
+                        }
+                        t = true;
+                    }
+
         });
+    }
+
+    public ArrayList<PathItem> removeConsecutiveDuplicates(ArrayList<PathItem> p) {
+        //if path is empty or only contains one city, no need to remove anything
+        if(p.size() <= 1) {
+            return p;
+        }
+
+        ArrayList<PathItem> toDelete = new ArrayList<PathItem>();
+        PathItem prevCity = p.get(0);
+        for(int i=1; i < p.size(); i++) {
+            //if current city and prev city are same city, then add current city to list of cities to delete
+            if(p.get(i).getCity().compareTo(prevCity.getCity()) == 0) {
+                toDelete.add(p.get(i));
+            }
+            prevCity = p.get(i);
+        }
+
+        //remove all cities marked to be deleted from p
+        p.removeAll(toDelete);
+        return p;
     }
 
     //when user clicks on button, deletes all path data for user from firebase
@@ -168,5 +203,57 @@ public class HomeActivity extends AppCompatActivity {
         });
         ad.show();
     }
+
+    public void statusCheck(View view) {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        buildAlertMessageNoGps();
+
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Would you like to edit your permissions for GPS?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void notiStautsCheck(View view) {
+        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        buildAlertMessageNotif();
+
+    }
+
+    private void buildAlertMessageNotif() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Would you like to edit your permissions for notifications?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 }
