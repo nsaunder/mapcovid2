@@ -51,7 +51,7 @@ public class Constant {
     private static boolean permissionsGranted;
     //DATA TINGS//
     private static String appId;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database;
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static String lastLocation;
@@ -69,6 +69,8 @@ public class Constant {
     public Constant(Context context) {
         //initialize list of City Objects
         set_cities(context);
+        //initialize firebase
+        database = FirebaseDatabase.getInstance().getReference();
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -129,7 +131,7 @@ public class Constant {
     public void setPermissionsGranted(Context context, boolean b) {
         //get shared preferences
         SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
-        //set permissions to boolean 
+        //set permissions to boolean
         preferences.edit().putBoolean("permissionsGranted", b).apply();
         permissionsGranted = b;
 
@@ -156,6 +158,10 @@ public class Constant {
 
     public String getAppId() {
         return appId;
+    }
+
+    public ArrayList<City> getCities() {
+        return cities;
     }
 
     public String getCurrentLocation() {
