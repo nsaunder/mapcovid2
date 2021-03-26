@@ -1,0 +1,842 @@
+[
+  {
+    "city_name": "Agoura Hills",
+    "center_lat": 34.14791,
+    "center_long": -118.7657042,
+    "radius": 527.18,
+    "new_cases": 4,
+    "new_deaths": 1,
+    "total_cases": 14447,
+    "total_deaths": 286
+  },
+  {
+    "city_name": "Alhambra",
+    "center_lat": 34.093042,
+    "center_long": -118.12706,
+    "radius": 4.04,
+    "new_cases": 6,
+    "new_deaths": 4,
+    "total_cases": 13381,
+    "total_deaths": 273
+  },
+  {
+    "city_name": "Arcadia",
+    "center_lat": 34.1362075,
+    "center_long": -118.0401497,
+    "radius": 6.65,
+    "new_cases": 3,
+    "new_deaths": 3,
+    "total_cases": 12909,
+    "total_deaths": 267
+  },
+  {
+    "city_name": "Artesia",
+    "center_lat": 33.8690197,
+    "center_long": -118.0796195,
+    "radius": 2,
+    "new_cases": 8,
+    "new_deaths": 3,
+    "total_cases": 14402,
+    "total_deaths": 299
+  },
+  {
+    "city_name": "Avalon",
+    "center_lat": 33.34221,
+    "center_long": -118.3272612,
+    "radius": 6.22,
+    "new_cases": 9,
+    "new_deaths": 1,
+    "total_cases": 13367,
+    "total_deaths": 293
+  },
+  {
+    "city_name": "Azusa",
+    "center_lat": 34.1338751,
+    "center_long": -117.9056046,
+    "radius": 3.49,
+    "new_cases": 6,
+    "new_deaths": 2,
+    "total_cases": 10341,
+    "total_deaths": 260
+  },
+  {
+    "city_name": "Baldwin Park",
+    "center_lat": 34.0854739,
+    "center_long": -117.9611761,
+    "radius": 5.16,
+    "new_cases": 9,
+    "new_deaths": 2,
+    "total_cases": 13378,
+    "total_deaths": 254
+  },
+  {
+    "city_name": "Bell",
+    "center_lat": 33.9747806,
+    "center_long": -118.1866361,
+    "radius": 3.59,
+    "new_cases": 5,
+    "new_deaths": 3,
+    "total_cases": 13273,
+    "total_deaths": 275
+  },
+  {
+    "city_name": "Bell Gardens",
+    "center_lat": 33.9694561,
+    "center_long": -118.1503953,
+    "radius": 2.07,
+    "new_cases": 4,
+    "new_deaths": 3,
+    "total_cases": 14347,
+    "total_deaths": 269
+  },
+  {
+    "city_name": "Bellflower",
+    "center_lat": 33.8825705,
+    "center_long": -118.1167679,
+    "radius": 3.04,
+    "new_cases": 2,
+    "new_deaths": 4,
+    "total_cases": 11007,
+    "total_deaths": 273
+  },
+  {
+    "city_name": "Beverly Hills",
+    "center_lat": 34.0696501,
+    "center_long": -118.3963062,
+    "radius": 2.41,
+    "new_cases": 7,
+    "new_deaths": 2,
+    "total_cases": 12512,
+    "total_deaths": 267
+  },
+  {
+    "city_name": "Bradbury",
+    "center_lat": 34.1469511,
+    "center_long": -117.9708982,
+    "radius": 2.2,
+    "new_cases": 3,
+    "new_deaths": 3,
+    "total_cases": 12430,
+    "total_deaths": 297
+  },
+  {
+    "city_name": "Burbank",
+    "center_lat": 34.1816482,
+    "center_long": -118.3258554,
+    "radius": 4.99,
+    "new_cases": 7,
+    "new_deaths": 2,
+    "total_cases": 10075,
+    "total_deaths": 264
+  },
+  {
+    "city_name": "Calabasas",
+    "center_lat": 34.1446643,
+    "center_long": -118.6440973,
+    "radius": 7.46,
+    "new_cases": 2,
+    "new_deaths": 3,
+    "total_cases": 14308,
+    "total_deaths": 262
+  },
+  {
+    "city_name": "Carson",
+    "center_lat": 33.8322043,
+    "center_long": -118.2517547,
+    "radius": 6.05,
+    "new_cases": 5,
+    "new_deaths": 1,
+    "total_cases": 11544,
+    "total_deaths": 285
+  },
+  {
+    "city_name": "Cerritos",
+    "center_lat": 33.8644291,
+    "center_long": -118.0539323,
+    "radius": 4.98,
+    "new_cases": 3,
+    "new_deaths": 3,
+    "total_cases": 11658,
+    "total_deaths": 293
+  },
+  {
+    "city_name": "Claremont",
+    "center_lat": 34.0966764,
+    "center_long": -117.7197785,
+    "radius": 7.46,
+    "new_cases": 1,
+    "new_deaths": 2,
+    "total_cases": 14394,
+    "total_deaths": 273
+  },
+  {
+    "city_name": "Commerce",
+    "center_lat": 34.002581,
+    "center_long": -118.156586,
+    "radius": 37.18,
+    "new_cases": 3,
+    "new_deaths": 1,
+    "total_cases": 12006,
+    "total_deaths": 266
+  },
+  {
+    "city_name": "compton",
+    "center_lat": 33.894927,
+    "center_long": -118.226624,
+    "radius": 3.43,
+    "new_cases": 8,
+    "new_deaths": 3,
+    "total_cases": 11585,
+    "total_deaths": 297
+  },
+  {
+    "city_name": "Covina",
+    "center_lat": 34.0877926,
+    "center_long": -117.8891164,
+    "radius": 4.25,
+    "new_cases": 2,
+    "new_deaths": 3,
+    "total_cases": 11789,
+    "total_deaths": 285
+  },
+  {
+    "city_name": "Cudahy",
+    "center_lat": 33.9620584,
+    "center_long": -118.1835395,
+    "radius": 1.91,
+    "new_cases": 7,
+    "new_deaths": 3,
+    "total_cases": 13379,
+    "total_deaths": 275
+  },
+  {
+    "city_name": "Culver City",
+    "center_lat": 34.0211224,
+    "center_long": -118.396466,
+    "radius": 5.01,
+    "new_cases": 6,
+    "new_deaths": 1,
+    "total_cases": 14232,
+    "total_deaths": 291
+  },
+  {
+    "city_name": "Diamond Bar",
+    "center_lat": 34.0286226,
+    "center_long": -117.8103367,
+    "radius": 7.92,
+    "new_cases": 6,
+    "new_deaths": 2,
+    "total_cases": 10717,
+    "total_deaths": 299
+  },
+  {
+    "city_name": "Downey",
+    "center_lat": 33.942215,
+    "center_long": -118.1235646,
+    "radius": 3.81,
+    "new_cases": 4,
+    "new_deaths": 2,
+    "total_cases": 13886,
+    "total_deaths": 299
+  },
+  {
+    "city_name": "Duarte",
+    "center_lat": 34.1394513,
+    "center_long": -117.9772873,
+    "radius": 7.28,
+    "new_cases": 8,
+    "new_deaths": 4,
+    "total_cases": 11047,
+    "total_deaths": 290
+  },
+  {
+    "city_name": "El Segundo",
+    "center_lat": 33.917028,
+    "center_long": -118.4156337,
+    "radius": 3.78,
+    "new_cases": 1,
+    "new_deaths": 1,
+    "total_cases": 11960,
+    "total_deaths": 259
+  },
+  {
+    "city_name": "Gardena",
+    "center_lat": 33.8963593,
+    "center_long": -118.3053037,
+    "radius": 3.43,
+    "new_cases": 1,
+    "new_deaths": 2,
+    "total_cases": 13533,
+    "total_deaths": 253
+  },
+  {
+    "city_name": "Glendale",
+    "center_lat": 34.1469416,
+    "center_long": -118.2478471,
+    "radius": 13.33,
+    "new_cases": 7,
+    "new_deaths": 1,
+    "total_cases": 10931,
+    "total_deaths": 297
+  },
+  {
+    "city_name": "Glendora",
+    "center_lat": 34.1361187,
+    "center_long": -117.865339,
+    "radius": 8.09,
+    "new_cases": 3,
+    "new_deaths": 1,
+    "total_cases": 12447,
+    "total_deaths": 292
+  },
+  {
+    "city_name": "Hawaiian Gardens",
+    "center_lat": 33.8284787,
+    "center_long": -118.0743137,
+    "radius": 1.13,
+    "new_cases": 5,
+    "new_deaths": 4,
+    "total_cases": 13155,
+    "total_deaths": 278
+  },
+  {
+    "city_name": "Hawthorne",
+    "center_lat": 33.9188589,
+    "center_long": -118.3483256,
+    "radius": 3.86,
+    "new_cases": 2,
+    "new_deaths": 4,
+    "total_cases": 11928,
+    "total_deaths": 251
+  },
+  {
+    "city_name": "Hermosa Beach",
+    "center_lat": 33.86428,
+    "center_long": -118.39591,
+    "radius": 5.03,
+    "new_cases": 3,
+    "new_deaths": 2,
+    "total_cases": 12206,
+    "total_deaths": 293
+  },
+  {
+    "city_name": "Hidden Hills",
+    "center_lat": 34.164091,
+    "center_long": -118.657837,
+    "radius": 1.59,
+    "new_cases": 1,
+    "new_deaths": 3,
+    "total_cases": 14392,
+    "total_deaths": 263
+  },
+  {
+    "city_name": "Huntington Park",
+    "center_lat": 33.9827043,
+    "center_long": -118.2120343,
+    "radius": 2.96,
+    "new_cases": 8,
+    "new_deaths": 1,
+    "total_cases": 13508,
+    "total_deaths": 257
+  },
+  {
+    "city_name": "Industry",
+    "center_lat": 34.0197335,
+    "center_long": -117.9586754,
+    "radius": 12.83,
+    "new_cases": 4,
+    "new_deaths": 4,
+    "total_cases": 11670,
+    "total_deaths": 288
+  },
+  {
+    "city_name": "Inglewood",
+    "center_lat": 33.9562003,
+    "center_long": -118.353132,
+    "radius": 4.16,
+    "new_cases": 1,
+    "new_deaths": 1,
+    "total_cases": 12835,
+    "total_deaths": 254
+  },
+  {
+    "city_name": "Irwindale",
+    "center_lat": 34.1069927,
+    "center_long": -117.9342148,
+    "radius": 4.16,
+    "new_cases": 7,
+    "new_deaths": 4,
+    "total_cases": 10972,
+    "total_deaths": 255
+  },
+  {
+    "city_name": "La Canada Flintridge",
+    "center_lat": 34.1998302,
+    "center_long": -118.2005236,
+    "radius": 5.18,
+    "new_cases": 5,
+    "new_deaths": 3,
+    "total_cases": 14946,
+    "total_deaths": 267
+  },
+  {
+    "city_name": "La Habra Heights",
+    "center_lat": 33.9604546,
+    "center_long": -117.9504255,
+    "radius": 3.24,
+    "new_cases": 8,
+    "new_deaths": 1,
+    "total_cases": 14838,
+    "total_deaths": 269
+  },
+  {
+    "city_name": "La Mirada",
+    "center_lat": 33.9060971,
+    "center_long": -118.0107092,
+    "radius": 3.69,
+    "new_cases": 7,
+    "new_deaths": 4,
+    "total_cases": 14770,
+    "total_deaths": 256
+  },
+  {
+    "city_name": "La Puente",
+    "center_lat": 34.01979,
+    "center_long": -117.9503677,
+    "radius": 4.49,
+    "new_cases": 5,
+    "new_deaths": 3,
+    "total_cases": 13464,
+    "total_deaths": 265
+  },
+  {
+    "city_name": "La Verne",
+    "center_lat": 34.1008426,
+    "center_long": -117.7678355,
+    "radius": 7.03,
+    "new_cases": 7,
+    "new_deaths": 3,
+    "total_cases": 11131,
+    "total_deaths": 288
+  },
+  {
+    "city_name": "Lakewood",
+    "center_lat": 33.84476,
+    "center_long": -118.08586,
+    "radius": 7.96,
+    "new_cases": 2,
+    "new_deaths": 2,
+    "total_cases": 11864,
+    "total_deaths": 274
+  },
+  {
+    "city_name": "Lancaster",
+    "center_lat": 34.69993,
+    "center_long": -118.13192,
+    "radius": 18.25,
+    "new_cases": 5,
+    "new_deaths": 2,
+    "total_cases": 11268,
+    "total_deaths": 263
+  },
+  {
+    "city_name": "Lawndale",
+    "center_lat": 33.88771,
+    "center_long": -118.35648,
+    "radius": 1.8,
+    "new_cases": 7,
+    "new_deaths": 3,
+    "total_cases": 10246,
+    "total_deaths": 252
+  },
+  {
+    "city_name": "Lomita",
+    "center_lat": 33.79132,
+    "center_long": -118.31797,
+    "radius": 12.68,
+    "new_cases": 7,
+    "new_deaths": 4,
+    "total_cases": 10391,
+    "total_deaths": 282
+  },
+  {
+    "city_name": "Long Beach",
+    "center_lat": 33.78815,
+    "center_long": -118.15612,
+    "radius": 10.86,
+    "new_cases": 4,
+    "new_deaths": 1,
+    "total_cases": 11645,
+    "total_deaths": 295
+  },
+  {
+    "city_name": "Los Angeles",
+    "center_lat": 34.08702,
+    "center_long": -118.26791,
+    "radius": 5.86,
+    "new_cases": 4,
+    "new_deaths": 4,
+    "total_cases": 12004,
+    "total_deaths": 283
+  },
+  {
+    "city_name": "Lynwood",
+    "center_lat": 33.92528,
+    "center_long": -118.20351,
+    "radius": 2.57,
+    "new_cases": 1,
+    "new_deaths": 3,
+    "total_cases": 14595,
+    "total_deaths": 273
+  },
+  {
+    "city_name": "Malibu",
+    "center_lat": 33.00706,
+    "center_long": -118.76091,
+    "radius": 110.67,
+    "new_cases": 2,
+    "new_deaths": 2,
+    "total_cases": 13563,
+    "total_deaths": 296
+  },
+  {
+    "city_name": "Manhattan Beach",
+    "center_lat": 33.88376,
+    "center_long": -118.4272,
+    "radius": 3.62,
+    "new_cases": 5,
+    "new_deaths": 3,
+    "total_cases": 13358,
+    "total_deaths": 289
+  },
+  {
+    "city_name": "Maywood",
+    "center_lat": 33.98834,
+    "center_long": -118.1872,
+    "radius": 1.67,
+    "new_cases": 8,
+    "new_deaths": 4,
+    "total_cases": 10116,
+    "total_deaths": 298
+  },
+  {
+    "city_name": "Monrovia",
+    "center_lat": 34.14856,
+    "center_long": -117.98214,
+    "radius": 5,
+    "new_cases": 9,
+    "new_deaths": 2,
+    "total_cases": 12254,
+    "total_deaths": 260
+  },
+  {
+    "city_name": "Montebello",
+    "center_lat": 34.0103,
+    "center_long": -118.10837,
+    "radius": 4.19,
+    "new_cases": 6,
+    "new_deaths": 4,
+    "total_cases": 13870,
+    "total_deaths": 276
+  },
+  {
+    "city_name": "Monterey Park",
+    "center_lat": 33.90689,
+    "center_long": -118.07684,
+    "radius": 3.5,
+    "new_cases": 1,
+    "new_deaths": 1,
+    "total_cases": 10841,
+    "total_deaths": 274
+  },
+  {
+    "city_name": "Palmdale",
+    "center_lat": 34.58546,
+    "center_long": -118.47107,
+    "radius": 51.38,
+    "new_cases": 3,
+    "new_deaths": 1,
+    "total_cases": 11972,
+    "total_deaths": 264
+  },
+  {
+    "city_name": "Palos Verdes Estates",
+    "center_lat": 33.77977,
+    "center_long": -118.41984,
+    "radius": 6.67,
+    "new_cases": 2,
+    "new_deaths": 3,
+    "total_cases": 14724,
+    "total_deaths": 293
+  },
+  {
+    "city_name": "Paramount",
+    "center_lat": 33.89927,
+    "center_long": -118.16582,
+    "radius": 2.7,
+    "new_cases": 2,
+    "new_deaths": 3,
+    "total_cases": 14819,
+    "total_deaths": 274
+  },
+  {
+    "city_name": "Pasadena",
+    "center_lat": 34.18458,
+    "center_long": -118.13181,
+    "radius": 8.93,
+    "new_cases": 4,
+    "new_deaths": 2,
+    "total_cases": 10958,
+    "total_deaths": 297
+  },
+  {
+    "city_name": "Pico Rivera",
+    "center_lat": 33.98967,
+    "center_long": -118.08179,
+    "radius": 4.43,
+    "new_cases": 2,
+    "new_deaths": 4,
+    "total_cases": 10967,
+    "total_deaths": 253
+  },
+  {
+    "city_name": "Pomona",
+    "center_lat": 34.11185,
+    "center_long": -117.75222,
+    "radius": 0.43,
+    "new_cases": 8,
+    "new_deaths": 1,
+    "total_cases": 11044,
+    "total_deaths": 276
+  },
+  {
+    "city_name": "Rancho Palos Verdes",
+    "center_lat": 33.72833,
+    "center_long": -118.43188,
+    "radius": 5.62,
+    "new_cases": 1,
+    "new_deaths": 4,
+    "total_cases": 12279,
+    "total_deaths": 291
+  },
+  {
+    "city_name": "Redondo Beach",
+    "center_lat": 33.85459,
+    "center_long": -118.50471,
+    "radius": 5.28,
+    "new_cases": 4,
+    "new_deaths": 4,
+    "total_cases": 14764,
+    "total_deaths": 271
+  },
+  {
+    "city_name": "Rolling Hills",
+    "center_lat": 33.76104,
+    "center_long": -118.34783,
+    "radius": 2.12,
+    "new_cases": 2,
+    "new_deaths": 4,
+    "total_cases": 13436,
+    "total_deaths": 261
+  },
+  {
+    "city_name": "Rolling Hills Estates",
+    "center_lat": 33.76104,
+    "center_long": -118.34893,
+    "radius": 2,
+    "new_cases": 9,
+    "new_deaths": 3,
+    "total_cases": 14631,
+    "total_deaths": 262
+  },
+  {
+    "city_name": "San Dimas",
+    "center_lat": 34.15594,
+    "center_long": -117.78706,
+    "radius": 1.22,
+    "new_cases": 6,
+    "new_deaths": 3,
+    "total_cases": 11580,
+    "total_deaths": 292
+  },
+  {
+    "city_name": "San Fernando",
+    "center_lat": 34.30708,
+    "center_long": -118.42271,
+    "radius": 0.91,
+    "new_cases": 3,
+    "new_deaths": 4,
+    "total_cases": 12539,
+    "total_deaths": 252
+  },
+  {
+    "city_name": "San Gabriel",
+    "center_lat": 34.09325,
+    "center_long": -118.09918,
+    "radius": 2.38,
+    "new_cases": 1,
+    "new_deaths": 3,
+    "total_cases": 13570,
+    "total_deaths": 258
+  },
+  {
+    "city_name": "San Marino",
+    "center_lat": 34.12115,
+    "center_long": -118.11505,
+    "radius": 2.43,
+    "new_cases": 7,
+    "new_deaths": 3,
+    "total_cases": 10563,
+    "total_deaths": 262
+  },
+  {
+    "city_name": "Santa Clarita",
+    "center_lat": 34.41881,
+    "center_long": -118.49604,
+    "radius": 10.5,
+    "new_cases": 8,
+    "new_deaths": 2,
+    "total_cases": 11346,
+    "total_deaths": 254
+  },
+  {
+    "city_name": "Santa Fe Springs",
+    "center_lat": 33.92228,
+    "center_long": -118.05822,
+    "radius": 4.72,
+    "new_cases": 6,
+    "new_deaths": 3,
+    "total_cases": 12425,
+    "total_deaths": 270
+  },
+  {
+    "city_name": "Santa Monica",
+    "center_lat": 33.98719,
+    "center_long": -118.52719,
+    "radius": 2.35,
+    "new_cases": 7,
+    "new_deaths": 2,
+    "total_cases": 10853,
+    "total_deaths": 262
+  },
+  {
+    "city_name": "Sierra Madre",
+    "center_lat": 34.17317,
+    "center_long": -118.03843,
+    "radius": 0.85,
+    "new_cases": 9,
+    "new_deaths": 3,
+    "total_cases": 10578,
+    "total_deaths": 271
+  },
+  {
+    "city_name": "Signal Hill",
+    "center_lat": 33.80436,
+    "center_long": -118.16714,
+    "radius": 2.22,
+    "new_cases": 5,
+    "new_deaths": 2,
+    "total_cases": 10900,
+    "total_deaths": 272
+  },
+  {
+    "city_name": "South Gate",
+    "center_lat": 33.9463456,
+    "center_long": -118.200981,
+    "radius": 5.52,
+    "new_cases": 3,
+    "new_deaths": 3,
+    "total_cases": 12495,
+    "total_deaths": 295
+  },
+  {
+    "city_name": "South Pasadena",
+    "center_lat": 34.1133062,
+    "center_long": -118.1478291,
+    "radius": 3.21,
+    "new_cases": 8,
+    "new_deaths": 4,
+    "total_cases": 11642,
+    "total_deaths": 260
+  },
+  {
+    "city_name": "Temple City",
+    "center_lat": 34.1082994,
+    "center_long": -118.0577568,
+    "radius": 2.55,
+    "new_cases": 3,
+    "new_deaths": 2,
+    "total_cases": 10878,
+    "total_deaths": 298
+  },
+  {
+    "city_name": "Torrance",
+    "center_lat": 33.8358492,
+    "center_long": -118.3406288,
+    "radius": 12.85,
+    "new_cases": 3,
+    "new_deaths": 2,
+    "total_cases": 11558,
+    "total_deaths": 299
+  },
+  {
+    "city_name": "Vernon",
+    "center_lat": 34.007135,
+    "center_long": -118.22525,
+    "radius": 5.34,
+    "new_cases": 6,
+    "new_deaths": 4,
+    "total_cases": 13749,
+    "total_deaths": 290
+  },
+  {
+    "city_name": "Walnut",
+    "center_lat": 34.0202894,
+    "center_long": -117.8653386,
+    "radius": 5.84,
+    "new_cases": 3,
+    "new_deaths": 1,
+    "total_cases": 14615,
+    "total_deaths": 271
+  },
+  {
+    "city_name": "West Covina",
+    "center_lat": 34.0686208,
+    "center_long": -117.9389526,
+    "radius": 9.5,
+    "new_cases": 7,
+    "new_deaths": 4,
+    "total_cases": 12300,
+    "total_deaths": 254
+  },
+  {
+    "city_name": "West Hollywood",
+    "center_lat": 34.0923014,
+    "center_long": -118.3692894,
+    "radius": 2.39,
+    "new_cases": 8,
+    "new_deaths": 2,
+    "total_cases": 10816,
+    "total_deaths": 289
+  },
+  {
+    "city_name": "Westlake Village",
+    "center_lat": 34.1460234,
+    "center_long": -118.8061794,
+    "radius": 5.16,
+    "new_cases": 5,
+    "new_deaths": 4,
+    "total_cases": 13872,
+    "total_deaths": 298
+  },
+  {
+    "city_name": "Whittier",
+    "center_lat": 33.9708782,
+    "center_long": -118.0308396,
+    "radius": 6.87,
+    "new_cases": 1,
+    "new_deaths": 4,
+    "total_cases": 11917,
+    "total_deaths": 261
+  }
+]

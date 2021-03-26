@@ -26,6 +26,22 @@ android {
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
+
+    sourceSets {
+        String sharedTestJavaDir = 'src/sharedTest/java'
+
+        test {
+            java.srcDirs += [sharedTestJavaDir]
+            resources.srcDirs += ['src/test/resources']
+        }
+
+        androidTest {
+            java.srcDirs += [sharedTestJavaDir]
+            resources.srcDirs += ['src/test/resources']
+        }
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -73,6 +89,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    testImplementation 'org.json:json:20140107'
+
+    testImplementation 'org.powermock:powermock-api-mockito:1.5.5'
+    testImplementation "org.powermock:powermock-module-junit4:1.6.4"
 
     api 'com.github.ok2c.hc4.android:httpclient-android:0.1.0'
     implementation group: 'cz.msebera.android' , name: 'httpclient', version: '4.5.8'
