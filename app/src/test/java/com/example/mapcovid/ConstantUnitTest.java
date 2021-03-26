@@ -1,19 +1,46 @@
 package com.example.mapcovid;
 
-import android.app.Instrumentation;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import android.content.Context;
-import android.content.pm.InstrumentationInfo;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(JUnit4.class)
+@PrepareForTest({FirebaseDatabase.class})
 public class ConstantUnitTest {
+    @Mock
+    Context mockContext;
+
+    private DatabaseReference mockDB;
+
+    @Before
+    public void before() {
+        mockDB = Mockito.mock(DatabaseReference.class);
+
+        FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
+        Mockito.when(mockFDB.getReference()).thenReturn(mockDB);
+
+        PowerMockito.mockStatic(FirebaseDatabase.class);
+        Mockito.when(FirebaseDatabase.getInstance()).thenReturn(mockFDB);
+
+
+    }
 
     @Test
     public void testSetCities() {

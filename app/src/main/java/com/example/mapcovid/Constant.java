@@ -51,7 +51,7 @@ public class Constant {
     private static boolean permissionsGranted;
     //DATA TINGS//
     private static String appId;
-    private DatabaseReference database;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static String lastLocation;
@@ -69,8 +69,6 @@ public class Constant {
     public Constant(Context context) {
         //initialize list of City Objects
         set_cities(context);
-        //initialize firebase
-        database = FirebaseDatabase.getInstance().getReference();
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
