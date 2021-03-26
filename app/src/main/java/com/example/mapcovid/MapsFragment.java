@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class MapsFragment extends Fragment {
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
     private Constant constants;
     private GoogleMap mMap;
+    private Marker marky;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -149,15 +151,13 @@ public class MapsFragment extends Fragment {
 
             button.setOnClickListener(new View.OnClickListener()
             {
-                Marker marky = null;
                 @Override
                 public void onClick(View v)
                 {
-                    if(marky != null) {
-                        marky.remove();
-                    }
-                    marky = markerPlace(false);
+                    System.out.println("Hi");
+                    markerPlace(false);
                 }
+
             });
 
             constants.addPermissionListener(new permissionsListener() {
@@ -251,7 +251,7 @@ public class MapsFragment extends Fragment {
         }
     };
 
-    private List<City> readItems(String filename) throws JSONException, IOException {
+    public List<City> readItems(String filename) throws JSONException, IOException {
         List<City> cities = new ArrayList<>();
         try {
             InputStream is = getContext().getAssets().open("city_data.json");
@@ -285,29 +285,27 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    public Marker markerPlace(final boolean tf){
-        final Marker[] marky = {null};
+    public void markerPlace(final boolean tf){
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            Marker currentLocation = null;
             boolean placeOnce = tf;
             @Override
             public void onMapClick(LatLng arg0) {
                 if (placeOnce == false) {
-                    if (currentLocation != null) {
-                        currentLocation.remove();
-                    }
-                    currentLocation = mMap.addMarker(new MarkerOptions()
+                    if(marky != null)
+                        marky.remove();
+                    marky = mMap.addMarker(new MarkerOptions()
                             .position(arg0)
                             .title("Current Location")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    currentLocation.showInfoWindow();
+                    marky.showInfoWindow();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
-                    marky[0] = currentLocation;
                     placeOnce = true;
+
+
                 }
             }
+
         });
-        return marky[0];
     }
 
 }

@@ -237,7 +237,7 @@ public class TestingFragment extends Fragment {
                             "\nDirections: www.google.com");
         info.onCreateDialog(new Bundle());
     }*/
-    private List<TestingLocation> readItems(String filename) throws JSONException, IOException {
+    public List<TestingLocation> readItems(String filename) throws JSONException, IOException {
         List<TestingLocation> result = new ArrayList<>();
         InputStream inputStream = getContext().getAssets().open(filename);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
