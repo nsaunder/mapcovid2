@@ -51,7 +51,7 @@ public class Constant {
     private static boolean permissionsGranted;
     //DATA TINGS//
     private static String appId;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database;
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static String lastLocation;
@@ -64,9 +64,14 @@ public class Constant {
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
-    public Constant() { }
+    public Constant() {
+        //initialize firebase database reference
+        database = get_instance().getReference();
+    }
 
     public Constant(Context context) {
+        //initialize firebase database reference
+        database = get_instance().getReference();
         //initialize list of City Objects
         set_cities(context);
         //get unique ID for application
@@ -84,6 +89,11 @@ public class Constant {
         } else {
             setPermissionsGranted(context, false);
         }
+    }
+
+    //wrapper for static FirebaseDatabase getInstance()
+    public FirebaseDatabase get_instance() {
+        return FirebaseDatabase.getInstance();
     }
 
     public void set_cities(Context context) {

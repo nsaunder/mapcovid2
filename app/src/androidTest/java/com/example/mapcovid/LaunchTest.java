@@ -1,6 +1,7 @@
 package com.example.mapcovid;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -24,22 +25,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
-
-@RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(JUnit4.class)
-@PrepareForTest({FirebaseDatabase.class})
+@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class LaunchTest {
-
-    private DatabaseReference mockDB;
 
     @Rule
     public ActivityTestRule<MainActivity> mLaunchRule =
@@ -50,17 +41,13 @@ public class LaunchTest {
     public void initialize() {
         Intents.init();
 
-        mockDB = Mockito.mock(DatabaseReference.class);
-
+        DatabaseReference mockDB = Mockito.mock(DatabaseReference.class);
         FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
+
+        Constant constants = new Constant();
+        Constant spy = Mockito.spy(constants);
         Mockito.when(mockFDB.getReference()).thenReturn(mockDB);
-
-        PowerMockito.mockStatic(FirebaseDatabase.class);
-        Mockito.when(FirebaseDatabase.getInstance()).thenReturn(mockFDB);
-
-        String appId = "";
-        String day = LocalDate.now().toString();
-        Mockito.when(mockDB.child(appId).child("paths").child(day)).thenReturn(mockDB);
+        Mockito.when(spy.get_instance()).thenReturn(mockFDB);
     }
 
     @After
@@ -70,7 +57,8 @@ public class LaunchTest {
 
     @Test
     public void launch_test() {
-        onView(withId(R.id.launch_button)).perform(click());
+        onView(withId(R.id.launchBtn)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
     }
 }
+
