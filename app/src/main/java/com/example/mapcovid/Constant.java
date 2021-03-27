@@ -204,7 +204,7 @@ public class Constant {
 
     //get path for day passed into function from firebase
     public void getPath(String day, final getPathCallback callBack) {
-        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
+        database.child("e0oPScPeTRy3c84TQcG4LS").child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<PathItem> path = new ArrayList<PathItem>();

@@ -11,6 +11,9 @@ import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,31 +30,59 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class HomeTest {
 
     @Rule
-    public ActivityTestRule<HomeActivity> mHomeRule =
-            new ActivityTestRule<>(HomeActivity.class);
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    public ActivityTestRule<MainActivity> mHomeRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void initialize() {
-        Intents.init();
-        Intents.getIntents();
+        DatabaseReference mockDB = Mockito.mock(DatabaseReference.class);
+        FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
+
+        Constant constants = new Constant();
+        Constant spy = Mockito.spy(constants);
+        Mockito.when(mockFDB.getReference()).thenReturn(mockDB);
+        Mockito.when(spy.get_instance()).thenReturn(mockFDB);
     }
 
     @After
     public void after() {
-        Intents.release();
+
+    }
+
+    @Test
+    public void map_to_testing() {
+        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.navigation_testing)).perform(click());
+        onView(withId(R.id.testing_map)).check(matches(ViewMatchers.isDisplayed()));
     }
 
     @Test
     public void map_to_path() {
-        onView(withId(R.id.launch_button)).perform(click());
-        onView(withId(R.id.navigation_covid)).perform(click());
-        onView(withId(R.id.map)).check(matches(ViewMatchers.isDisplayed()));
+        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.navigation_path)).perform(click());
+        onView(withId(R.id.header1)).check(matches(ViewMatchers.isDisplayed()));
     }
+
+    @Test
+    public void map_to_news() {
+        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.navigation_news)).perform(click());
+        onView(withId(R.id.tweet_scroll_view)).check(matches(ViewMatchers.isDisplayed()));
+    }
+
+    @Test
+    public void map_to_settings() {
+        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.navigation_settings)).perform(click());
+        onView(withId(R.id.settings_button)).check(matches(ViewMatchers.isDisplayed()));
+    }
+
+
 }
