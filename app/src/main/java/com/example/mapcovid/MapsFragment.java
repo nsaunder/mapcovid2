@@ -72,7 +72,7 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            mMap.setMinZoomPreference(7.0f);
+            mMap.setMinZoomPreference(10f);
 
             constants = new Constant();
 
@@ -254,7 +254,15 @@ public class MapsFragment extends Fragment {
     public List<City> readItems(String filename) throws JSONException, IOException {
         List<City> cities = new ArrayList<>();
         try {
-            InputStream is = getContext().getAssets().open("city_data.json");
+
+            InputStream is = null;
+            if(getContext() != null) {
+                is = getContext().getAssets().open(filename);
+            }
+            else {
+                is = this.getClass().getClassLoader().getResourceAsStream(filename);
+            }
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();

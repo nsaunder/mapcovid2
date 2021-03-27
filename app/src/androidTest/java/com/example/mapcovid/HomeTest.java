@@ -50,7 +50,7 @@ public class HomeTest {
 
     @Test
     public void map_to_path() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_covid)).perform(click());
         onView(withId(R.id.map)).check(matches(ViewMatchers.isDisplayed()));
     }

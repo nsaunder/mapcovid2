@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,7 +54,7 @@ public class TestingFragment extends Fragment {
         LatLng position;
         boolean walkup;
         boolean driveup;
-        public TestingLocation(String name, LatLng ll, boolean w, boolean d)
+        public TestingLocation(String name, LatLng ll, boolean d, boolean w)
         {
             this.name = name;
             this.position = ll;
@@ -84,7 +85,7 @@ public class TestingFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             GoogleMap mMap = googleMap;
-            mMap.setMaxZoomPreference(7.0f);
+            mMap.setMinZoomPreference(10f);
             constants = new Constant();
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
 
@@ -239,7 +240,14 @@ public class TestingFragment extends Fragment {
     }*/
     public List<TestingLocation> readItems(String filename) throws JSONException, IOException {
         List<TestingLocation> result = new ArrayList<>();
-        InputStream inputStream = getContext().getAssets().open(filename);
+        InputStream inputStream = null;
+        if(getContext() != null) {
+            inputStream = getContext().getAssets().open(filename);
+        }
+        else {
+            inputStream = this.getClass().getClassLoader().getResourceAsStream(filename);
+        }
+
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
         JSONArray array = new JSONArray(json);
         Random rand = new Random();
