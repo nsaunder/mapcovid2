@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-database:19.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    testImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     testImplementation 'org.json:json:20140107'
 
     testImplementation 'org.powermock:powermock-api-mockito:1.5.5'
