@@ -47,13 +47,14 @@
                 android:src="@drawable/onboarding6" />
 
             <Button
+                android:id="@+id/finish_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:onClick="finishOnboarding"
                 android:text="Finish Onboarding"
                 android:textColor="@color/peach"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 
