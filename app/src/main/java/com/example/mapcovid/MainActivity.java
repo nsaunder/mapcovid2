@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Constant constants;
 
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
+
+        database = get_instance().getReference();
 
         //create GoogleApiClient
         createGoogleApi();
@@ -135,6 +137,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void handleLaunch(View view) {
         Intent newActivity = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(newActivity);
+    }
+
+    public FirebaseDatabase get_instance() {
+        return FirebaseDatabase.getInstance();
     }
 
     //create GoogleApiClient instance
@@ -385,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 });
     }
 
-    public String getCityByCoordinates(double lat, double lon) throws IOException {
+    public String getCityByCoordinates(Double lat, Double lon) throws IOException {
         Geocoder gc = new Geocoder(this);
         //fetches up to 10 addresses around the coordinates passed in
         List<Address> addresses = gc.getFromLocation(lat, lon, 10);

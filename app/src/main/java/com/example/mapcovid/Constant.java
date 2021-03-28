@@ -98,7 +98,13 @@ public class Constant {
 
     public void set_cities(Context context) {
         try {
-            InputStream is = context.getAssets().open("city_data.json");
+            InputStream is = null;
+            if(context != null) {
+                is = context.getAssets().open("city_data.json");
+            }
+            else {
+                is = this.getClass().getClassLoader().getResourceAsStream("city_data.json");
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -122,7 +128,7 @@ public class Constant {
         }
     }
 
-    public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
+    public void addCurrentLocationChangeListener(currentLocationChangedListener l) {
         currentLocationListeners.add(l);
     }
 
@@ -190,6 +196,10 @@ public class Constant {
     public boolean getPermissionsGranted() { return permissionsGranted; }
 
     public City get_city(String city) {
+        //added because it failed test case
+        if(city == null) {
+            return null;
+        }
         for(City c: cities) {
             if(c.get_city_name().compareTo(city) == 0) {
                 return c;
