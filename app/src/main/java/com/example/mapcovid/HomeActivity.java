@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         getSupportActionBar().setTitle("MapCovid");
+        getSupportActionBar().setHomeActionContentDescription("MapCovid");
 
         constants = new Constant();
 
