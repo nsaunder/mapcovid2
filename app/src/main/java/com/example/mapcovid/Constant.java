@@ -51,7 +51,7 @@ public class Constant {
     private static boolean permissionsGranted;
     //DATA TINGS//
     private static String appId;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference database;
     private static ArrayList<City> cities;
     private static String currentLocation;
     private static String lastLocation;
@@ -64,9 +64,14 @@ public class Constant {
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
-    public Constant() { }
+    public Constant() {
+        //initialize firebase database reference
+        database = get_instance().getReference();
+    }
 
     public Constant(Context context) {
+        //initialize firebase database reference
+        database = get_instance().getReference();
         //initialize list of City Objects
         set_cities(context);
         //get unique ID for application
@@ -86,9 +91,20 @@ public class Constant {
         }
     }
 
+    //wrapper for static FirebaseDatabase getInstance()
+    public FirebaseDatabase get_instance() {
+        return FirebaseDatabase.getInstance();
+    }
+
     public void set_cities(Context context) {
         try {
-            InputStream is = context.getAssets().open("city_data.json");
+            InputStream is = null;
+            if(context != null) {
+                is = context.getAssets().open("city_data.json");
+            }
+            else {
+                is = this.getClass().getClassLoader().getResourceAsStream("city_data.json");
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -112,7 +128,7 @@ public class Constant {
         }
     }
 
-    public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
+    public void addCurrentLocationChangeListener(currentLocationChangedListener l) {
         currentLocationListeners.add(l);
     }
 
@@ -129,7 +145,7 @@ public class Constant {
     public void setPermissionsGranted(Context context, boolean b) {
         //get shared preferences
         SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
-        //set permissions to boolean 
+        //set permissions to boolean
         preferences.edit().putBoolean("permissionsGranted", b).apply();
         permissionsGranted = b;
         for(permissionsListener l: permissionsListeners) {
@@ -157,6 +173,10 @@ public class Constant {
         return appId;
     }
 
+    public ArrayList<City> getCities() {
+        return cities;
+    }
+
     public String getCurrentLocation() {
         return currentLocation;
     }
@@ -176,6 +196,10 @@ public class Constant {
     public boolean getPermissionsGranted() { return permissionsGranted; }
 
     public City get_city(String city) {
+        //added because it failed test case
+        if(city == null) {
+            return null;
+        }
         for(City c: cities) {
             if(c.get_city_name().compareTo(city) == 0) {
                 return c;

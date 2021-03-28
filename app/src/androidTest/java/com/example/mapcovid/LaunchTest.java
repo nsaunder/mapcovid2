@@ -6,6 +6,9 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,10 +25,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class LaunchTest {
+
     @Rule
     public ActivityTestRule<MainActivity> mLaunchRule =
             new ActivityTestRule<>(MainActivity.class);
@@ -34,6 +40,14 @@ public class LaunchTest {
     @Before
     public void initialize() {
         Intents.init();
+
+        DatabaseReference mockDB = Mockito.mock(DatabaseReference.class);
+        FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
+
+        Constant constants = new Constant();
+        Constant spy = Mockito.spy(constants);
+        Mockito.when(mockFDB.getReference()).thenReturn(mockDB);
+        Mockito.when(spy.get_instance()).thenReturn(mockFDB);
     }
 
     @After
