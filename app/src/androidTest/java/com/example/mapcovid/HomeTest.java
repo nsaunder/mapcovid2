@@ -18,6 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -42,6 +43,7 @@ public class HomeTest {
 
     @Before
     public void initialize() {
+        Intents.init();
         DatabaseReference mockDB = Mockito.mock(DatabaseReference.class);
         FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
 
@@ -53,7 +55,7 @@ public class HomeTest {
 
     @After
     public void after() {
-
+        Intents.release();
     }
 
     @Test
@@ -82,6 +84,13 @@ public class HomeTest {
         onView(withId(R.id.launchBtn)).perform(click());
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.settings_button)).check(matches(ViewMatchers.isDisplayed()));
+    }
+
+    @Test
+    public void testing_to_launch() {
+        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.navigation_settings)).perform(click());
+        intended(hasComponent(MainActivity.class.getName()));
     }
 
 
