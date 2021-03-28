@@ -177,6 +177,10 @@ public class Constant {
         return cities;
     }
 
+    public List<permissionsListener> getPermissionListeners() {
+        return permissionsListeners;
+    }
+
     public String getCurrentLocation() {
         return currentLocation;
     }

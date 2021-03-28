@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    private void getLastLocation() {
+    public void getLastLocation() {
         //if permissions denied, check permissions and request permissions before proceeding
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -366,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         //get last known recent location
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        FusedLocationProviderClient locationClient = getLocationClient();
 
         Task<Location> prevLocation = locationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -389,6 +389,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         Log.d(TAG, "Error trying to get last GPS location");
                     }
                 });
+    }
+
+    //wrap static method: getFusedLocationProviderClient
+    public FusedLocationProviderClient getLocationClient() {
+        return getFusedLocationProviderClient(this);
     }
 
     public String getCityByCoordinates(Double lat, Double lon) throws IOException {
@@ -483,5 +488,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
+    }
+
+    public Constant getConstants() {
+        return constants;
     }
 }
