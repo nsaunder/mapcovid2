@@ -11,7 +11,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -35,6 +37,10 @@ public class ConstantUnitTest {
     private Constant constants;
     //keeps track of how many times currentLocationChange Listener triggered
     private int locationListener;
+    //keeps track of how many times mapFragmentListener Listener triggered
+    private int mapListener;
+    //keeps track of how many times permissionsListener triggered
+    private int permissionListener;
 
     @Before
     public void before() {
@@ -52,6 +58,10 @@ public class ConstantUnitTest {
         constants.set_cities(null);
         //initialize locationListener
         locationListener = 0;
+        //initialize mapListener
+        mapListener = 0;
+        //initialize permissionListener
+        permissionListener = 0;
     }
 
     @Test
@@ -135,7 +145,79 @@ public class ConstantUnitTest {
         locationListener += 1;
     }
 
+    @Test
+    public void testMapFragmentListener() {
+        //initialize mapFragment listener
+        constants.addMapFragmentListener(new mapFragmentListener() {
+            @Override
+            public void fragmentReady() {
+                mapListenerTriggered();
+            }
+        });
+        //test to make sure listener hasn't been triggered
+        assertEquals(0, mapListener);
+        constants.get_city("Torrance");
+        assertEquals(0, mapListener);
+        //test for correctness
+        constants.fragmentReady();
+        assertEquals(1, mapListener);
+        assertFalse(mapListener != 1);
+        constants.fragmentReady();
+        assertEquals(2, mapListener);
+        assertFalse(mapListener != 2);
+        for(int i=0; i < 10; i++) {
+            constants.fragmentReady();
+        }
+        assertEquals(12, mapListener);
+        assertFalse(mapListener != 12);
+    }
 
+    public void mapListenerTriggered() {
+        mapListener += 1;
+    }
+
+    @Test
+    public void testPermissionListener() {
+        //set up spy to avoid errors with accessing and manipulating shared preferences
+        Constant spy = Mockito.spy(constants);
+        Mockito.doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                List<permissionsListener> permissionsListeners = spy.getPermissionListeners();
+                for(permissionsListener l: permissionsListeners) {
+                    l.onPermissionsChange();
+                }
+                return null;
+            }
+        }).when(spy).setPermissionsGranted(mockContext, true);
+        //initialize permissionsListener
+        spy.addPermissionListener(new permissionsListener() {
+            @Override
+            public void onPermissionsChange() {
+                permissionListenerTriggered();
+            }
+        });
+        //test to make sure listener hasn't been triggered
+        assertEquals(0, permissionListener);
+        spy.get_city("Torrance");
+        assertEquals(0, permissionListener);
+        //test for correctness
+        spy.setPermissionsGranted(mockContext, true);
+        assertEquals(1, permissionListener);
+        assertFalse(permissionListener != 1);
+        spy.setPermissionsGranted(mockContext, true);
+        assertEquals(2, permissionListener);
+        assertFalse(permissionListener != 2);
+        for(int i=0; i < 20; i++) {
+            spy.setPermissionsGranted(mockContext, true);
+        }
+        assertEquals(22, permissionListener);
+        assertFalse(permissionListener != 22);
+    }
+
+    public void permissionListenerTriggered() {
+        permissionListener += 1;
+    }
 
 
 
