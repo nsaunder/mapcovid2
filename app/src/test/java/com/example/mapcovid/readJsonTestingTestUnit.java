@@ -45,6 +45,7 @@ public class readJsonTestingTestUnit {
 
     }
 
+    @Test
     public void testingCorrectValues(){
         testLocations = getJson();
 
