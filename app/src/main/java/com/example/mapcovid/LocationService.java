@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
@@ -59,12 +60,26 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //initialize constant data structures
-        constants = new Constant(getApplicationContext());
+        setConstants(getApplicationContext());
 
         prepareForegroundNotification();
         startLocationUpdates();
 
         return START_STICKY;
+    }
+
+    //for testing
+    public void setConstants(Context context) {
+        if(context == null) {
+            constants = new Constant();
+        } else {
+            constants = new Constant(context);
+        }
+    }
+
+    //for testing
+    public Constant getConstants() {
+        return constants;
     }
 
     private void prepareForegroundNotification() {
@@ -146,21 +161,29 @@ public class LocationService extends Service {
         database.child("paths").child(date).push().setValue(newCity);
     }
 
-    private void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {
+        //caught using testOnLocationChanged3
+        if(location == null) {
+            return;
+        }
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
-            if(city != null) {
-                Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
+
+            if (city != null) {
+                //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
+                constants.setCurrentLat(location.getLatitude());
+                constants.setCurrentLon(location.getLongitude());
             }
-        } catch(IOException ioe) {
-            Log.d(TAG, "Couldn't retrieve city from updated location coordinates");
+        } catch (IOException ioe) {
+            Log.d(TAG, ioe + "    -   Couldn't retrieve city from updated location coordinates");
         }
     }
 
+
     @SuppressLint("MissingPermission")
-    private void getLastLocation() {
+    public void getLastLocation() {
         //get last known recent location
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         Task<Location> prevLocation = locationClient.getLastLocation()
@@ -186,8 +209,12 @@ public class LocationService extends Service {
                 });
     }
 
-    private String getCityByCoordinates(double lat, double lon) throws IOException {
-        Geocoder gc = new Geocoder(this);
+    public String getCityByCoordinates(Double lat, Double lon) throws IOException {
+        Geocoder gc = setGeocoder();
+        //add condition for tests
+        if(gc == null) {
+            return null;
+        }
         //fetches up to 10 addresses around the coordinates passed in
         List<Address> addresses = gc.getFromLocation(lat, lon, 10);
         //retrieves city associated with coordinates by iterating through "addresses"
@@ -199,6 +226,11 @@ public class LocationService extends Service {
             }
         }
         return null;
+    }
+
+    public Geocoder setGeocoder() {
+        Geocoder gc = new Geocoder(this);
+        return gc;
     }
 
     //function to handle notifying users about covid-19 related details based on new location they moved to

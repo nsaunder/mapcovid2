@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return;
         }
         //initialize constant data structures
-        constants = new Constant(getApplicationContext());
+        setConstants(getApplicationContext());
 
         database = get_instance().getReference();
 
@@ -130,6 +130,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     constants.setNewLocation(true);
                 }
             });
+        }
+    }
+
+    //for testing
+    public void setConstants(Context context) {
+        if(context == null) {
+            constants = new Constant();
+        } else {
+            constants = new Constant(context);
         }
     }
 
@@ -342,6 +351,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void onLocationChanged(Location location) {
+        //caught using testOnLocationChanged3
+        if(location == null) {
+            return;
+        }
         //new location has now been determined
         try {
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
@@ -357,7 +370,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    private void getLastLocation() {
+    //wrap static method: getFusedLocationProviderClient
+    public FusedLocationProviderClient getLocationClient() {
+        return getFusedLocationProviderClient(this);
+    }
+
+    public void getLastLocation() {
         //if permissions denied, check permissions and request permissions before proceeding
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -366,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         //get last known recent location
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        FusedLocationProviderClient locationClient = getLocationClient();
 
         Task<Location> prevLocation = locationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -392,7 +410,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public String getCityByCoordinates(Double lat, Double lon) throws IOException {
-        Geocoder gc = new Geocoder(this);
+        Geocoder gc = setGeocoder();
+        //add condition for tests
+        if(gc == null) {
+            return null;
+        }
         //fetches up to 10 addresses around the coordinates passed in
         List<Address> addresses = gc.getFromLocation(lat, lon, 10);
         //retrieves city associated with coordinates by iterating through "addresses"
@@ -404,6 +426,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         }
         return null;
+    }
+
+    public Geocoder setGeocoder() {
+        Geocoder gc = new Geocoder(this);
+        return gc;
     }
 
     //function to handle notifying users about covid-19 related details based on new location they moved to
@@ -483,5 +510,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
+    }
+
+    public Constant getConstants() {
+        return constants;
     }
 }
