@@ -59,6 +59,7 @@ public class MapsFragment extends Fragment {
     private Constant constants;
     private GoogleMap mMap;
     private Marker marky;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -188,30 +189,8 @@ public class MapsFragment extends Fragment {
                 System.err.println(e);
             }
 
-            for(int i = 0; i < cities.size(); i++)
-            {
-                //citiesMap -> (cityName, City)
-                citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+            addCityMarkers(cities, latLngs, citiesMap);
 
-                //Create a LatLng
-                LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
-                        cities.get(i).get_center_long());
-
-                //Create the weightedlatlng
-                WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
-                latLngs.add(temp);  //Add to latLngs arraylist
-
-                //Add map marker to to map with the city name that can be shown by clicking
-                //This will be helpful for onMarkerClickListener
-                Marker mark = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(citypos)
-                                .title(cities.get(i).get_city_name())
-                                .snippet("More info..."));
-
-                mark.showInfoWindow();
-
-            }
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
                 @Override
@@ -250,6 +229,44 @@ public class MapsFragment extends Fragment {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
+
+    public List<LatLng> addCityMarkers(List<City> cities, List<WeightedLatLng> latLngs, HashMap<String, City> citiesMap){
+        List<LatLng> res = new ArrayList<>();
+        for(int i = 0; i < cities.size(); i++)
+        {
+            //citiesMap -> (cityName, City)
+            citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+
+            //Create a LatLng
+            LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
+                    cities.get(i).get_center_long());
+
+            //Create the weightedlatlng
+            WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
+            latLngs.add(temp);  //Add to latLngs arraylist
+
+            //Add map marker to to map with the city name that can be shown by clicking
+            //This will be helpful for onMarkerClickListener
+            Marker mark = null;
+            if(mMap != null) {
+                mark = mMap.addMarker(
+                        new MarkerOptions()
+                                .position(citypos)
+                                .title(cities.get(i).get_city_name())
+                                .snippet("More info..."));
+                res.add(mark.getPosition());
+            }
+            else
+            {
+                res.add(citypos);
+            }
+
+            //mark.showInfoWindow();
+
+        }
+        return res;
+    }
+
 
     public List<City> readItems(String filename) throws JSONException, IOException {
         List<City> cities = new ArrayList<>();
