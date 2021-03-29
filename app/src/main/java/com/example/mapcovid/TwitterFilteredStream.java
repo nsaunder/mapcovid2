@@ -51,13 +51,17 @@ public class TwitterFilteredStream extends Thread {
 
         StreamRule s_r1 = twitterClient.addFilteredStreamRule("covid OR coronavirus OR covid-19 lang:en is:verified", "language1");
 
-        startStream(twitterClient, new TweetStream() {
-            @Override
-            public void onCallBack(ArrayList<Tweet> tweets) {
-                setVar();
-                twitterClient.stopFilteredStream(future_response);
-            }
-        });
+        try {
+            startStream(twitterClient, new TweetStream() {
+                @Override
+                public void onCallBack(ArrayList<Tweet> tweets) {
+                    setVar();
+                    twitterClient.stopFilteredStream(future_response);
+                }
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("FLAG " + tweets.size());
         if (tweets.size() == 20) {
@@ -65,7 +69,7 @@ public class TwitterFilteredStream extends Thread {
         }
     }
 
-    public void startStream(TwitterClient twitterClient, final TweetStream tweetStream) {
+    public synchronized void startStream(TwitterClient twitterClient, final TweetStream tweetStream) throws InterruptedException {
         future_response = twitterClient.startFilteredStream(new IAPIEventListener() {
             int i = 0;
             @Override
@@ -94,6 +98,7 @@ public class TwitterFilteredStream extends Thread {
                 System.out.println((e.toString()));
             }
         });
+        wait(2000);
     }
     public ArrayList<Tweet> getTweets() {
         return tweets;

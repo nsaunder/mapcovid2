@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewsFragment extends Fragment {
     private NewsViewModel mViewModel;
@@ -27,6 +28,23 @@ public class NewsFragment extends Fragment {
         return new NewsFragment();
     }
 
+     public synchronized List<Tweet> helperTweets() throws InterruptedException {
+        TwitterFilteredStream t1 = new TwitterFilteredStream();
+        t1.start();
+        List<Tweet> return_tweets = new ArrayList<Tweet>();
+        t1.addListeners(new TweetListener() {
+            @Override
+            public void onListener() {
+                List<Tweet> temp = t1.getTweets();
+                for (Tweet tweet: temp) {
+                    return_tweets.add(tweet);
+                }
+            }
+        });
+        wait(2000);
+        return return_tweets;
+    }
+    
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -45,7 +63,6 @@ public class NewsFragment extends Fragment {
 //                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
 //                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 params.setMargins(10,10,10,10);
-
                 for (Tweet tweet : t1.getTweets()) {
                     TextView temp = new TextView(getContext());
                     LinearLayout tweetLayout = new LinearLayout(getContext());
@@ -79,6 +96,7 @@ public class NewsFragment extends Fragment {
                         @Override
                         public void run() {
                             ll.addView(temp);
+                           // returnabletweets.add(tweet);
                         }
                     });
                     System.out.println(tweet.getText());
