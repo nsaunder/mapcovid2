@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(JUnit4.class)
 @PrepareForTest({FirebaseDatabase.class})
-public class populateUnitTest {
+public class removeDuplicatesUnitTest {
     HomeActivity ha;
     ArrayList<PathItem> p;
 
@@ -93,15 +93,22 @@ public class populateUnitTest {
         assertEquals("98",p.get(p.size()-2).getTime());
     }
 
+    @Test
     public void noItems(){
+        mockDB = Mockito.mock(DatabaseReference.class);
+        FirebaseDatabase mockFDB = Mockito.mock(FirebaseDatabase.class);
+        Mockito.when(mockFDB.getReference()).thenReturn(mockDB);
+        PowerMockito.mockStatic(FirebaseDatabase.class);
+        Mockito.when(FirebaseDatabase.getInstance()).thenReturn(mockFDB);
+        ha = new HomeActivity();
+
         p = ha.removeConsecutiveDuplicates(p);
         assertNull(p);
-        assertEquals(0, p.size());
 
-        p.add(new PathItem("h", "h", 1.0, 1.0));
+        p = new ArrayList<>();
         p = ha.removeConsecutiveDuplicates(p);
-        assertEquals(1, p.size());
-
+        assertNotNull(p);
+        assertEquals(0, p.size());
     }
 
 }

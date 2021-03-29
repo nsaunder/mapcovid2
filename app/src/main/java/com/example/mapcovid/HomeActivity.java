@@ -157,6 +157,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public ArrayList<PathItem> removeConsecutiveDuplicates(ArrayList<PathItem> p) {
         //if path is empty or only contains one city, no need to remove anything
+        if(p == null)
+            return p;
         if(p.size() <= 1) {
             return p;
         }
