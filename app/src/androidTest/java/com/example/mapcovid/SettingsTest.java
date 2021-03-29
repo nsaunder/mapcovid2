@@ -41,6 +41,9 @@ public class SettingsTest {
     @Rule
     public ActivityTestRule<HomeActivity> mHomeRule =
             new ActivityTestRule<>(HomeActivity.class);
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
 
     @Before
     public void initialize() {
@@ -59,7 +62,7 @@ public class SettingsTest {
     }
 
     @Test
-    public void settings_buttons_1() {
+    public void gps_settings() {
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.switch1)).perform(click());
         onView(withText("Would you like to edit your permissions for GPS?")).check(matches(isDisplayed()));
@@ -67,12 +70,11 @@ public class SettingsTest {
     }
 
     @Test
-    public void settings_buttons_2() {
+    public void notification_settings() {
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.switch2)).perform(click());
         onView(withText("Would you like to edit your permissions for notifications?")).check(matches(isDisplayed()));
         onView(withId(android.R.id.button1)).perform(click());
     }
-
 
 }
