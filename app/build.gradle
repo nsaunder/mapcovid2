@@ -17,9 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
@@ -37,19 +35,19 @@ android {
         }
     }
 
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    useLibrary 'android.test.runner'
 
+    useLibrary 'android.test.runner'
     useLibrary 'android.test.base'
     useLibrary 'android.test.mock'
     packagingOptions {
@@ -83,22 +81,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-database:19.2.1'
-
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     testImplementation 'org.json:json:20140107'
-
     testImplementation 'org.powermock:powermock-api-mockito:1.5.5'
     testImplementation "org.powermock:powermock-module-junit4:1.6.4"
-
     api 'com.github.ok2c.hc4.android:httpclient-android:0.1.0'
     implementation group: 'cz.msebera.android' , name: 'httpclient', version: '4.5.8'
     implementation 'com.github.redouane59.twitter:twittered:1.21'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
-
     testImplementation 'org.mockito:mockito-core:1.10.8'
-
-
     androidTestUtil 'androidx.test:orchestrator:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
@@ -118,10 +110,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     testImplementation 'org.json:json:20140107'
-
     testImplementation 'org.powermock:powermock-api-mockito:1.5.5'
     testImplementation "org.powermock:powermock-module-junit4:1.6.4"
-
     api 'com.github.ok2c.hc4.android:httpclient-android:0.1.0'
     implementation group: 'cz.msebera.android', name: 'httpclient', version: '4.5.8'
     implementation 'com.github.redouane59.twitter:twittered:1.21'
@@ -132,21 +122,9 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestUtil 'androidx.test:orchestrator:1.1.0'
-
     testImplementation 'org.powermock:powermock-api-mockito:1.5.5'
     testImplementation "org.powermock:powermock-module-junit4:1.6.4"
-
-
     androidTestImplementation 'junit:junit:4.+'
-//    androidTestImplementation ('org.powermock:powermock-api-mockito2:2.0.2') {
-//        exclude group: 'org.hamcrest'
-//        exclude group: 'org.objenesis'
-//    }
-//    androidTestImplementation ("org.powermock:powermock-module-junit4:2.0.2") {
-//        exclude group: 'org.hamcrest'
-//        exclude group: 'org.objenesis'
-//    }
-    //androidTestImplementation "org.mockito:mockito-core:2.23.4"
     androidTestImplementation 'org.mockito:mockito-core:3.7.7'
     androidTestImplementation 'org.mockito:mockito-android:3.7.7'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -171,10 +149,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }
 
-//configurations.all {
-//    resolutionStrategy.dependencySubstitution {
-//        substitute module('org.hamcrest:hamcrest-core:1.3') with module('junit:junit:4.10')
-//    }
-//}
 
 
