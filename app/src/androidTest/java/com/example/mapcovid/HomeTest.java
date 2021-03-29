@@ -1,5 +1,6 @@
 package com.example.mapcovid;
 
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.View;
 
@@ -149,15 +150,28 @@ public class HomeTest {
         }).check(matches(isDisplayed())).perform(click());
     }
 
-    @Test // test #14, 15
+    @Test
     public void test_pop_up_info() throws UiObjectNotFoundException {
         onView(withId(R.id.launchBtn)).perform(click());
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject markerbutton = device.findObject(new UiSelector()
                 .descriptionContains("Google Map")
                 .childSelector(new UiSelector().instance(1)));
-        markerbutton.click();
-        //onView(withId(R.id.launchBtn)).getLocationOnScreen();
+        try {
+            markerbutton.click();
+            Rect rects = markerbutton.getBounds();
+
+            //Rect(79, 641 - 150, 754)
+            device.click(469, 837 );
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+        onView(withText("New Cases")).inRoot(isDialog()).withFailureHandler(new FailureHandler() {
+            @Override
+            public void handle(Throwable error, Matcher<View> viewMatcher) {
+
+            }
+        }).check(matches(isDisplayed())).perform(click());
 
     }
 
