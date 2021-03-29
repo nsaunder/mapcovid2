@@ -2,15 +2,22 @@ package com.example.mapcovid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,8 +58,10 @@ public class MapsFragment extends Fragment {
     private long UPDATE_INTERVAL = 10*1000; /*10 secs*/
     private long FASTEST_INTERVAL = 2000; /*2 secs*/
     private Constant constants;
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private GoogleMap mMap;
+    private Marker marky;
 
+    private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -64,7 +73,8 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            GoogleMap mMap = googleMap;
+            mMap = googleMap;
+            mMap.setMinZoomPreference(10f);
 
             constants = new Constant();
 
@@ -118,19 +128,57 @@ public class MapsFragment extends Fragment {
                                 .color(Color.BLUE));
                     }
 
-                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    lastLocation = new LatLng(34.2, -118.23);
+                    //lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
                     lastMarker = mMap.addMarker(new MarkerOptions()
                             .position(lastLocation)
                             .title("Current Location")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });
 
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+
+            System.out.println(constants.getPermissionsGranted()+"--");
+            if(!constants.getPermissionsGranted()) {
+                button.setVisibility(View.VISIBLE);
+            }
+            else {
+                button.setVisibility(View.GONE);
+            }
+
+
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    System.out.println("Hi");
+                    markerPlace(false);
+                }
+
+            });
+
+            constants.addPermissionListener(new permissionsListener() {
+                @Override
+                public void onPermissionsChange() {
+                    System.out.println(constants.getPermissionsGranted()+"--");
+                    if(constants.getPermissionsGranted() == false)
+                        button.setVisibility(View.VISIBLE);
+                    else
+                        button.setVisibility(View.GONE);
+                }
+            });
+
             constants.fragmentReady();
+
+//            View b = findViewById(R.id.button);
+//b.setVisibility(View.GONE);
+
 
             List<City> cities = null;
             List<WeightedLatLng> latLngs = new ArrayList<>();
@@ -143,30 +191,8 @@ public class MapsFragment extends Fragment {
                 System.err.println(e);
             }
 
-            for(int i = 0; i < cities.size(); i++)
-            {
-                //citiesMap -> (cityName, City)
-                citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+            addCityMarkers(cities, latLngs, citiesMap);
 
-                //Create a LatLng
-                LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
-                        cities.get(i).get_center_long());
-
-                //Create the weightedlatlng
-                WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
-                latLngs.add(temp);  //Add to latLngs arraylist
-
-                //Add map marker to to map with the city name that can be shown by clicking
-                //This will be helpful for onMarkerClickListener
-                Marker mark = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(citypos)
-                                .title(cities.get(i).get_city_name())
-                                .snippet("More info..."));
-
-                mark.showInfoWindow();
-
-            }
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
                 @Override
@@ -202,14 +228,60 @@ public class MapsFragment extends Fragment {
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
 
-    private List<City> readItems(String filename) throws JSONException, IOException {
+    public List<LatLng> addCityMarkers(List<City> cities, List<WeightedLatLng> latLngs, HashMap<String, City> citiesMap){
+        List<LatLng> res = new ArrayList<>();
+        for(int i = 0; i < cities.size(); i++)
+        {
+            //citiesMap -> (cityName, City)
+            citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+
+            //Create a LatLng
+            LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
+                    cities.get(i).get_center_long());
+
+            //Create the weightedlatlng
+            WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
+            latLngs.add(temp);  //Add to latLngs arraylist
+
+            //Add map marker to to map with the city name that can be shown by clicking
+            //This will be helpful for onMarkerClickListener
+            Marker mark = null;
+            if(mMap != null) {
+                mark = mMap.addMarker(
+                        new MarkerOptions()
+                                .position(citypos)
+                                .title(cities.get(i).get_city_name())
+                                .snippet("More info..."));
+                res.add(mark.getPosition());
+            }
+            else
+            {
+                res.add(citypos);
+            }
+
+            //mark.showInfoWindow();
+
+        }
+        return res;
+    }
+
+
+    public List<City> readItems(String filename) throws JSONException, IOException {
         List<City> cities = new ArrayList<>();
         try {
-            InputStream is = getContext().getAssets().open("city_data.json");
+
+            InputStream is = null;
+            if(getContext() != null) {
+                is = getContext().getAssets().open(filename);
+            }
+            else {
+                is = this.getClass().getClassLoader().getResourceAsStream(filename);
+            }
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -227,6 +299,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -240,5 +313,27 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    public void markerPlace(final boolean tf){
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            boolean placeOnce = tf;
+            @Override
+            public void onMapClick(LatLng arg0) {
+                if (placeOnce == false) {
+                    if(marky != null)
+                        marky.remove();
+                    marky = mMap.addMarker(new MarkerOptions()
+                            .position(arg0)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    marky.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
+                    placeOnce = true;
+
+
+                }
+            }
+
+        });
+    }
 
 }

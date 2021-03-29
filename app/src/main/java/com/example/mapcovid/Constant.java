@@ -21,7 +21,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -39,22 +42,36 @@ interface mapFragmentListener {
     void fragmentReady();
 }
 
+interface permissionsListener {
+    void onPermissionsChange();
+}
+
 public class Constant {
+    //PERMISSIONS//
+    private static boolean permissionsGranted;
+    //DATA TINGS//
     private static String appId;
+    private DatabaseReference database;
     private static ArrayList<City> cities;
     private static String currentLocation;
-    private static boolean newLocation;
-    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
-    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static String lastLocation;
     private static Double current_lat;
     private static Double current_lon;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private static boolean newLocation;
+    //LISTENERS//
+    private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
+    private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
+    private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
-    public Constant() { }
+    public Constant() {
+        //initialize firebase database reference
+        database = get_instance().getReference();
+    }
 
     public Constant(Context context) {
+        //initialize firebase database reference
+        database = get_instance().getReference();
         //initialize list of City Objects
         set_cities(context);
         //get unique ID for application
@@ -64,11 +81,30 @@ public class Constant {
                 appId = s;
             }
         });
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //check permissions saved from last run
+        if(preferences.getBoolean("permissionsGranted", true)) {
+            setPermissionsGranted(context, true);
+        } else {
+            setPermissionsGranted(context, false);
+        }
+    }
+
+    //wrapper for static FirebaseDatabase getInstance()
+    public FirebaseDatabase get_instance() {
+        return FirebaseDatabase.getInstance();
     }
 
     public void set_cities(Context context) {
         try {
-            InputStream is = context.getAssets().open("city_data.json");
+            InputStream is = null;
+            if(context != null) {
+                is = context.getAssets().open("city_data.json");
+            }
+            else {
+                is = this.getClass().getClassLoader().getResourceAsStream("city_data.json");
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -92,7 +128,7 @@ public class Constant {
         }
     }
 
-    public static void addCurrentLocationChangeListener(currentLocationChangedListener l) {
+    public void addCurrentLocationChangeListener(currentLocationChangedListener l) {
         currentLocationListeners.add(l);
     }
 
@@ -104,6 +140,21 @@ public class Constant {
         for(mapFragmentListener l: mapFragmentListeners) {
             l.fragmentReady();
         }
+    }
+
+    public void setPermissionsGranted(Context context, boolean b) {
+        //get shared preferences
+        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        //set permissions to boolean
+        preferences.edit().putBoolean("permissionsGranted", b).apply();
+        permissionsGranted = b;
+        for(permissionsListener l: permissionsListeners) {
+            l.onPermissionsChange();
+        }
+    }
+
+    public void addPermissionListener(permissionsListener l) {
+        permissionsListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {
@@ -122,6 +173,14 @@ public class Constant {
         return appId;
     }
 
+    public ArrayList<City> getCities() {
+        return cities;
+    }
+
+    public List<permissionsListener> getPermissionListeners() {
+        return permissionsListeners;
+    }
+
     public String getCurrentLocation() {
         return currentLocation;
     }
@@ -138,7 +197,13 @@ public class Constant {
         return lastLocation;
     }
 
+    public boolean getPermissionsGranted() { return permissionsGranted; }
+
     public City get_city(String city) {
+        //added because it failed test case
+        if(city == null) {
+            return null;
+        }
         for(City c: cities) {
             if(c.get_city_name().compareTo(city) == 0) {
                 return c;
@@ -153,7 +218,7 @@ public class Constant {
 
     //get path for day passed into function from firebase
     public void getPath(String day, final getPathCallback callBack) {
-        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
+        database.child("e0oPScPeTRy3c84TQcG4LS").child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<PathItem> path = new ArrayList<PathItem>();

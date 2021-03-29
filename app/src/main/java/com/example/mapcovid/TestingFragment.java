@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,7 +54,7 @@ public class TestingFragment extends Fragment {
         LatLng position;
         boolean walkup;
         boolean driveup;
-        public TestingLocation(String name, LatLng ll, boolean w, boolean d)
+        public TestingLocation(String name, LatLng ll, boolean d, boolean w)
         {
             this.name = name;
             this.position = ll;
@@ -69,6 +70,7 @@ public class TestingFragment extends Fragment {
     private double currentX = 34;
     private double currentY = -118;
     private Constant constants;
+    private GoogleMap mMap;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -83,9 +85,11 @@ public class TestingFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            GoogleMap mMap = googleMap;
+            mMap = googleMap;
+            mMap.setMinZoomPreference(10f);
             constants = new Constant();
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
+
             String day = LocalDate.now().toString();
             constants.getPath(day, new getPathCallback() {
                 boolean newPath = false;
@@ -141,16 +145,12 @@ public class TestingFragment extends Fragment {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     lastMarker.showInfoWindow();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 10f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                 }
 
             });
 
             constants.fragmentReady();
-
-
-
-
 
             List<TestingLocation> testingLocations = null;
             // Get the data: latitude/longitude positions of police stations.
@@ -162,23 +162,7 @@ public class TestingFragment extends Fragment {
                 System.err.println(e);
             }
 
-            for(int i = 0; i < testingLocations.size(); i++)
-            {
-                //testingMap -> (location name, TestingLocation)
-                testingMap.put(testingLocations.get(i).getName(), testingLocations.get(i));
-
-
-                //Add map marker to to map with the city name that can be shown by clicking
-                //This will be helpful for onMarkerClickListener
-                Marker mark = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(testingLocations.get(i).getPosition())
-                                .title(testingLocations.get(i).getName())
-                                .snippet("More info..."));
-
-                mark.showInfoWindow();
-
-            }
+            addTestingMarkers(testingLocations, testingMap);
 
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
@@ -221,20 +205,48 @@ public class TestingFragment extends Fragment {
                     }
                     }
             });
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
 
-    /*public void openDialog(TestingLocation loc){
-        InfoDialog info = new InfoDialog();
-        info.setTitle(loc.getName());
-        info.setInformation("\nDrive-through: " + loc.getDriveUp() +
-                            "\nWalk-in: " + loc.getWalkUp()+
-                            "\nDirections: www.google.com");
-        info.onCreateDialog(new Bundle());
-    }*/
-    private List<TestingLocation> readItems(String filename) throws JSONException, IOException {
+    public List<LatLng> addTestingMarkers(List<TestingLocation> testingLocations, HashMap<String, TestingLocation> testingMap){
+        List<LatLng> res = new ArrayList<>();
+        for(int i = 0; i < testingLocations.size(); i++)
+        {
+            //testingMap -> (location name, TestingLocation)
+            testingMap.put(testingLocations.get(i).getName(), testingLocations.get(i));
+
+
+            //Add map marker to to map with the city name that can be shown by clicking
+            //This will be helpful for onMarkerClickListener
+            Marker mark = null;
+            if(mMap != null) {
+                mark = mMap.addMarker(
+                        new MarkerOptions()
+                                .position(testingLocations.get(i).getPosition())
+                                .title(testingLocations.get(i).getName())
+                                .snippet("More info..."));
+                res.add(mark.getPosition());
+            }
+            else{
+                res.add(testingLocations.get(i).getPosition());
+            }
+
+        }
+        return res;
+    }
+
+
+    public List<TestingLocation> readItems(String filename) throws JSONException, IOException {
         List<TestingLocation> result = new ArrayList<>();
-        InputStream inputStream = getContext().getAssets().open(filename);
+        InputStream inputStream = null;
+        if(getContext() != null) {
+            inputStream = getContext().getAssets().open(filename);
+        }
+        else {
+            inputStream = this.getClass().getClassLoader().getResourceAsStream(filename);
+        }
+
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
         JSONArray array = new JSONArray(json);
         Random rand = new Random();

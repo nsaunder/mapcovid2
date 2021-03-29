@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".MainActivity">
 
     <ImageView
@@ -11,9 +12,10 @@
         android:layout_height="253dp"
         android:layout_marginTop="197dp"
         android:layout_marginBottom="361dp"
+        android:contentDescription="logo"
         android:scaleType="center"
         android:src="@drawable/logo"
-        android:contentDescription="logo"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
