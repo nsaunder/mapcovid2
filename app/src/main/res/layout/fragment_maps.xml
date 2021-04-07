@@ -18,14 +18,23 @@
         />
 
     <ImageButton
-        android:id="@+id/fakebutton"
+        android:id="@+id/currentposbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:background="@drawable/marker_button"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="200dp"
         android:layout_marginRight="20dp"
-        android:visibility="gone"
+        />
+
+    <ImageButton
+        android:id="@+id/LAcamerabutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/marker_button"
+        android:layout_marginBottom="140dp"
+        android:layout_marginRight="20dp"
         />
 
 </fragment>
