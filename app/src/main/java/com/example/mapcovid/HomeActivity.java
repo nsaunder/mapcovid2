@@ -97,9 +97,9 @@ public class HomeActivity extends AppCompatActivity {
                     ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
                     TextView numLoc = (TextView) findViewById(R.id.numLocations);
                     TextView pop = (TextView) findViewById(R.id.popCity);
+                    ll.removeAllViews();
 
                     if (path.size() == 0) {
-                        ll.removeAllViews();
                         if (numLoc != null && pop != null) {
                             numLoc.setText("0");
                             pop.setText("N/A");

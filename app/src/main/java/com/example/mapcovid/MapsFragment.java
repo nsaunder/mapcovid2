@@ -128,8 +128,8 @@ public class MapsFragment extends Fragment {
                                 .color(Color.BLUE));
                     }
 
-                    lastLocation = new LatLng(34.2, -118.23);
-                    //lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    //lastLocation = new LatLng(34.2, -118.23);
+                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
                     lastMarker = mMap.addMarker(new MarkerOptions()
                             .position(lastLocation)
                             .title("Current Location")
