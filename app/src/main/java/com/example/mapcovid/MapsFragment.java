@@ -141,7 +141,7 @@ public class MapsFragment extends Fragment {
 
             });
 
-            ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
 
             System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
