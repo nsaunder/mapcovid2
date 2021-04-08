@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/MapCovid.iml" filepath="$PROJECT_DIR$/.idea/modules/MapCovid.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MapCovid.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MapCovid.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/mapcovid2.MapCovid.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/mapcovid2.MapCovid.app.iml" />
     </modules>
   </component>
 </project>

@@ -218,7 +218,7 @@ public class Constant {
 
     //get path for day passed into function from firebase
     public void getPath(String day, final getPathCallback callBack) {
-        database.child("e0oPScPeTRy3c84TQcG4LS").child("paths").child(day).addValueEventListener(new ValueEventListener() {
+        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<PathItem> path = new ArrayList<PathItem>();
@@ -237,6 +237,22 @@ public class Constant {
                 Log.d("Constant Class", "Error Reading Path for " + day);
             }
         });
+    }
+
+    //checks if city is in LA County
+    public boolean inLACounty(String city) {
+        //if we didn't populate cities, then return false
+        if(cities == null || city == null) {
+            return false;
+        }
+        //traverse cities list
+        for(City c: cities) {
+            if(c.get_city_name().compareTo(city) == 0) {
+                return true;
+            }
+        }
+        //all else fails, return false
+        return false;
     }
 
 }
