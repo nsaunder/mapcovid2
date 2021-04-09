@@ -20,8 +20,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MapCovid">
-
+        android:theme="@style/Theme.MapCovid"
+        android:name="com.chaquo.python.android.PyApplication">
         <activity android:name=".OnboardingActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.ok2c.hc4.android:httpclient-android:0.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f65821360c2461b01f893fe5fb5e9280/jetified-httpclient-android-0.1.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f65821360c2461b01f893fe5fb5e9280/jetified-httpclient-android-0.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f65821360c2461b01f893fe5fb5e9280/jetified-httpclient-android-0.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b5458b13e77bf929e86e3e973acaff58/jetified-httpclient-android-0.1.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b5458b13e77bf929e86e3e973acaff58/jetified-httpclient-android-0.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b5458b13e77bf929e86e3e973acaff58/jetified-httpclient-android-0.1.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.ok2c.hc4.android/httpclient-android/0.1.0/5afd027343b8a96a01ff6350a3597ce0087af8ad/httpclient-android-0.1.0-javadoc.jar!/" />
