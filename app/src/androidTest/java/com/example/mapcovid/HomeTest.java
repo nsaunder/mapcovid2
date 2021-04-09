@@ -76,70 +76,70 @@ public class HomeTest {
 
     @Test
     public void map_to_testing() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_testing)).perform(click());
         onView(withId(R.id.testing_map)).check(matches(isDisplayed()));
     }
 
     @Test
     public void map_to_path() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_path)).perform(click());
         onView(withId(R.id.header1)).check(matches(isDisplayed()));
     }
 
     @Test
     public void map_to_news() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_news)).perform(click());
         onView(withId(R.id.tweet_scroll_view)).check(matches(isDisplayed()));
     }
 
     @Test
     public void map_to_settings() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.settings_button)).check(matches(isDisplayed()));
     }
 
     @Test
     public void home_to_launch() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         ViewInteraction imageButton = onView(Matchers.allOf(withContentDescription("MapCovid"), isDisplayed()));
         imageButton.perform(click());
-        onView(withId(R.id.launchBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.launch_button)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testing_to_launch() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_testing)).perform(click());
         ViewInteraction imageButton = onView(Matchers.allOf(withContentDescription("MapCovid"), isDisplayed()));
         imageButton.perform(click());
-        onView(withId(R.id.launchBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.launch_button)).check(matches(isDisplayed()));
     }
 
     @Test
     public void path_to_launch() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_path)).perform(click());
         ViewInteraction imageButton = onView(Matchers.allOf(withContentDescription("MapCovid"), isDisplayed()));
         imageButton.perform(click());
-        onView(withId(R.id.launchBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.launch_button)).check(matches(isDisplayed()));
     }
 
     @Test
     public void settings_to_launch() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_settings)).perform(click());
         ViewInteraction imageButton = onView(Matchers.allOf(withContentDescription("MapCovid"), isDisplayed()));
         imageButton.perform(click());
-        onView(withId(R.id.launchBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.launch_button)).check(matches(isDisplayed()));
     }
 
     @Test
     public void test_about_button() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.about_button)).perform(click());
         onView(withText("About")).inRoot(isDialog()).withFailureHandler(new FailureHandler() {
@@ -152,7 +152,7 @@ public class HomeTest {
 
     @Test
     public void test_pop_up_info() throws UiObjectNotFoundException {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject markerbutton = device.findObject(new UiSelector()
                 .descriptionContains("Google Map")

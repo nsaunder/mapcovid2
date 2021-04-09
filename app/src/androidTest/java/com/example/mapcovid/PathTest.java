@@ -76,7 +76,7 @@ public class PathTest {
 
     @Test
     public void add_path() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         onView(withId(R.id.navigation_path)).perform(click());
         onView(withId(R.id.date_button)).perform(click());
         onView(withId(R.id.numLocations)).check(matches(withText("1")));

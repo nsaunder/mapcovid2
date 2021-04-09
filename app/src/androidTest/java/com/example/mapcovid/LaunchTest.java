@@ -57,7 +57,7 @@ public class LaunchTest {
 
     @Test
     public void launch_test() {
-        onView(withId(R.id.launchBtn)).perform(click());
+        onView(withId(R.id.launch_button)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
     }
 }
