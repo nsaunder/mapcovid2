@@ -140,9 +140,12 @@ public class MapsFragment extends Fragment {
                 }
 
             });
+            constants.fragmentReady();
 
             ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
-
+            ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
+            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton
+            );
             System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
@@ -157,8 +160,25 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
-                    System.out.println("Hi");
                     markerPlace(false);
+                }
+
+            });
+            curposbutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(constants.getCurrentLat(), constants.getCurrentLon())));
+                }
+
+            });
+            labutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
                 }
 
             });
