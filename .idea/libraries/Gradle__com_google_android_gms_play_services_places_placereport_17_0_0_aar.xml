@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-places-placereport:17.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/08ccd60cb34ccbaaf15cce29daa0c7be/jetified-play-services-places-placereport-17.0.0/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d3d7a6dea7090f667273c098de0d4384/jetified-play-services-places-placereport-17.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d3d7a6dea7090f667273c098de0d4384/jetified-play-services-places-placereport-17.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d3d7a6dea7090f667273c098de0d4384/jetified-play-services-places-placereport-17.0.0/AndroidManifest.xml" />

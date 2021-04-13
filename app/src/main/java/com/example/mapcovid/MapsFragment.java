@@ -110,6 +110,10 @@ public class MapsFragment extends Fragment {
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
             //Fixed by moving the currentlocation code to here and adding a line in mainactivity so the listner knows to fetch first location
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
+            ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
+            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton
+            );
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -130,6 +134,14 @@ public class MapsFragment extends Fragment {
 
                     //lastLocation = new LatLng(34.2, -118.23);
                     lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+                    if(citiesMap.containsKey(constants.getCurrentLocation())){
+                        labutton.setVisibility(View.GONE);
+                    }
+                    else {
+                        labutton.setVisibility((View.VISIBLE));
+                    }
+
                     lastMarker = mMap.addMarker(new MarkerOptions()
                             .position(lastLocation)
                             .title("Current Location")
@@ -142,10 +154,6 @@ public class MapsFragment extends Fragment {
             });
             constants.fragmentReady();
 
-            ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
-            ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
-            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton
-            );
             System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
@@ -245,7 +253,6 @@ public class MapsFragment extends Fragment {
                     .radius(30)
                     .maxIntensity(9)
                     .build();
-
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
