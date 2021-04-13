@@ -112,8 +112,8 @@ public class MapsFragment extends Fragment {
             //Fixed by moving the currentlocation code to here and adding a line in mainactivity so the listner knows to fetch first location
             ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
             ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
-            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton
-            );
+            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton);
+            ImageButton infobutton = (ImageButton) getView().findViewById(R.id.infoButton);
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -139,7 +139,7 @@ public class MapsFragment extends Fragment {
                         labutton.setVisibility(View.GONE);
                     }
                     else {
-                        labutton.setVisibility((View.VISIBLE));
+                        labutton.setVisibility(View.VISIBLE);
                     }
 
                     lastMarker = mMap.addMarker(new MarkerOptions()
@@ -189,6 +189,27 @@ public class MapsFragment extends Fragment {
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
                 }
 
+            });
+
+            infobutton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    AlertDialog ad = new AlertDialog.Builder(getContext())
+                            .create();
+                    ad.setCancelable(false);
+                    ad.setTitle("Heatmap Legend");
+                    LayoutInflater factory = LayoutInflater.from(getContext());
+                    final View view = factory.inflate(R.layout.legend, null);
+                    ad.setView(view);
+                    ad.setButton(DialogInterface.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+                    ad.show();
+                }
             });
 
             constants.addPermissionListener(new permissionsListener() {
