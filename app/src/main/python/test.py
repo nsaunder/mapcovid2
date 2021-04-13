@@ -4,6 +4,7 @@ import json
 from os.path import dirname, join
 import pickle
 import datetime
+import os
 
 def create_new_file():
     #[GRABBING OLD DATA -- BASELINE DATA IS A DICTIONARY]
@@ -57,7 +58,13 @@ def create_new_file():
             final_comparison.append(temp)
         else:
             final_comparison.append(city_data[i])
-    print(dirname(__file__))
+
+    print (final_comparison)
+    with open(os.environ["HOME"] + "/final_city_data.json", 'w') as outfile:
+        json.dump(final_comparison, outfile)
+
+        #WRITTEN TO /storage/emulated/0/final_city_data.json
+
 
 
 

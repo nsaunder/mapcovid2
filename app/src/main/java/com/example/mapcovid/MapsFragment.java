@@ -47,6 +47,7 @@ import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -189,22 +190,6 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
-                    View root = getView().findViewById(R.id.map).getRootView();
-                    Bitmap bitmap = getScreenShot(root);
-                    store(bitmap,"screenshotMap.png");
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SENDTO);
-                    intent.setType("image/*");
-                    intent.setData(Uri.parse("sms:7327578047"));
-                    startActivity(Intent.createChooser(intent, "Share via"));
-//                    try {
-//                        startActivity(Intent.createChooser(intent, "Share Screenshot"));
-//                    } catch (ActivityNotFoundException e) {
-//                        Toast.makeText(context, "No App Available", Toast.LENGTH_SHORT).show();
-//                    }
-
-
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
                 }
 
             });
@@ -230,7 +215,10 @@ public class MapsFragment extends Fragment {
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
             try {
-                cities = readItems("city_data.json");
+//                String path = Environment.getExternalStorageDirectory().toString() + "/final_city_data.json";
+//                System.out.println(path);
+//                System.out.println("FLAG");
+                cities = readItems("final_city_data.json");
             } catch (JSONException e) {
                 System.err.println(e);
             } catch (IOException e) {
@@ -322,7 +310,10 @@ public class MapsFragment extends Fragment {
 
             InputStream is = null;
             if(getContext() != null) {
-                is = getContext().getAssets().open(filename);
+                //is = getContext().getAssets().open(filename);
+                //File file = new File(Environment.getExternalStorageDirectory(), filename);
+                File file = new File(getContext().getFilesDir(), filename);
+                is = new FileInputStream(file);
             }
             else {
                 is = this.getClass().getClassLoader().getResourceAsStream(filename);
@@ -336,6 +327,9 @@ public class MapsFragment extends Fragment {
             reader.close();
         } catch(Exception e) {
             System.err.println(e);
+        }
+        for (City c: cities) {
+            System.err.println(c.get_city_name());
         }
         return cities;
     }
