@@ -3,11 +3,13 @@ package com.example.mapcovid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,6 +27,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,6 +62,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -129,6 +134,7 @@ public class MapsFragment extends Fragment {
             ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
             ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton);
             ImageButton infobutton = (ImageButton) getView().findViewById(R.id.infoButton);
+
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -203,6 +209,18 @@ public class MapsFragment extends Fragment {
                 }
 
             });
+            ImageButton screenButton = (ImageButton) getView().findViewById(R.id.share_button);
+            screenButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    System.out.println("HERERERERE");
+                    Bitmap bm = getScreenShot(getView());
+                    System.out.println("MADE IT PAST");
+                    File myFile = store(bm, "Screenshot.png");
+                    System.out.println("MADE it one more");
+                    shareImage(myFile);
+                }
+            });
 
 
             labutton.setOnClickListener(new View.OnClickListener()
@@ -210,6 +228,8 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
+
                 }
 
             });
@@ -266,6 +286,19 @@ public class MapsFragment extends Fragment {
             }
 
             addCityMarkers(cities, latLngs, citiesMap);
+
+
+            constants.addnewcatlistener(new catlistenerr{
+                public void onThing(){
+                    try {
+                        cities = readItems("final_city_data.json");
+                    } catch(Exception e){
+                        System.out.println("Something went wrong figure it out");
+                    }
+                    addCityMarkers(cities, latLngs, citiesMap);
+                }
+            });
+
 
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
@@ -366,6 +399,12 @@ public class MapsFragment extends Fragment {
                 //is = getContext().getAssets().open(filename);
                 //File file = new File(Environment.getExternalStorageDirectory(), filename);
                 File file = new File(getContext().getFilesDir(), filename);
+                if(!file.exists()){
+                    Python python = Python.getInstance();
+                    PyObject pythonFile = python.getModule("test");
+                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                    file = new File(getContext().getFilesDir(), filename);
+                }
                 is = new FileInputStream(file);
             }
             else {
@@ -428,29 +467,105 @@ public class MapsFragment extends Fragment {
 
         });
     }
-    public static Bitmap getScreenShot(View view) {
-        View screenView = view.getRootView();
-        screenView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
-    public static void store(Bitmap bm, String fileName){
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Images";
+
+//    public void store(Bitmap bm, String fileName){
+//        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Images";
+//        File dir = new File(dirPath);
+//        if(!dir.exists())
+//            dir.mkdirs();
+//        File file = new File(dirPath, fileName);
+//        try {
+//            FileOutputStream fOut = new FileOutputStream(file);
+//            System.out.println("FOUT" + fOut);
+//            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+//            System.out.println(bm);
+//            fOut.flush();
+//            fOut.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public File store(Bitmap bm, String fileName){
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            System.out.println("Media Mounted");
+            return null;
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), fileName);
+        FileProvider.getUriForFile(Objects.requireNonNull(requireActivity().getApplicationContext()),
+                BuildConfig.APPLICATION_ID + ".provider", file);
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
         File dir = new File(dirPath);
         if(!dir.exists())
             dir.mkdirs();
-        File file = new File(dirPath, fileName);
+
         try {
             FileOutputStream fOut = new FileOutputStream(file);
-            System.out.println("FOUT" + fOut);
             bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            System.out.println(bm);
             fOut.flush();
             fOut.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return file;
+    }
+    public void shareImage(File file) {
+//        Uri uri = Uri.fromFile(file);
+//        Uri uri = FileProvider.getUriForFile(this,
+//                BuildConfig.APPLICATION_ID + ".provider",
+//                file);
+//        Intent intent = new Intent();
+//        intent.setAction(Intent.ACTION_VIEW);
+//
+//        intent.setDataAndType(uri, "image/*");
+//        startActivity(intent);
+//        Intent intent = new Intent();
+//
+//        intent.setDataAndType(uri, "image/*");
+//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        intent.setAction(Intent.ACTION_SENDTO);
+////        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+//        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+//        intent.putExtra(Intent.EXTRA_STREAM, uri);
+//        try {
+//            if (intent.resolveActivity(getPackageManager()) != null) {
+//                startActivity(intent);
+//            }
+//
+//        } catch (ActivityNotFoundException e) {
+//            Toast.makeText(this, "No App Available", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        Uri uri = FileProvider.getUriForFile(getContext(),
+                BuildConfig.APPLICATION_ID + ".provider",
+                file);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+//        intent.putExtra(android.content.Intent.)
+        try {
+            startActivity(Intent.createChooser(intent, "Share Screenshot"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), "No App Available", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    public Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 
 }
