@@ -140,9 +140,10 @@
                 android:text="1445789 bytes used"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+
             <Button
                 android:id="@+id/delete_storage_button"
-                android:layout_width="383dp"
+                android:layout_width="180dp"
                 android:layout_height="72dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="-220dp"
@@ -150,7 +151,19 @@
                 android:backgroundTint="#ff9984"
                 android:onClick="deleteStorage"
                 android:text="Delete Storage"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/show_storage_button"
+                android:layout_width="180dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="210dp"
+                android:layout_marginTop="-238dp"
+                android:layout_marginBottom="165dp"
+                android:backgroundTint="#ff9984"
+                android:onClick="showStorage"
+                android:text="Show Storage"
+                android:textColor="@color/white" />
             <Button
                 android:id="@+id/about_button"
                 android:layout_width="84dp"
