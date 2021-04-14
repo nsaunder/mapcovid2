@@ -46,6 +46,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/test/assets" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/assets" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../app/build/generated/python/proxies/debug" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/build" />
     </content>
@@ -66,13 +67,8 @@
     <orderEntry type="library" scope="TEST" name="Gradle: net.bytebuddy:byte-buddy-agent:1.10.19" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.objenesis:objenesis:3.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3" level="project" />
-<<<<<<< HEAD
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.ext:junit:1.1.2@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-intents:3.1.0@aar" level="project" />
-=======
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-intents:3.1.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.ext:junit:1.1.2@aar" level="project" />
->>>>>>> testingnew
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-core:3.3.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.uiautomator:uiautomator:2.2.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:rules:1.1.0@aar" level="project" />
@@ -81,7 +77,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:monitor:1.3.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.transition:transition:1.2.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-idling-resource:3.3.0@aar" level="project" />
-<<<<<<< HEAD
     <orderEntry type="library" scope="TEST" name="Gradle: org.powermock:powermock-module-junit4:1.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.powermock:powermock-module-junit4-common:1.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.robolectric:robolectric:4.0.2" level="project" />
@@ -93,12 +88,9 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.powermock:powermock-core:1.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.powermock:powermock-reflect:1.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.objenesis:objenesis:2.1" level="project" />
-=======
->>>>>>> testingnew
     <orderEntry type="library" scope="TEST" name="Gradle: org.json:json:20140107" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.mockito:mockito-all:1.9.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.javassist:javassist:3.20.0-GA" level="project" />
-<<<<<<< HEAD
     <orderEntry type="library" scope="TEST" name="Gradle: net.sf.kxml:kxml2:2.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.robolectric:junit:4.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.robolectric:resources:4.0.2" level="project" />
@@ -141,12 +133,10 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:rules:1.1.0-alpha3@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:runner:1.1.0-alpha3@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test:monitor:1.1.0@aar" level="project" />
-=======
-    <orderEntry type="library" scope="TEST" name="Gradle: org.mockito:mockito-core:1.10.8" level="project" />
->>>>>>> testingnew
     <orderEntry type="library" name="Gradle: android.test.mock" level="project" />
     <orderEntry type="library" name="Gradle: android.test.base" level="project" />
     <orderEntry type="library" name="Gradle: android.test.runner" level="project" />
+    <orderEntry type="library" name="Gradle: ./../../../.gradle/caches/modules-2/files-2.1/com.chaquo.python.runtime/chaquopy_java/9.1.0/3ce389fd29a40b6a788df30a5d6a8e3562a7b18b/chaquopy_java-9.1.0.jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.redouane59.twitter:twittered:1.21" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.10" level="project" />

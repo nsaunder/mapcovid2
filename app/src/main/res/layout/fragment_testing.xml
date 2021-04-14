@@ -5,4 +5,38 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestingFragment" />
+    tools:context=".TestingFragment">
+
+    <ImageButton
+        android:id="@+id/test_LACameraButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/ic_la_button"
+        android:layout_marginBottom="240dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        />
+
+    <ImageButton
+        android:id="@+id/test_currentposbutton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/ic_current_button"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <ImageButton
+        android:id="@+id/test_markerButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/ic_marker_button"
+        android:layout_marginBottom="160dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        />
+
+</fragment>

@@ -21,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -49,6 +52,14 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // "context" must be an Activity, Service or Application object from your app.
+        if (! Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("test");
+        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -126,9 +137,9 @@ public class HomeActivity extends AppCompatActivity {
                     ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
                     TextView numLoc = (TextView) findViewById(R.id.numLocations);
                     TextView pop = (TextView) findViewById(R.id.popCity);
+                    ll.removeAllViews();
 
                     if (path.size() == 0) {
-                        ll.removeAllViews();
                         if (numLoc != null && pop != null) {
                             numLoc.setText("0");
                             pop.setText("N/A");

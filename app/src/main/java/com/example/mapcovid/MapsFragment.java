@@ -9,15 +9,21 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +46,10 @@ import com.google.maps.android.heatmaps.WeightedLatLng;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -110,6 +120,10 @@ public class MapsFragment extends Fragment {
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
             //Fixed by moving the currentlocation code to here and adding a line in mainactivity so the listner knows to fetch first location
+            ImageButton button = (ImageButton) getView().findViewById(R.id.markerButton);
+            ImageButton labutton = (ImageButton) getView().findViewById(R.id.LACameraButton);
+            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton);
+            ImageButton infobutton = (ImageButton) getView().findViewById(R.id.infoButton);
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -128,8 +142,16 @@ public class MapsFragment extends Fragment {
                                 .color(Color.BLUE));
                     }
 
-                    lastLocation = new LatLng(34.2, -118.23);
-                    //lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    //lastLocation = new LatLng(34.2, -118.23);
+                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+                    if(citiesMap.containsKey(constants.getCurrentLocation())){
+                        labutton.setVisibility(View.GONE);
+                    }
+                    else {
+                        labutton.setVisibility(View.VISIBLE);
+                    }
+
                     lastMarker = mMap.addMarker(new MarkerOptions()
                             .position(lastLocation)
                             .title("Current Location")
@@ -140,12 +162,12 @@ public class MapsFragment extends Fragment {
                 }
 
             });
-
-            ImageButton button = (ImageButton) getView().findViewById(R.id.markerbutton);
+            constants.fragmentReady();
 
             System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
+                labutton.setVisibility(View.VISIBLE);
             }
             else {
                 button.setVisibility(View.GONE);
@@ -157,10 +179,54 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
-                    System.out.println("Hi");
                     markerPlace(false);
                 }
 
+            });
+            curposbutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if(constants != null && constants.getCurrentLat() != null)
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(constants.getCurrentLat(), constants.getCurrentLon())));
+                    else {
+                        if(marky != null) {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(marky.getPosition()));
+                        }
+                    }
+                }
+
+            });
+
+
+            labutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                }
+
+            });
+
+            infobutton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    AlertDialog ad = new AlertDialog.Builder(getContext())
+                            .create();
+                    ad.setCancelable(false);
+                    LayoutInflater factory = LayoutInflater.from(getContext());
+                    final View view = factory.inflate(R.layout.legend, null);
+                    ad.setView(view);
+                    ad.setButton(DialogInterface.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+                    ad.show();
+                }
             });
 
             constants.addPermissionListener(new permissionsListener() {
@@ -184,7 +250,10 @@ public class MapsFragment extends Fragment {
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
             try {
-                cities = readItems("city_data.json");
+//                String path = Environment.getExternalStorageDirectory().toString() + "/final_city_data.json";
+//                System.out.println(path);
+//                System.out.println("FLAG");
+                cities = readItems("final_city_data.json");
             } catch (JSONException e) {
                 System.err.println(e);
             } catch (IOException e) {
@@ -225,7 +294,6 @@ public class MapsFragment extends Fragment {
                     .radius(30)
                     .maxIntensity(9)
                     .build();
-
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
@@ -236,15 +304,16 @@ public class MapsFragment extends Fragment {
         List<LatLng> res = new ArrayList<>();
         for(int i = 0; i < cities.size(); i++)
         {
+            City city = cities.get(i);
             //citiesMap -> (cityName, City)
-            citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+            citiesMap.put(city.get_city_name(), city);
 
             //Create a LatLng
             LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
-                    cities.get(i).get_center_long());
+                    city.get_center_long());
 
             //Create the weightedlatlng
-            WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
+            WeightedLatLng temp = new WeightedLatLng(citypos, city.get_new_cases());
             latLngs.add(temp);  //Add to latLngs arraylist
 
             //Add map marker to to map with the city name that can be shown by clicking
@@ -254,8 +323,21 @@ public class MapsFragment extends Fragment {
                 mark = mMap.addMarker(
                         new MarkerOptions()
                                 .position(citypos)
-                                .title(cities.get(i).get_city_name())
+                                .title(city.get_city_name())
                                 .snippet("More info..."));
+                if(city.get_new_cases() < 3){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(105.0f));
+                }
+                else if(city.get_new_cases() >= 3 && city.get_new_cases() < 6){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                }
+                else if(city.get_new_cases() >= 6 && city.get_new_cases() < 9){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                }
+                else {
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
                 res.add(mark.getPosition());
             }
             else
@@ -276,7 +358,10 @@ public class MapsFragment extends Fragment {
 
             InputStream is = null;
             if(getContext() != null) {
-                is = getContext().getAssets().open(filename);
+                //is = getContext().getAssets().open(filename);
+                //File file = new File(Environment.getExternalStorageDirectory(), filename);
+                File file = new File(getContext().getFilesDir(), filename);
+                is = new FileInputStream(file);
             }
             else {
                 is = this.getClass().getClassLoader().getResourceAsStream(filename);
@@ -290,6 +375,9 @@ public class MapsFragment extends Fragment {
             reader.close();
         } catch(Exception e) {
             System.err.println(e);
+        }
+        for (City c: cities) {
+            System.err.println(c.get_city_name());
         }
         return cities;
     }
@@ -334,6 +422,30 @@ public class MapsFragment extends Fragment {
             }
 
         });
+    }
+    public static Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+    public static void store(Bitmap bm, String fileName){
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Images";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+        File file = new File(dirPath, fileName);
+        try {
+            FileOutputStream fOut = new FileOutputStream(file);
+            System.out.println("FOUT" + fOut);
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            System.out.println(bm);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

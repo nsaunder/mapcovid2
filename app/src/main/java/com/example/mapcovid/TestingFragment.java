@@ -18,6 +18,7 @@ import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mapcovid.Constant;
@@ -71,6 +72,7 @@ public class TestingFragment extends Fragment {
     private double currentY = -118;
     private Constant constants;
     private GoogleMap mMap;
+    private Marker marky;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -120,6 +122,9 @@ public class TestingFragment extends Fragment {
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
             //Fixed by moving the currentlocation code to here and adding a line in mainactivity so the listner knows to fetch first location
+            ImageButton button = (ImageButton) getView().findViewById(R.id.test_markerButton);
+            ImageButton labutton = (ImageButton) getView().findViewById(R.id.test_LACameraButton);
+            ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.test_currentposbutton);
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -139,6 +144,13 @@ public class TestingFragment extends Fragment {
                     }
 
                     lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+                    if(testingMap.containsKey(constants.getCurrentLocation())){
+                        labutton.setVisibility(View.GONE);
+                    }
+                    else {
+                        labutton.setVisibility((View.VISIBLE));
+                    }
                     lastMarker = mMap.addMarker(new MarkerOptions()
                             .position(lastLocation)
                             .title("Current Location")
@@ -151,6 +163,45 @@ public class TestingFragment extends Fragment {
             });
 
             constants.fragmentReady();
+
+            System.out.println(constants.getPermissionsGranted()+"--");
+            if(!constants.getPermissionsGranted()) {
+                button.setVisibility(View.VISIBLE);
+            }
+            else {
+                button.setVisibility(View.GONE);
+            }
+
+
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    markerPlace(false);
+                }
+
+            });
+            curposbutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(constants.getCurrentLat(), constants.getCurrentLon())));
+                }
+
+            });
+            labutton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
+                }
+
+            });
+
+
 
             List<TestingLocation> testingLocations = null;
             // Get the data: latitude/longitude positions of police stations.
@@ -280,5 +331,28 @@ public class TestingFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    public void markerPlace(final boolean tf){
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            boolean placeOnce = tf;
+            @Override
+            public void onMapClick(LatLng arg0) {
+                if (placeOnce == false) {
+                    if(marky != null)
+                        marky.remove();
+                    marky = mMap.addMarker(new MarkerOptions()
+                            .position(arg0)
+                            .title("Current Location")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    marky.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arg0, 10f));
+                    placeOnce = true;
+
+
+                }
+            }
+
+        });
     }
 }
