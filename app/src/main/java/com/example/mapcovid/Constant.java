@@ -100,10 +100,13 @@ public class Constant {
         try {
             InputStream is = null;
             if(context != null) {
-                is = context.getAssets().open("city_data.json");
+                //is = getContext().getAssets().open(filename);
+                //File file = new File(Environment.getExternalStorageDirectory(), filename);
+                File file = new File(context.getFilesDir(), "final_city_data.json");
+                is = new FileInputStream(file);
             }
             else {
-                is = this.getClass().getClassLoader().getResourceAsStream("city_data.json");
+                is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
