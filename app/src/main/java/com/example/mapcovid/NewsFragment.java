@@ -1,6 +1,7 @@
 package com.example.mapcovid;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import com.github.redouane59.twitter.dto.tweet.Tweet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -55,6 +57,7 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.news_fragment, container, false);
 
         t1.addListeners(new TweetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onListener() {
                 ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
@@ -69,6 +72,7 @@ public class NewsFragment extends Fragment {
                     TextView temp = new TextView(getContext());
                     LinearLayout tweetLayout = new LinearLayout(getContext());
                     temp.post(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.P)
                         @Override
                         public void run() {
 //                            tweetLayout.setLayoutParams(params);

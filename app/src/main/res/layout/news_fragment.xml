@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".NewsFragment">
 
+
     <ScrollView
         android:id="@+id/tweet_scroll_view"
         android:layout_width="match_parent"

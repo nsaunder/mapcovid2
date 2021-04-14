@@ -2,6 +2,7 @@ package com.example.mapcovid;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -50,6 +52,7 @@ import java.util.Set;
 public class HomeActivity extends AppCompatActivity {
     private Constant constants;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private static final String CHANNEL_ID = "test notification";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,9 @@ public class HomeActivity extends AppCompatActivity {
 
         constants = new Constant();
 
+        //create notification channel to send test notification
+        createNotificationChannel();
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -78,6 +84,27 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+    }
+
+    //create notification channel to push notifications to user
+    private void createNotificationChannel() {
+        //create the notification channel, but only in API 26+
+        if (Build.VERSION.SDK_INT >= 26) {
+            CharSequence name = getString(R.string.common_google_play_services_notification_channel_name);
+            String description = "notification channel for moving location notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.setShowBadge(true);
+            channel.setLightColor(Color.rgb(255, 153, 132));
+            channel.getLockscreenVisibility();
+            channel.enableVibration(true);
+
+            //register the channel with the system; can't change importance or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void setDate(View view){
@@ -227,6 +254,51 @@ public class HomeActivity extends AppCompatActivity {
             tf = true;
         }
         ad.show();
+    }
+
+    //when user clicks on button, send a test notification
+    public void sendTestNotification(View view) {
+        //right now, if user selects notification, they navigate to heat map --> change to news feed
+        Intent intent = new Intent(this, HomeActivity.class); //--------------------------------------------
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //notification text
+        String content_title = "Congratulations! You Successfully Received Test Notification!";
+        String msg = "\nNow that you read this test notification. You're good to go in terms of receiving notifications through the app!";
+        String title_and_msg = content_title + "\n" + msg;
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_logo)
+                .setContentTitle("Test Notification")
+                .setContentText(content_title)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(title_and_msg))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
+    public void showStorage(View view) {
+        TextView storageText = (TextView) findViewById(R.id.storageText);
+        //retrieves cached city data file
+        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        //gets storage used by file
+        String msg = String.valueOf(file.length()) + " Bytes Used";
+        //set text in settings
+        storageText.setText(msg);
+    }
+
+    public void deleteStorage(View view) {
+        //retrieves cached city data file
+        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        //deletes cached city data file
+        file.delete();
+        //trigger file deleted listener
+        constants.setFileDeleted(true);
     }
 
     public void showAbout(View view){

@@ -136,11 +136,27 @@ public class LocationService extends Service {
                 //new location is different from last recorded location
                 String currentLocation = constants.getCurrentLocation();
                 String lastLocation = constants.getLastLocation();
-                if(currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
-                    if(lastLocation != null) {
-                        createNotification();
+
+                if (currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
+                    if (lastLocation != null) {
+                        //only display notifications with relevant Covid-19 info to user when they move within LA County
+                        if(constants.inLACounty(currentLocation)) {
+                            System.out.println("Inside LA County: " + currentLocation);
+                            createNotification();
+                        }
+                        else {
+                            //if user is outside of LA County, then send notification warning them that we cannot
+                            //guarantee certain features
+                            System.out.println("Outside LA County: " + currentLocation);
+                            createWarningNotification();
+                        }
+                        constants.setNewLocation(true);
                     }
-                    writeToDatabase();
+                    //only track user's location when they're in LA County
+                    if(constants.inLACounty(currentLocation)) {
+
+                        writeToDatabase();
+                    }
                 }
 
             }
@@ -265,6 +281,35 @@ public class LocationService extends Service {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(0, builder.build());
     }
+
+    //warning notification only used for when user moves outside of LA County
+    public void createWarningNotification() {
+        //right now, if user selects notification, they navigate to heat map --> change to news feed
+        Intent intent = new Intent(this, HomeActivity.class); //--------------------------------------------
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //notification text
+        String content_title = "You just moved to " + constants.getCurrentLocation() + " which is outside of LA County.";
+        String msg = "\nSince you're no longer in LA County, we cannot guarantee you access to the same features " +
+                "that would be available to you if you were located in LA County. These features include " +
+                "but aren't limited to: Covid Map, Testing Locations Map, and Travel Tracking";
+        String title_and_msg = content_title + "\n" + msg;
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_logo)
+                .setContentTitle("MapCovid Detected City Change Outside LA County")
+                .setContentText(content_title)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(title_and_msg))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
 
     @Override
     @Nullable
