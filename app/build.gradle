@@ -12,6 +12,12 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
+        python {
+            pip {
+                install "requests"
+                install "beautifulsoup4"
+            }
+        }
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }

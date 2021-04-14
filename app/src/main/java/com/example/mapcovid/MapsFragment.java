@@ -9,15 +9,21 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +46,10 @@ import com.google.maps.android.heatmaps.WeightedLatLng;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -188,12 +198,13 @@ public class MapsFragment extends Fragment {
                 }
 
             });
+
+
             labutton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.947029, -118.258471)));
                 }
 
             });
@@ -239,7 +250,10 @@ public class MapsFragment extends Fragment {
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
             try {
-                cities = readItems("city_data.json");
+//                String path = Environment.getExternalStorageDirectory().toString() + "/final_city_data.json";
+//                System.out.println(path);
+//                System.out.println("FLAG");
+                cities = readItems("final_city_data.json");
             } catch (JSONException e) {
                 System.err.println(e);
             } catch (IOException e) {
@@ -344,7 +358,10 @@ public class MapsFragment extends Fragment {
 
             InputStream is = null;
             if(getContext() != null) {
-                is = getContext().getAssets().open(filename);
+                //is = getContext().getAssets().open(filename);
+                //File file = new File(Environment.getExternalStorageDirectory(), filename);
+                File file = new File(getContext().getFilesDir(), filename);
+                is = new FileInputStream(file);
             }
             else {
                 is = this.getClass().getClassLoader().getResourceAsStream(filename);
@@ -358,6 +375,9 @@ public class MapsFragment extends Fragment {
             reader.close();
         } catch(Exception e) {
             System.err.println(e);
+        }
+        for (City c: cities) {
+            System.err.println(c.get_city_name());
         }
         return cities;
     }
@@ -402,6 +422,30 @@ public class MapsFragment extends Fragment {
             }
 
         });
+    }
+    public static Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+    public static void store(Bitmap bm, String fileName){
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Images";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+        File file = new File(dirPath, fileName);
+        try {
+            FileOutputStream fOut = new FileOutputStream(file);
+            System.out.println("FOUT" + fOut);
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            System.out.println(bm);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
