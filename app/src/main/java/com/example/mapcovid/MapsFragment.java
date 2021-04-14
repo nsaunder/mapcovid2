@@ -313,7 +313,7 @@ public class MapsFragment extends Fragment {
                     city.get_center_long());
 
             //Create the weightedlatlng
-            WeightedLatLng temp = new WeightedLatLng(citypos, city.get_new_deaths());
+            WeightedLatLng temp = new WeightedLatLng(citypos, city.get_new_cases());
             latLngs.add(temp);  //Add to latLngs arraylist
 
             //Add map marker to to map with the city name that can be shown by clicking
@@ -326,7 +326,7 @@ public class MapsFragment extends Fragment {
                                 .title(city.get_city_name())
                                 .snippet("More info..."));
                 if(city.get_new_cases() < 3){
-                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(110.0f));
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(105.0f));
                 }
                 else if(city.get_new_cases() >= 3 && city.get_new_cases() < 6){
                     mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));

@@ -39,14 +39,4 @@
         android:visibility="gone"
         />
 
-    <ImageButton
-        android:id="@+id/test_infoButton"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_gravity="left|top"
-        android:background="@drawable/ic_icons8_info"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        />
-
 </fragment>

@@ -125,7 +125,6 @@ public class TestingFragment extends Fragment {
             ImageButton button = (ImageButton) getView().findViewById(R.id.test_markerButton);
             ImageButton labutton = (ImageButton) getView().findViewById(R.id.test_LACameraButton);
             ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.test_currentposbutton);
-            ImageButton infobutton = (ImageButton) getView().findViewById(R.id.test_infoButton);
 
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
@@ -202,26 +201,6 @@ public class TestingFragment extends Fragment {
 
             });
 
-            infobutton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    AlertDialog ad = new AlertDialog.Builder(getContext())
-                            .create();
-                    ad.setCancelable(false);
-                    ad.setTitle("Heatmap Legend");
-                    LayoutInflater factory = LayoutInflater.from(getContext());
-                    final View view = factory.inflate(R.layout.legend, null);
-                    ad.setView(view);
-                    ad.setButton(DialogInterface.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-
-                    });
-                    ad.show();
-                }
-            });
 
 
             List<TestingLocation> testingLocations = null;

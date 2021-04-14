@@ -47,14 +47,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // "context" must be an Activity, Service or Application object from your app.
-        /*if (! Python.isStarted()) {
+        if (! Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
         Python python = Python.getInstance();
         PyObject pythonFile = python.getModule("test");
-        PyObject helloWorldString = pythonFile.callAttr("helloworld");
-        System.out.println(helloWorldString.toString());*/
         PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         BottomNavigationView navView = findViewById(R.id.nav_view);
