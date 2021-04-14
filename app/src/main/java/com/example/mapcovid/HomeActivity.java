@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.LocationManager;
@@ -19,15 +20,18 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+import com.example.mapcovid.ui.settings.SettingsFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -36,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
@@ -56,6 +61,8 @@ public class HomeActivity extends AppCompatActivity {
     private Constant constants;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private static final String CHANNEL_ID = "test notification";
+    private Switch darkSwitch;
+    private boolean dark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +95,33 @@ public class HomeActivity extends AppCompatActivity {
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        /*darkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    restartApp();
+                }
+                else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    restartApp();
+                }
+            }
+        });*/
+
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+        Resources.Theme theme = super.getTheme();
+        if(dark){
+            theme.applyStyle(R.style.darkTheme, true);
+        }
+        else{
+            theme.applyStyle(R.style.Theme_MapCovid, true);
+        }
+        // you could also use a switch if you have many themes that could apply
+        return theme;
     }
 
     //create notification channel to push notifications to user
@@ -371,95 +405,8 @@ public class HomeActivity extends AppCompatActivity {
         alert.show();
     }
 
-    public void screenshotShare(View view){
-
-        System.out.println("HERERERERE");
-        View viewNew  = getWindow().getDecorView().findViewById(android.R.id.content);
-        Bitmap bm = getScreenShot(viewNew);
-        System.out.println("MADE IT PAST");
-        File myFile = store(bm, "Screenshot.png");
-        System.out.println("MADE it one more");
-        shareImage(myFile);
-
-    }
-
-    public static Bitmap getScreenShot(View view) {
-        View screenView = view.findViewById(R.id.map);
-        screenView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
-
-    public File store(Bitmap bm, String fileName){
-        String state = Environment.getExternalStorageState();
-        if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            System.out.println("Media Mounted");
-            return null;
-        }
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), fileName);
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
-        File dir = new File(dirPath);
-        if(!dir.exists())
-            dir.mkdirs();
-
-        try {
-            FileOutputStream fOut = new FileOutputStream(file);
-            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return file;
-    }
-    public void shareImage(File file) {
-//        Uri uri = Uri.fromFile(file);
-//        Uri uri = FileProvider.getUriForFile(this,
-//                BuildConfig.APPLICATION_ID + ".provider",
-//                file);
-//        Intent intent = new Intent();
-//        intent.setAction(Intent.ACTION_VIEW);
-//
-//        intent.setDataAndType(uri, "image/*");
-//        startActivity(intent);
-//        Intent intent = new Intent();
-//
-//        intent.setDataAndType(uri, "image/*");
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        intent.setAction(Intent.ACTION_SENDTO);
-////        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-//        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-//        intent.putExtra(Intent.EXTRA_STREAM, uri);
-//        try {
-//            if (intent.resolveActivity(getPackageManager()) != null) {
-//                startActivity(intent);
-//            }
-//
-//        } catch (ActivityNotFoundException e) {
-//            Toast.makeText(this, "No App Available", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-        Uri uri = FileProvider.getUriForFile(this,
-                BuildConfig.APPLICATION_ID + ".provider",
-                file);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
-
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-//        intent.putExtra(android.content.Intent.)
-        try {
-            startActivity(Intent.createChooser(intent, "Share Screenshot"));
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "No App Available", Toast.LENGTH_SHORT).show();
-        }
-
+    public void darkModeOn(View view){
+        dark = !dark;
     }
 
 
