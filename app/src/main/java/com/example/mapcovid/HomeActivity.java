@@ -278,10 +278,16 @@ public class HomeActivity extends AppCompatActivity {
         TextView storageText = (TextView) findViewById(R.id.storageText);
         //retrieves cached city data file
         File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
-        //gets storage used by file
-        String msg = String.valueOf(file.length()) + " Bytes Used";
-        //set text in settings
-        storageText.setText(msg);
+        if(!file.exists()) {
+            String msg = "0 Bytes Used";
+            //set text in settings
+            storageText.setText(msg);
+        } else {
+            //gets storage used by file
+            String msg = String.valueOf(file.length()) + " Bytes Used";
+            //set text in settings
+            storageText.setText(msg);
+        }
     }
 
     public void deleteStorage(View view) {
