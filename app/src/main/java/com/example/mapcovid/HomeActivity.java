@@ -100,6 +100,7 @@ public class HomeActivity extends AppCompatActivity {
     public int getInfo(String day, Context cc, LinearLayout ll, final boolean tf, ArrayList<PathItem> p) {
         int count = 0;
         if(!tf) {
+            try{
             constants.getPath(day, new getPathCallback() {
                 boolean t = tf; //Make it only call once only when the above method is called
 
@@ -152,7 +153,11 @@ public class HomeActivity extends AppCompatActivity {
                     t = true;
                 }
 
-            });
+            });} catch (Exception e){
+                TextView temp = new TextView(cc);
+                temp.setText("Please turn on location permissions");
+                ll.addView(temp);
+            }
         }
         else{
             ArrayList<PathItem> path = removeConsecutiveDuplicates(p);
@@ -222,7 +227,7 @@ public class HomeActivity extends AppCompatActivity {
                 .create();
         ad.setCancelable(false);
         ad.setTitle("About");
-        ad.setMessage("Version: 1.0"+"\n\nWhat's new: ---\n\n"
+        ad.setMessage("Version: 1.1"+"\n\nWhat's new: Updated UI, Updated location services functionality, Added additional map functionality, Added dark mode functionality, Fixed an error where after changing settings the app would crash\n\n"
                     +"Developers: \nCarson Greengrove\nCatherine Phu\nCyprien Toffa\nNicholas Saunders\nRahul Mehta\nSmrithi Balebail\n");
         ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
 
