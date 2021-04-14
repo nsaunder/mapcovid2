@@ -66,6 +66,7 @@ import java.util.Objects;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
+
 public class MapsFragment extends Fragment {
 
 
@@ -278,7 +279,7 @@ public class MapsFragment extends Fragment {
 //                String path = Environment.getExternalStorageDirectory().toString() + "/final_city_data.json";
 //                System.out.println(path);
 //                System.out.println("FLAG");
-                cities = readItems("final_city_data.json");
+                readItems("final_city_data.json", cities);
             } catch (JSONException e) {
                 System.err.println(e);
             } catch (IOException e) {
@@ -288,10 +289,11 @@ public class MapsFragment extends Fragment {
             addCityMarkers(cities, latLngs, citiesMap);
 
 
-            constants.addnewcatlistener(new catlistenerr{
-                public void onThing(){
+            constants.addFileDeletedListener(new deleteFileListener(){
+                @Override
+                public void onDelete() {
                     try {
-                        cities = readItems("final_city_data.json");
+                        readItems("final_city_data.json", cities);
                     } catch(Exception e){
                         System.out.println("Something went wrong figure it out");
                     }
@@ -390,8 +392,7 @@ public class MapsFragment extends Fragment {
     }
 
 
-    public List<City> readItems(String filename) throws JSONException, IOException {
-        List<City> cities = new ArrayList<>();
+    public List<City> readItems(String filename, List<City> cities) throws JSONException, IOException {
         try {
 
             InputStream is = null;
