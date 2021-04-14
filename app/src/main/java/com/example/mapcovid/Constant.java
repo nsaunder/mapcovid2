@@ -46,6 +46,10 @@ interface permissionsListener {
     void onPermissionsChange();
 }
 
+interface deleteFileListener {
+    void onDelete();
+}
+
 public class Constant {
     //PERMISSIONS//
     private static boolean permissionsGranted;
@@ -58,10 +62,12 @@ public class Constant {
     private static Double current_lat;
     private static Double current_lon;
     private static boolean newLocation;
+    private static boolean fileDeleted;
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
+    private static List<deleteFileListener> deleteFileListeners = new ArrayList<deleteFileListener>();
 
     //constructor for fragments
     public Constant() {
@@ -158,6 +164,17 @@ public class Constant {
 
     public void addPermissionListener(permissionsListener l) {
         permissionsListeners.add(l);
+    }
+
+    public void setFileDeleted(boolean b) {
+        fileDeleted = b;
+        for(deleteFileListener l: deleteFileListeners) {
+            l.onDelete();
+        }
+    }
+
+    public void addFileDeletedListener(deleteFileListener l) {
+        deleteFileListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {

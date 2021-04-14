@@ -274,7 +274,7 @@ public class HomeActivity extends AppCompatActivity {
         notificationManager.notify(0, builder.build());
     }
 
-    public void displayStorage() {
+    public void showStorage(View view) {
         TextView storageText = (TextView) findViewById(R.id.storageText);
         //retrieves cached city data file
         File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
@@ -282,6 +282,15 @@ public class HomeActivity extends AppCompatActivity {
         String msg = String.valueOf(file.length()) + " Bytes Used";
         //set text in settings
         storageText.setText(msg);
+    }
+
+    public void deleteStorage(View view) {
+        //retrieves cached city data file
+        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        //deletes cached city data file
+        file.delete();
+        //trigger file deleted listener
+        constants.setFileDeleted(true);
     }
 
     public void showAbout(View view){
