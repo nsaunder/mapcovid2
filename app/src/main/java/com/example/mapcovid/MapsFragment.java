@@ -157,6 +157,7 @@ public class MapsFragment extends Fragment {
             System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
+                labutton.setVisibility(View.VISIBLE);
             }
             else {
                 button.setVisibility(View.GONE);
@@ -177,7 +178,13 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(constants.getCurrentLat(), constants.getCurrentLon())));
+                    if(constants != null && constants.getCurrentLat() != null)
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(constants.getCurrentLat(), constants.getCurrentLon())));
+                    else {
+                        if(marky != null) {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(marky.getPosition()));
+                        }
+                    }
                 }
 
             });
@@ -197,7 +204,6 @@ public class MapsFragment extends Fragment {
                     AlertDialog ad = new AlertDialog.Builder(getContext())
                             .create();
                     ad.setCancelable(false);
-                    ad.setTitle("Heatmap Legend");
                     LayoutInflater factory = LayoutInflater.from(getContext());
                     final View view = factory.inflate(R.layout.legend, null);
                     ad.setView(view);
@@ -284,15 +290,16 @@ public class MapsFragment extends Fragment {
         List<LatLng> res = new ArrayList<>();
         for(int i = 0; i < cities.size(); i++)
         {
+            City city = cities.get(i);
             //citiesMap -> (cityName, City)
-            citiesMap.put(cities.get(i).get_city_name(), cities.get(i));
+            citiesMap.put(city.get_city_name(), city);
 
             //Create a LatLng
             LatLng citypos = new LatLng(cities.get(i).get_center_lat(),
-                    cities.get(i).get_center_long());
+                    city.get_center_long());
 
             //Create the weightedlatlng
-            WeightedLatLng temp = new WeightedLatLng(citypos, cities.get(i).get_new_deaths());
+            WeightedLatLng temp = new WeightedLatLng(citypos, city.get_new_deaths());
             latLngs.add(temp);  //Add to latLngs arraylist
 
             //Add map marker to to map with the city name that can be shown by clicking
@@ -302,8 +309,21 @@ public class MapsFragment extends Fragment {
                 mark = mMap.addMarker(
                         new MarkerOptions()
                                 .position(citypos)
-                                .title(cities.get(i).get_city_name())
+                                .title(city.get_city_name())
                                 .snippet("More info..."));
+                if(city.get_new_cases() < 3){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(110.0f));
+                }
+                else if(city.get_new_cases() >= 3 && city.get_new_cases() < 6){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                }
+                else if(city.get_new_cases() >= 6 && city.get_new_cases() < 9){
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                }
+                else {
+                    mark.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
                 res.add(mark.getPosition());
             }
             else
