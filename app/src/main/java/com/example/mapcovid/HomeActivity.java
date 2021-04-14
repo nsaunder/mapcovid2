@@ -39,6 +39,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
     }
 
     //create notification channel to push notifications to user
@@ -270,6 +272,16 @@ public class HomeActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(0, builder.build());
+    }
+
+    public void displayStorage() {
+        TextView storageText = (TextView) findViewById(R.id.storageText);
+        //retrieves cached city data file
+        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        //gets storage used by file
+        String msg = String.valueOf(file.length()) + " Bytes Used";
+        //set text in settings
+        storageText.setText(msg);
     }
 
     public void showAbout(View view){
