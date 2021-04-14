@@ -1,6 +1,7 @@
 package com.example.mapcovid;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import com.github.redouane59.twitter.dto.tweet.Tweet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,7 +30,7 @@ public class NewsFragment extends Fragment {
         return new NewsFragment();
     }
 
-     public synchronized List<Tweet> helperTweets() throws InterruptedException {
+    public synchronized List<Tweet> helperTweets() throws InterruptedException {
         TwitterFilteredStream t1 = new TwitterFilteredStream();
         t1.start();
         List<Tweet> return_tweets = new ArrayList<Tweet>();
@@ -44,7 +46,7 @@ public class NewsFragment extends Fragment {
         wait(2000);
         return return_tweets;
     }
-    
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.news_fragment, container, false);
 
         t1.addListeners(new TweetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onListener() {
                 ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
@@ -64,9 +67,12 @@ public class NewsFragment extends Fragment {
 //                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 params.setMargins(10,10,10,10);
                 for (Tweet tweet : t1.getTweets()) {
+                    System.out.println("INSIDE");
+                    System.out.println(tweet.getText());
                     TextView temp = new TextView(getContext());
                     LinearLayout tweetLayout = new LinearLayout(getContext());
                     temp.post(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.P)
                         @Override
                         public void run() {
 //                            tweetLayout.setLayoutParams(params);
@@ -85,18 +91,18 @@ public class NewsFragment extends Fragment {
 //                            tweetLayout.addView(body);
 //                            tweetLayout.addView(date);
 //                            System.out.println(tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
-                               temp.setPadding(30,30,30,30);
-                               temp.setText("@" + tweet.getUser().getName() + "\n\n" + tweet.getText() + "\n\n" + tweet.getCreatedAt().getMonth() + " " + tweet.getCreatedAt().getDayOfMonth()+", "+tweet.getCreatedAt().getYear());
-                               temp.setBackgroundColor(Color.GRAY);
-                               temp.setBackgroundResource(R.drawable.back);
-                               temp.setLayoutParams(params);
+                            temp.setPadding(30,30,30,30);
+                            temp.setText("@LACovid19Bot"   + "\n\n" + tweet.getText() + "\n\n" + tweet.getCreatedAt().getMonth() + " " + tweet.getCreatedAt().getDayOfMonth()+", "+tweet.getCreatedAt().getYear());
+                            temp.setBackgroundColor(Color.GRAY);
+                            temp.setBackgroundResource(R.drawable.back);
+                            temp.setLayoutParams(params);
                         }
                     });
                     ll.post(new Runnable() {
                         @Override
                         public void run() {
                             ll.addView(temp);
-                           // returnabletweets.add(tweet);
+                            // returnabletweets.add(tweet);
                         }
                     });
                     System.out.println(tweet.getText());
@@ -104,7 +110,7 @@ public class NewsFragment extends Fragment {
             }
         });
         return view;
-        }
+    }
 
 //    public void setText(ArrayList<Tweet> tweets, View view) {
 //        ScrollView sv = (ScrollView) view.findViewById(R.id.tweet_scroll_view);

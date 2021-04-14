@@ -46,6 +46,10 @@ interface permissionsListener {
     void onPermissionsChange();
 }
 
+interface deleteFileListener {
+    void onDelete();
+}
+
 public class Constant {
     //PERMISSIONS//
     private static boolean permissionsGranted;
@@ -58,10 +62,12 @@ public class Constant {
     private static Double current_lat;
     private static Double current_lon;
     private static boolean newLocation;
+    private static boolean fileDeleted;
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
+    private static List<deleteFileListener> deleteFileListeners = new ArrayList<deleteFileListener>();
 
     //constructor for fragments
     public Constant() {
@@ -100,10 +106,13 @@ public class Constant {
         try {
             InputStream is = null;
             if(context != null) {
-                is = context.getAssets().open("city_data.json");
+                //is = getContext().getAssets().open(filename);
+                //File file = new File(Environment.getExternalStorageDirectory(), filename);
+                File file = new File(context.getFilesDir(), "final_city_data.json");
+                is = new FileInputStream(file);
             }
             else {
-                is = this.getClass().getClassLoader().getResourceAsStream("city_data.json");
+                is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
@@ -155,6 +164,17 @@ public class Constant {
 
     public void addPermissionListener(permissionsListener l) {
         permissionsListeners.add(l);
+    }
+
+    public void setFileDeleted(boolean b) {
+        fileDeleted = b;
+        for(deleteFileListener l: deleteFileListeners) {
+            l.onDelete();
+        }
+    }
+
+    public void addFileDeletedListener(deleteFileListener l) {
+        deleteFileListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {
@@ -218,7 +238,7 @@ public class Constant {
 
     //get path for day passed into function from firebase
     public void getPath(String day, final getPathCallback callBack) {
-        database.child("e0oPScPeTRy3c84TQcG4LS").child("paths").child(day).addValueEventListener(new ValueEventListener() {
+        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<PathItem> path = new ArrayList<PathItem>();
@@ -237,6 +257,22 @@ public class Constant {
                 Log.d("Constant Class", "Error Reading Path for " + day);
             }
         });
+    }
+
+    //checks if city is in LA County
+    public boolean inLACounty(String city) {
+        //if we didn't populate cities, then return false
+        if(cities == null || city == null) {
+            return false;
+        }
+        //traverse cities list
+        for(City c: cities) {
+            if(c.get_city_name().compareTo(city) == 0) {
+                return true;
+            }
+        }
+        //all else fails, return false
+        return false;
     }
 
 }

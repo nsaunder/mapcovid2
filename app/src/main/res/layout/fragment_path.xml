@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PathFragment">
+    tools:context=".PathFragment"
+    android:background="?attr/backgroundColor">
 
     <TextView
         android:id="@+id/header1"
@@ -15,6 +16,7 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif-medium"
         android:text="Choose Date"
+        android:textColor="?attr/textColor"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +31,7 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif-medium"
         android:text="Full Path"
+        android:textColor="?attr/textColor"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,6 +87,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="Cities"
         android:textSize="16sp"
+        android:textColor="?attr/textColor"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
         app:srcCompat="@drawable/path_top_container" />
@@ -97,6 +101,7 @@
         android:layout_marginTop="60dp"
         android:fontFamily="sans-serif-medium"
         android:text="Top City"
+        android:textColor="?attr/textColor"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@id/imageView"
@@ -111,6 +116,7 @@
         android:layout_marginEnd="8dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
+        android:background="?attr/tintColor"
         android:spinnersShown="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

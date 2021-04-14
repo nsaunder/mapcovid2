@@ -10,12 +10,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,13 +23,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,21 +44,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -108,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return;
         }
         //initialize constant data structures
-        setConstants(getApplicationContext());
+        constants = new Constant(getApplicationContext());
 
-        database = get_instance().getReference();
+        database = FirebaseDatabase.getInstance().getReference();
 
         //create GoogleApiClient
         createGoogleApi();
@@ -131,15 +114,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
         }
-    }
 
-    //for testing
-    public void setConstants(Context context) {
-        if(context == null) {
-            constants = new Constant();
-        } else {
-            constants = new Constant(context);
-        }
+        //rewrite file if deleted in settings
+        constants.addFileDeletedListener(new deleteFileListener() {
+            @Override
+            public void onDelete() {
+                try {
+                    //recreate and repopulate file
+                    Python python = Python.getInstance();
+                    PyObject pythonFile = python.getModule("test");
+                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                    //call set_cities()
+                    constants.set_cities(getApplicationContext());
+
+                } catch(Exception e) {
+                    System.out.println("Something went wrong with fileDeletedListener in MainActivity!");
+                }
+            }
+        });
     }
 
     //launches next Activity after user selects 'Launch' button
@@ -324,11 +316,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 if (currentLocation != null && (lastLocation == null || lastLocation.compareTo(currentLocation) != 0)) {
                     if (lastLocation != null) {
-                        createNotification();
+                        //only display notifications with relevant Covid-19 info to user when they move within LA County
+                        if(constants.inLACounty(currentLocation)) {
+                            System.out.println("Inside LA County: " + currentLocation);
+                            createNotification();
+                        }
+                        else {
+                            //if user is outside of LA County, then send notification warning them that we cannot
+                            //guarantee certain features
+                            System.out.println("Outside LA County: " + currentLocation);
+                            createWarningNotification();
+                        }
                         constants.setNewLocation(true);
                     }
-                    writeToDatabase();
-
+                    //only track user's location when they're in LA County
+                    if(constants.inLACounty(currentLocation)) {
+                        writeToDatabase();
+                    }
                 }
 
             }
@@ -370,11 +374,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    //wrap static method: getFusedLocationProviderClient
-    public FusedLocationProviderClient getLocationClient() {
-        return getFusedLocationProviderClient(this);
-    }
-
     public void getLastLocation() {
         //if permissions denied, check permissions and request permissions before proceeding
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -384,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         //get last known recent location
-        FusedLocationProviderClient locationClient = getLocationClient();
+        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
 
         Task<Location> prevLocation = locationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -410,11 +409,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public String getCityByCoordinates(Double lat, Double lon) throws IOException {
-        Geocoder gc = setGeocoder();
-        //add condition for tests
-        if(gc == null) {
-            return null;
-        }
+        Geocoder gc = new Geocoder(this);
         //fetches up to 10 addresses around the coordinates passed in
         List<Address> addresses = gc.getFromLocation(lat, lon, 10);
         //retrieves city associated with coordinates by iterating through "addresses"
@@ -426,11 +421,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         }
         return null;
-    }
-
-    public Geocoder setGeocoder() {
-        Geocoder gc = new Geocoder(this);
-        return gc;
     }
 
     //function to handle notifying users about covid-19 related details based on new location they moved to
@@ -455,6 +445,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_logo)
                 .setContentTitle("MapCovid Detected City Change")
+                .setContentText(content_title)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(title_and_msg))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
+    //warning notification only used for when user moves outside of LA County
+    public void createWarningNotification() {
+        //right now, if user selects notification, they navigate to heat map --> change to news feed
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class); //--------------------------------------------
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //notification text
+        String content_title = "You just moved to " + constants.getCurrentLocation() + " which is outside of LA County.";
+        String msg = "\nSince you're no longer in LA County, we cannot guarantee you access to the same features " +
+                    "that would be available to you if you were located in LA County. These features include " +
+                    "but aren't limited to: Covid Map, Testing Locations Map, and Travel Tracking";
+        String title_and_msg = content_title + "\n" + msg;
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_logo)
+                .setContentTitle("MapCovid Detected City Change Outside LA County")
                 .setContentText(content_title)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(title_and_msg))

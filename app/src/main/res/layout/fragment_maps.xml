@@ -8,24 +8,55 @@
     tools:context=".MapsFragment">
 
     <ImageButton
-        android:id="@+id/markerbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/LACameraButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|bottom"
-        android:background="@drawable/marker_button"
-        android:layout_marginBottom="80dp"
-        android:layout_marginRight="20dp"
+        android:background="@drawable/ic_la_button"
+        android:layout_marginBottom="160dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
         />
 
     <ImageButton
-        android:id="@+id/fakebutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/currentposbutton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|bottom"
-        android:background="@drawable/marker_button"
+        android:background="@drawable/ic_current_button"
         android:layout_marginBottom="80dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <ImageButton
+        android:id="@+id/markerButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/ic_marker_button"
+        android:layout_marginBottom="240dp"
+        android:layout_marginEnd="20dp"
         android:visibility="gone"
+        />
+
+    <ImageButton
+        android:id="@+id/infoButton"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_gravity="left|top"
+        android:background="@drawable/ic_icons8_info"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        />
+
+    <ImageButton
+        android:id="@+id/share_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right|top"
+        android:background="@drawable/ic_share_button_1_"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         />
 
 </fragment>
