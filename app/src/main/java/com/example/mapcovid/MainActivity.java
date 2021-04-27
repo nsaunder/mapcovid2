@@ -44,7 +44,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -347,11 +350,46 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Double lat = constants.getCurrentLat();
         Double lon = constants.getCurrentLon();
 
+        //creates new path item for new change in location
         PathItem newCity = new PathItem(time, city, lat, lon);
         String appID = constants.getAppId();
 
+        //retrieves path for current date or creates new path for current date
+        DayPath path = constants.getDayPath(date);
+        if(path != null) {
+            //TODO: possibly check for sequential duplicates before adding
+            //there is a path that exists for current date => retrieve path
+            List<PathItem> places = path.getPlaces();
+            //add new path item to existing path
+            places.add(newCity);
+        } else {
+            //there is no path for current date => create a path with new location detected
+            ArrayList<PathItem> places = new ArrayList<PathItem>();
+            places.add(newCity);
+            DayPath newPath = new DayPath(date, places);
+            //add new path to database
+            constants.getPaths().add(newPath);
+        } //at this point, database reflects new location change accurately
+
+        try {
+            //converting paths to JSON string
+            Gson gson = new Gson();
+            String data = gson.toJson(constants.getPaths());
+            //creates/retrieves file to write to
+            File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+            FileOutputStream fos = new FileOutputStream(file);
+            //convert JSON string to bytes and write to file
+            fos.write(data.getBytes());
+            //save write to file
+            fos.flush();
+
+        } catch(Exception e) {
+            System.out.println("Something went wrong when trying to write to database!");
+            e.printStackTrace();
+        }
+
         //pushes new city location to date's path
-        database.child(appID).child("paths").child(date).push().setValue(newCity);
+        //database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {
