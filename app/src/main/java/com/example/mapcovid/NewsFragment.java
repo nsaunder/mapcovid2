@@ -50,11 +50,12 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.news_fragment, container, false);
+
+        try{
         ArrayList<Tweet> tweets_mainview = new ArrayList<Tweet>();
         TwitterFilteredStream t1 = new TwitterFilteredStream();
         t1.start();
-
-        View view = inflater.inflate(R.layout.news_fragment, container, false);
 
         t1.addListeners(new TweetListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
@@ -108,7 +109,13 @@ public class NewsFragment extends Fragment {
                     System.out.println(tweet.getText());
                 }
             }
-        });
+        });}
+        catch (Exception e){
+            LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
+            TextView temp = new TextView(getContext());
+            temp.setText("Turn on wifi please :(");
+            ll.addView(temp);
+        }
         return view;
     }
 

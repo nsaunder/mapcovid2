@@ -94,34 +94,26 @@ public class TestingFragment extends Fragment {
 
             String day = LocalDate.now().toString();
             try {
-                constants.getPath(day, new getPathCallback() {
-                    boolean newPath = false;
+                ArrayList<PathItem> path = constants.getPath(getContext(), day);
+                if (path != null) {
+                    try {
+                        LatLng lastCoordinates = new LatLng(path.get(path.size() - 1).getLat(), path.get(path.size() - 1).getLon());
 
-                    @Override
-                    public void onCallback(ArrayList<PathItem> path) {
-                        if (path != null) {
-                            try {
-                                if (newPath == false) {
-                                    LatLng lastCoordinates = new LatLng(path.get(path.size() - 1).getLat(), path.get(path.size() - 1).getLon());
-
-                                    for (int i = path.size() - 2; i >= 0; i--) {
-                                        PathItem p = path.get(i);
-                                        LatLng temp = new LatLng(p.getLat(), p.getLon());
-                                        Polyline line = mMap.addPolyline(new PolylineOptions()
-                                                .add(temp, lastCoordinates)
-                                                .width(10)
-                                                .color(Color.BLUE));
-                                        lastCoordinates = temp;
-                                    }
-                                    newPath = true;
-                                }
-                            } catch (Exception e) {
-                                System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
-                            }
+                        for (int i = path.size() - 2; i >= 0; i--) {
+                            PathItem p = path.get(i);
+                            LatLng temp = new LatLng(p.getLat(), p.getLon());
+                            Polyline line = mMap.addPolyline(new PolylineOptions()
+                                    .add(temp, lastCoordinates)
+                                    .width(10)
+                                    .color(Color.BLUE));
+                            lastCoordinates = temp;
                         }
+                    } catch (Exception e) {
+                        System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
                     }
-                });
-            } catch (Exception e) {
+                }
+            }
+            catch (Exception e) {
                 System.out.println("Permissions should be off");
             }
             //Original: constants.getCurrentLat() would return null causing app to crash

@@ -172,12 +172,10 @@ public class HomeActivity extends AppCompatActivity {
         int count = 0;
         if(!tf) {
             try{
-            constants.getPath(day, new getPathCallback() {
+            ArrayList<PathItem> path = constants.getPath(cc, day);
                 boolean t = tf; //Make it only call once only when the above method is called
 
-                @Override
-                public void onCallback(ArrayList<PathItem> oldPath) {
-                    ArrayList<PathItem> path = removeConsecutiveDuplicates(oldPath);
+                    path = removeConsecutiveDuplicates(path);
                     TextView numLoc = (TextView) findViewById(R.id.numLocations);
                     TextView pop = (TextView) findViewById(R.id.popCity);
                     ll.removeAllViews();
@@ -198,18 +196,18 @@ public class HomeActivity extends AppCompatActivity {
                             int maxNum = 0;
                             String popCity = "";
 
-                            for (PathItem p : path) {
+                            for (PathItem pi : path) {
                                 TextView temp = new TextView(cc);
                                 temp.setGravity(Gravity.CENTER);
-                                temp.setText(p.getCity() + "------" + p.getTime());
+                                temp.setText(pi.getCity() + "------" + pi.getTime());
                                 ll.addView(temp); //add view to linear layout
 
-                                visits.add(p.getCity());
-                                int count = map.getOrDefault(p.getCity(), 0);
-                                map.put(p.getCity(), count + 1);
+                                visits.add(pi.getCity());
+                                count = map.getOrDefault(pi.getCity(), 0);
+                                map.put(pi.getCity(), count + 1);
                                 if (count + 1 > maxNum) {
                                     maxNum = count + 1;
-                                    popCity = p.getCity();
+                                    popCity = pi.getCity();
                                 }
                             }
                             if (!visits.isEmpty() && !map.isEmpty()) {
@@ -221,10 +219,8 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    t = true;
-                }
-
-            });} catch (Exception e){
+            }
+            catch (Exception e){
                 TextView temp = new TextView(cc);
                 temp.setText("Please turn on location permissions");
                 ll.addView(temp);
