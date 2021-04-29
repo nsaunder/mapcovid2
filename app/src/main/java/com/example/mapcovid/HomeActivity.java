@@ -72,7 +72,22 @@ public class HomeActivity extends AppCompatActivity {
         }
         Python python = Python.getInstance();
         PyObject pythonFile = python.getModule("test");
-        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+
+        try {
+            PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+            PyObject weatherString = pythonFile.callAttr("get_weather");
+        } catch (Exception e) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Airplane mode has been enabled. Please disable.")
+                    .setCancelable(false)
+                    .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
