@@ -57,6 +57,7 @@ public class Constant {
     private static String appId;
     private DatabaseReference database;
     private static ArrayList<City> cities;
+    private static ArrayList<DayPath> paths;
     private static String currentLocation;
     private static String lastLocation;
     private static Double current_lat;
@@ -80,6 +81,8 @@ public class Constant {
         database = get_instance().getReference();
         //initialize list of City Objects
         set_cities(context);
+        //initialize list of paths
+        paths = new ArrayList<DayPath>();
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -237,26 +240,85 @@ public class Constant {
     }
 
     //get path for day passed into function from firebase
-    public void getPath(String day, final getPathCallback callBack) {
-        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<PathItem> path = new ArrayList<PathItem>();
-                for(DataSnapshot ds: snapshot.getChildren()) {
-                    PathItem city = ds.getValue(PathItem.class);
-                    if(city != null) {
-                        path.add(city);
-                    }
-                }
-                //use callback to make call synchronous --> return path AFTER all data has been fetched
-                callBack.onCallback(path);
-            }
+//    public void getPath(String day, final getPathCallback callBack) {
+//        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                ArrayList<PathItem> path = new ArrayList<PathItem>();
+//                for(DataSnapshot ds: snapshot.getChildren()) {
+//                    PathItem city = ds.getValue(PathItem.class);
+//                    if(city != null) {
+//                        path.add(city);
+//                    }
+//                }
+//                //use callback to make call synchronous --> return path AFTER all data has been fetched
+//                callBack.onCallback(path);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.d("Constant Class", "Error Reading Path for " + day);
+//            }
+//        });
+//    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Constant Class", "Error Reading Path for " + day);
+    //gets path for day passed into function from database in local storage
+    public ArrayList<PathItem> getPath(Context context, String day) {
+        Gson gson = new Gson();
+        String data = "";
+
+        try {
+            //retrieve file
+            File file = new File(context.getFilesDir(), "paths.json");
+            //create input stream with file
+            InputStream is = new FileInputStream(file);
+            StringBuilder sb = new StringBuilder();
+            //check to see if InputStream is null
+            if(is != null) {
+                InputStreamReader streamReader = new InputStreamReader(is);
+                BufferedReader bufferedReader = new BufferedReader(streamReader);
+                String received = "";
+                //append lines from buffered reader
+                while((received = bufferedReader.readLine()) != null) {
+                    sb.append(received);
+                }
+                //close input stream and save stringBuilder as a String
+                is.close();
+                data = sb.toString();
             }
-        });
+        } catch(Exception e) {
+            System.out.println("Error when retrieving day path!");
+            e.printStackTrace();
+        }
+        //use gson to recreate list of day paths from data string
+        Type pathsType = new TypeToken<ArrayList<DayPath>>(){}.getType();
+        ArrayList<DayPath> paths = gson.fromJson(data, pathsType);
+
+        //search for date passed in
+        for(DayPath dayPath: paths) {
+            if(dayPath.getDate().compareTo(day) == 0) {
+                return dayPath.getPlaces();
+            }
+        }
+        //if we get here, there is no path for date passed in
+        return null;
+    }
+
+    public ArrayList<DayPath> getPaths() {
+        return paths;
+    }
+
+    public DayPath getDayPath(String date) {
+        if(paths == null) {
+            return null;
+        }
+        for(DayPath p: paths) {
+            if(p.getDate().compareTo(date) == 0) {
+                return p;
+            }
+        }
+        //if we reach here, that means there is no path for date passed in
+        return null;
     }
 
     //checks if city is in LA County
