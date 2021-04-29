@@ -15,6 +15,7 @@ def create_new_file():
         baseline_data = pickle.load(f)
 
     #[NEW DATA]
+
     URL = 'http://publichealth.lacounty.gov/media/coronavirus/locations.htm'
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, 'html.parser')
