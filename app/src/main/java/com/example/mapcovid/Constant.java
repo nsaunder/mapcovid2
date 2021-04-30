@@ -285,6 +285,11 @@ public class Constant {
         return paths;
     }
 
+    //use when there is no file and we need array list
+    public void setPaths(ArrayList<DayPath> list) {
+        paths = list;
+    }
+
     //reads paths from file in local storage
     public void setPaths(Context context) {
         Gson gson = new Gson();
@@ -317,8 +322,6 @@ public class Constant {
         //use gson to recreate list of day paths from data string
         Type pathsType = new TypeToken<ArrayList<DayPath>>(){}.getType();
         paths = gson.fromJson(data, pathsType);
-
-        System.out.println("NUMBER OF PATHS: " + paths.size()  + " -------------------------------");
     }
 
     public DayPath getDayPath(String date) {

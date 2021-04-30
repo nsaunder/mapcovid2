@@ -274,7 +274,14 @@ public class HomeActivity extends AppCompatActivity {
             ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
-                    database.child(constants.getAppId()).removeValue();
+                    //retrieve file
+                    File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+                    //delete file if it exists + clear database
+                    if(file.exists()) {
+                        file.delete();
+                        constants.getPaths().clear();
+                    }
+                    //database.child(constants.getAppId()).removeValue();
                     dialog.dismiss();
                 }
             });

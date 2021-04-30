@@ -369,8 +369,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             ArrayList<PathItem> places = new ArrayList<PathItem>();
             places.add(newCity);
             DayPath newPath = new DayPath(date, places);
-            //add new path to database
-            constants.getPaths().add(newPath);
+            if(constants.getPaths() == null) {
+                //happens when there is no file => need to initialize paths
+                ArrayList<DayPath> tempPaths = new ArrayList<DayPath>();
+                tempPaths.add(newPath);
+                constants.setPaths(tempPaths);
+            } else {
+                //we have a file; therefore we have array list
+                //add new path to database
+                constants.getPaths().add(newPath);
+            }
         } //at this point, database reflects new location change accurately
 
         try {
@@ -388,6 +396,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //save write to file
                 fos.flush();
             } else {
+                System.out.println("NO PATH!");
                 File file = new File(getApplicationContext().getFilesDir(), "paths.json");
                 fos = new FileOutputStream(file);
                 //convert JSON string to bytes and write to file
