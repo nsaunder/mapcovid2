@@ -124,7 +124,13 @@ public class NewsFragment extends Fragment {
             }
         });}
         catch (Exception e){
-            LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
+            /*LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
+            ImageView temp = new ImageView(getContext());
+            temp.setImageResource(R.drawable.no_internet);
+            ll.addView(temp);*/
+        }
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
+        if(ll.getChildCount() == 0) {
             ImageView temp = new ImageView(getContext());
             temp.setImageResource(R.drawable.no_internet);
             ll.addView(temp);
