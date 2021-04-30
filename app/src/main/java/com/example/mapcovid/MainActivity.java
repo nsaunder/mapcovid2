@@ -13,6 +13,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -362,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             List<PathItem> places = path.getPlaces();
             //add new path item to existing path
             places.add(newCity);
+            System.out.println(path.toString());
         } else {
             //there is no path for current date => create a path with new location detected
             ArrayList<PathItem> places = new ArrayList<PathItem>();
@@ -375,13 +377,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //converting paths to JSON string
             Gson gson = new Gson();
             String data = gson.toJson(constants.getPaths());
+            System.out.println("PATH DATA: " + data);
             //creates/retrieves file to write to
-            File file = new File(getApplicationContext().getFilesDir(), "paths.json");
-            FileOutputStream fos = new FileOutputStream(file);
-            //convert JSON string to bytes and write to file
-            fos.write(data.getBytes());
-            //save write to file
-            fos.flush();
+//            File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+//            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = getApplicationContext().openFileOutput("paths.json", Context.MODE_PRIVATE);
+            if(fos != null) {
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+            } else {
+                File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+                fos = new FileOutputStream(file);
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+            }
+
+            //need to reflect changes in ArrayList in Constant.java => changes only occur when location changes
+            constants.setPaths(getApplicationContext());
 
         } catch(Exception e) {
             System.out.println("Something went wrong when trying to write to database!");
