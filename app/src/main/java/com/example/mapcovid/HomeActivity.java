@@ -1,5 +1,6 @@
 package com.example.mapcovid;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.NotificationChannel;
@@ -9,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,6 +43,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
@@ -236,7 +239,8 @@ public class HomeActivity extends AppCompatActivity {
             }
             catch (Exception e){
                 TextView temp = new TextView(cc);
-                temp.setText("Please turn on location permissions");
+                temp.setGravity(Gravity.CENTER);
+                temp.setText("No available path!");
                 ll.addView(temp);
             }
         }
