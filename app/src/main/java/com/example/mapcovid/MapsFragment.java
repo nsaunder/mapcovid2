@@ -151,7 +151,10 @@ public class MapsFragment extends Fragment {
                     }
 
                     //lastLocation = new LatLng(34.2, -118.23);
-                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    try{
+                        lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+
+
 
                     if(citiesMap.containsKey(constants.getCurrentLocation())){
                         labutton.setVisibility(View.GONE);
@@ -167,6 +170,10 @@ public class MapsFragment extends Fragment {
                     lastMarker.showInfoWindow();
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+
+                    }
+                    catch(Exception e){
+                    }
                 }
 
             });

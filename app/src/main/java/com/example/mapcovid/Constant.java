@@ -318,7 +318,7 @@ public class Constant {
         Type pathsType = new TypeToken<ArrayList<DayPath>>(){}.getType();
         paths = gson.fromJson(data, pathsType);
 
-        System.out.println("NUMBER OF PATHS: " + paths.size()  + " -------------------------------");
+        //System.out.println("NUMBER OF PATHS: " + paths.size()  + " -------------------------------");
     }
 
     public DayPath getDayPath(String date) {
