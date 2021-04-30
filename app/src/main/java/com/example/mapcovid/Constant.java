@@ -82,7 +82,7 @@ public class Constant {
         //initialize list of City Objects
         set_cities(context);
         //initialize list of paths
-        paths = new ArrayList<DayPath>();
+        setPaths(context);
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -264,14 +264,38 @@ public class Constant {
 
     //gets path for day passed into function from database in local storage
     public ArrayList<PathItem> getPath(Context context, String day) {
+        if(paths == null) {
+            System.out.println("NO PATHS!!!!");
+            return null;
+        }
+        //search for date passed in
+        for(DayPath dayPath: paths) {
+            if(dayPath.getDate().compareTo(day) == 0) {
+                for(PathItem item: dayPath.getPlaces()) {
+                    System.out.println("PLACE READ: " + item.getCity());
+                }
+                return dayPath.getPlaces();
+            }
+        }
+        //if we get here, there is no path for date passed in
+        return null;
+    }
+
+    public ArrayList<DayPath> getPaths() {
+        return paths;
+    }
+
+    //reads paths from file in local storage
+    public void setPaths(Context context) {
         Gson gson = new Gson();
         String data = "";
 
         try {
             //retrieve file
-            File file = new File(context.getFilesDir(), "paths.json");
+            //File file = new File(context.getFilesDir(), "paths.json");
             //create input stream with file
-            InputStream is = new FileInputStream(file);
+            //InputStream is = new FileInputStream(file);
+            InputStream is = context.openFileInput("paths.json");
             StringBuilder sb = new StringBuilder();
             //check to see if InputStream is null
             if(is != null) {
@@ -292,20 +316,9 @@ public class Constant {
         }
         //use gson to recreate list of day paths from data string
         Type pathsType = new TypeToken<ArrayList<DayPath>>(){}.getType();
-        ArrayList<DayPath> paths = gson.fromJson(data, pathsType);
+        paths = gson.fromJson(data, pathsType);
 
-        //search for date passed in
-        for(DayPath dayPath: paths) {
-            if(dayPath.getDate().compareTo(day) == 0) {
-                return dayPath.getPlaces();
-            }
-        }
-        //if we get here, there is no path for date passed in
-        return null;
-    }
-
-    public ArrayList<DayPath> getPaths() {
-        return paths;
+        System.out.println("NUMBER OF PATHS: " + paths.size()  + " -------------------------------");
     }
 
     public DayPath getDayPath(String date) {

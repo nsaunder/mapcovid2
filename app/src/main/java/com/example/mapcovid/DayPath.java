@@ -22,4 +22,15 @@ public class DayPath {
     public ArrayList<PathItem> getPlaces() {
         return places;
     }
+
+    public String toString() {
+        if(places != null) {
+            String msg = "";
+            for(PathItem p : places) {
+                msg += p.getCity();
+            }
+            return msg;
+        }
+        return null;
+    }
 }
