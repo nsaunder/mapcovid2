@@ -372,8 +372,6 @@ public class HomeActivity extends AppCompatActivity {
             //also need to clear database
             constants.getPaths().clear();
         }
-        //trigger file deleted listener
-//        constants.setFileDeleted(true);
     }
 
     public void showAbout(View view){

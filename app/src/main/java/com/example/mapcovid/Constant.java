@@ -36,20 +36,12 @@ interface currentLocationChangedListener {
     public void onCurrentLocationChange();
 }
 
-interface getPathCallback {
-    void onCallback(ArrayList<PathItem> path);
-}
-
 interface mapFragmentListener {
     void fragmentReady();
 }
 
 interface permissionsListener {
     void onPermissionsChange();
-}
-
-interface deleteFileListener {
-    void onDelete();
 }
 
 public class Constant {
@@ -70,13 +62,9 @@ public class Constant {
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
-    private static List<deleteFileListener> deleteFileListeners = new ArrayList<deleteFileListener>();
 
     //constructor for fragments
-    public Constant() {
-        //initialize firebase database reference
-        database = get_instance().getReference();
-    }
+    public Constant() { }
 
     public Constant(Context context) {
         //initialize firebase database reference
@@ -142,7 +130,6 @@ public class Constant {
                 }
             }
 
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -193,17 +180,6 @@ public class Constant {
 
     public void addPermissionListener(permissionsListener l) {
         permissionsListeners.add(l);
-    }
-
-    public void setFileDeleted(boolean b) {
-        fileDeleted = b;
-        for(deleteFileListener l: deleteFileListeners) {
-            l.onDelete();
-        }
-    }
-
-    public void addFileDeletedListener(deleteFileListener l) {
-        deleteFileListeners.add(l);
     }
 
     public void setCurrentLat(Double lat) {
@@ -266,29 +242,6 @@ public class Constant {
         return database;
     }
 
-    //get path for day passed into function from firebase
-//    public void getPath(String day, final getPathCallback callBack) {
-//        database.child(appId).child("paths").child(day).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                ArrayList<PathItem> path = new ArrayList<PathItem>();
-//                for(DataSnapshot ds: snapshot.getChildren()) {
-//                    PathItem city = ds.getValue(PathItem.class);
-//                    if(city != null) {
-//                        path.add(city);
-//                    }
-//                }
-//                //use callback to make call synchronous --> return path AFTER all data has been fetched
-//                callBack.onCallback(path);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.d("Constant Class", "Error Reading Path for " + day);
-//            }
-//        });
-//    }
-
     //gets path for day passed into function from database in local storage
     public ArrayList<PathItem> getPath(Context context, String day) {
         if(paths == null) {
@@ -323,10 +276,7 @@ public class Constant {
         String data = "";
 
         try {
-            //retrieve file
-            //File file = new File(context.getFilesDir(), "paths.json");
             //create input stream with file
-            //InputStream is = new FileInputStream(file);
             InputStream is = context.openFileInput("paths.json");
             StringBuilder sb = new StringBuilder();
             //check to see if InputStream is null

@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Constant constants;
 
-    private DatabaseReference database;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
-
-        database = FirebaseDatabase.getInstance().getReference();
 
         //create GoogleApiClient
         createGoogleApi();
@@ -118,34 +114,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
         }
-
-        //rewrite file if deleted in settings
-//        constants.addFileDeletedListener(new deleteFileListener() {
-//            @Override
-//            public void onDelete() {
-//                try {
-//                    //recreate and repopulate file
-//                    Python python = Python.getInstance();
-//                    PyObject pythonFile = python.getModule("test");
-//                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
-//                    //call set_cities()
-//                    constants.set_cities(getApplicationContext());
-//
-//                } catch(Exception e) {
-//                    System.out.println("Something went wrong with fileDeletedListener in MainActivity!");
-//                }
-//            }
-//        });
     }
 
     //launches next Activity after user selects 'Launch' button
     public void handleLaunch(View view) {
         Intent newActivity = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(newActivity);
-    }
-
-    public FirebaseDatabase get_instance() {
-        return FirebaseDatabase.getInstance();
     }
 
     //create GoogleApiClient instance
@@ -358,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //retrieves path for current date or creates new path for current date
         DayPath path = constants.getDayPath(date);
         if(path != null) {
-            //TODO: possibly check for sequential duplicates before adding
             //there is a path that exists for current date => retrieve path
             List<PathItem> places = path.getPlaces();
             //add new path item to existing path
@@ -387,8 +360,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String data = gson.toJson(constants.getPaths());
             System.out.println("PATH DATA: " + data);
             //creates/retrieves file to write to
-//            File file = new File(getApplicationContext().getFilesDir(), "paths.json");
-//            FileOutputStream fos = new FileOutputStream(file);
             FileOutputStream fos = getApplicationContext().openFileOutput("paths.json", Context.MODE_PRIVATE);
             if(fos != null) {
                 //convert JSON string to bytes and write to file
@@ -412,9 +383,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             System.out.println("Something went wrong when trying to write to database!");
             e.printStackTrace();
         }
-
-        //pushes new city location to date's path
-        //database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {
@@ -427,7 +395,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String city = getCityByCoordinates(location.getLatitude(), location.getLongitude());
 
             if (city != null) {
-                //Toast.makeText(this, city, Toast.LENGTH_SHORT).show();
                 constants.setCurrentLocation(city);
                 constants.setCurrentLat(location.getLatitude());
                 constants.setCurrentLon(location.getLongitude());

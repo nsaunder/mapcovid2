@@ -58,7 +58,6 @@ public class LocationService extends Service {
     private LocationRequest locationRequest;
     private long UPDATE_INTERVAL = 10000; /*10 secs*/
     private long FASTEST_INTERVAL = 5000; /*5 secs*/
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -181,7 +180,6 @@ public class LocationService extends Service {
         //retrieves path for current date or creates new path for current date
         DayPath path = constants.getDayPath(date);
         if(path != null) {
-            //TODO: possibly check for sequential duplicates before adding
             //there is a path that exists for current date => retrieve path
             List<PathItem> places = path.getPlaces();
             //add new path item to existing path
