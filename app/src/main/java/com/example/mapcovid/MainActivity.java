@@ -120,22 +120,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         //rewrite file if deleted in settings
-        constants.addFileDeletedListener(new deleteFileListener() {
-            @Override
-            public void onDelete() {
-                try {
-                    //recreate and repopulate file
-                    Python python = Python.getInstance();
-                    PyObject pythonFile = python.getModule("test");
-                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
-                    //call set_cities()
-                    constants.set_cities(getApplicationContext());
-
-                } catch(Exception e) {
-                    System.out.println("Something went wrong with fileDeletedListener in MainActivity!");
-                }
-            }
-        });
+//        constants.addFileDeletedListener(new deleteFileListener() {
+//            @Override
+//            public void onDelete() {
+//                try {
+//                    //recreate and repopulate file
+//                    Python python = Python.getInstance();
+//                    PyObject pythonFile = python.getModule("test");
+//                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+//                    //call set_cities()
+//                    constants.set_cities(getApplicationContext());
+//
+//                } catch(Exception e) {
+//                    System.out.println("Something went wrong with fileDeletedListener in MainActivity!");
+//                }
+//            }
+//        });
     }
 
     //launches next Activity after user selects 'Launch' button

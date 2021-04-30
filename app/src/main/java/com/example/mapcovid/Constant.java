@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -112,11 +114,35 @@ public class Constant {
                 //is = getContext().getAssets().open(filename);
                 //File file = new File(Environment.getExternalStorageDirectory(), filename);
                 File file = new File(context.getFilesDir(), "final_city_data.json");
+                //if file doesn't exist, recreate and repopulate file
+                if(!file.exists()) {
+                    try {
+                        Python python = Python.getInstance();
+                        PyObject pythonFile = python.getModule("test");
+                        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                        file = new File(context.getFilesDir(), "final_city_data.json");
+                    } catch(Exception e) {
+                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                    }
+                }
                 is = new FileInputStream(file);
             }
             else {
                 is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
+                //if file doesn't exist, recreate and repopulate file
+                if(is == null) {
+                    try {
+                        Python python = Python.getInstance();
+                        PyObject pythonFile = python.getModule("test");
+                        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                        is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
+                    } catch(Exception e) {
+                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                    }
+                }
             }
+
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             Gson gson = new Gson();
@@ -227,6 +253,7 @@ public class Constant {
         if(city == null) {
             return null;
         }
+
         for(City c: cities) {
             if(c.get_city_name().compareTo(city) == 0) {
                 return c;

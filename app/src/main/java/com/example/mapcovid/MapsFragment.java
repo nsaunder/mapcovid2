@@ -303,25 +303,30 @@ public class MapsFragment extends Fragment {
 
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    if(!marker.getTitle().equals("Current Location"))
-                    {
-                        City loc = citiesMap.get(marker.getTitle());
-                        AlertDialog ad = new AlertDialog.Builder(getContext())
-                                .create();
-                        ad.setCancelable(false);
-                        ad.setTitle(loc.get_city_name());
-                        ad.setMessage("\nNew Cases: " + loc.get_new_cases() +
-                                "\nNew Deaths: " + loc.get_new_deaths()+
-                                "\nTotal Cases: "+ loc.get_total_cases() +
-                                "\nTotal Deaths: " + loc.get_total_deaths());
-                        ad.setButton("OK", new DialogInterface.OnClickListener() {
+                    try {
+                        if(!marker.getTitle().equals("Current Location"))
+                        {
+                            City loc = citiesMap.get(marker.getTitle());
+                            AlertDialog ad = new AlertDialog.Builder(getContext())
+                                    .create();
+                            ad.setCancelable(false);
+                            ad.setTitle(loc.get_city_name());
+                            ad.setMessage("\nNew Cases: " + loc.get_new_cases() +
+                                    "\nNew Deaths: " + loc.get_new_deaths()+
+                                    "\nTotal Cases: "+ loc.get_total_cases() +
+                                    "\nTotal Deaths: " + loc.get_total_deaths());
+                            ad.setButton("OK", new DialogInterface.OnClickListener() {
 
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        ad.show();
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
+                    } catch(Exception e) {
+                        //TODO: Show Modal
                     }
+
                 }
             });
             // Create a heat map tile provider, passing it the latlngs of the police stations.
@@ -397,17 +402,33 @@ public class MapsFragment extends Fragment {
             if(getContext() != null) {
                 //is = getContext().getAssets().open(filename);
                 //File file = new File(Environment.getExternalStorageDirectory(), filename);
-                File file = new File(getContext().getFilesDir(), filename);
-//                if(!file.exists()){
-//                    Python python = Python.getInstance();
-//                    PyObject pythonFile = python.getModule("test");
-//                    PyObject helloWorldString = pythonFile.callAttr("create_new_file");
-//                    file = new File(getContext().getFilesDir(), filename);
-//                }
+                File file = new File(getContext().getFilesDir(), "final_city_data.json");
+                //if file doesn't exist, recreate and repopulate file
+                if(!file.exists()) {
+                    try {
+                        Python python = Python.getInstance();
+                        PyObject pythonFile = python.getModule("test");
+                        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                        file = new File(getContext().getFilesDir(), "final_city_data.json");
+                    } catch(Exception e) {
+                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                    }
+                }
                 is = new FileInputStream(file);
             }
             else {
-                is = this.getClass().getClassLoader().getResourceAsStream(filename);
+                is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
+                //if file doesn't exist, recreate and repopulate file
+                if(is == null) {
+                    try {
+                        Python python = Python.getInstance();
+                        PyObject pythonFile = python.getModule("test");
+                        PyObject helloWorldString = pythonFile.callAttr("create_new_file");
+                        is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
+                    } catch(Exception e) {
+                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                    }
+                }
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));

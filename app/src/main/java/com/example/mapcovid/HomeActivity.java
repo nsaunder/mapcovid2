@@ -323,28 +323,39 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void showStorage(View view) {
+        int totalStorage = 0;
         TextView storageText = (TextView) findViewById(R.id.storageText);
-        //retrieves cached city data file
-        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
-        if(!file.exists()) {
-            String msg = "0 Bytes Used";
-            //set text in settings
-            storageText.setText(msg);
-        } else {
-            //gets storage used by file
-            String msg = String.valueOf(file.length()) + " Bytes Used";
-            //set text in settings
-            storageText.setText(msg);
+        //retrieves cached files
+        File cityFile = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        File pathFile = new File(getApplicationContext().getFilesDir(), "paths.json");
+
+        if(cityFile.exists()){
+            totalStorage += cityFile.length();
         }
+        if(pathFile.exists()) {
+            totalStorage += pathFile.length();
+        }
+        //gets storage used by file
+        String msg = String.valueOf(totalStorage) + " Bytes Used";
+        //set text in settings
+        storageText.setText(msg);
     }
 
     public void deleteStorage(View view) {
-        //retrieves cached city data file
-        File file = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
-        //deletes cached city data file
-        file.delete();
+        //retrieves cached files
+        File cityFile = new File(getApplicationContext().getFilesDir(), "final_city_data.json");
+        File pathFile = new File(getApplicationContext().getFilesDir(), "paths.json");
+        //deletes cached city data file + paths file if files exist
+        if(cityFile.exists()) {
+            cityFile.delete();
+        }
+        if(pathFile.exists()) {
+            pathFile.delete();
+            //also need to clear database
+            constants.getPaths().clear();
+        }
         //trigger file deleted listener
-        constants.setFileDeleted(true);
+//        constants.setFileDeleted(true);
     }
 
     public void showAbout(View view){
