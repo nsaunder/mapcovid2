@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -123,9 +124,9 @@ public class NewsFragment extends Fragment {
             }
         });}
         catch (Exception e){
-            LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
-            TextView temp = new TextView(getContext());
-            temp.setText("Turn on wifi please :(");
+            LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
+            ImageView temp = new ImageView(getContext());
+            temp.setImageResource(R.drawable.no_internet);
             ll.addView(temp);
         }
         Python python = Python.getInstance();

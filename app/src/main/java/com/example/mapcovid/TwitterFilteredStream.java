@@ -63,6 +63,7 @@ public class TwitterFilteredStream extends Thread{
             setVar();
         }
         catch (Exception e) {
+            System.out.println("HITTTTT!");
             e.printStackTrace();
         }
 

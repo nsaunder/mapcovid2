@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:gravity="center"
-        android:text="Please enable your internet for weather and news."
         android:textColor="?attr/textColor"/>
+
+<!--    android:text="Please enable your internet for weather and news."-->
 
     <ScrollView
         android:id="@+id/tweet_scroll_view"

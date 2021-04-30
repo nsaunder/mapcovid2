@@ -20,8 +20,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="opacityPercent" value="86" />
-                            <entry key="outputName" value="ic_share_button_1_" />
-                            <entry key="sourceFile" value="$USER_HOME$/Downloads/share_button(1).svg" />
+                            <entry key="outputName" value="no_internet" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/no_internet.svg" />
                           </map>
                         </option>
                       </PersistentState>
