@@ -49,13 +49,13 @@ public class NewsFragment extends Fragment {
         return return_tweets;
     }
 
-    public void printWeather(String weather){
+    public void printWeather(String weather, View view){
         try {
             String[] pieces = weather.split("_");
             for (String s : pieces) {
                 System.out.println(s);
             }
-            TextView wet = (TextView) getView().findViewById(R.id.weather_text);
+            TextView wet = (TextView) view.findViewById(R.id.weather_text);
             wet.setText("Weather in Los Angeles: " + pieces[1] + "°, " + pieces[0] + ".");
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +133,7 @@ public class NewsFragment extends Fragment {
 
         try {
             PyObject weatherString = pythonFile.callAttr("get_weather");
-            printWeather(weatherString.toString());
+            printWeather(weatherString.toString(), view);
         }
         catch (Exception e){
             System.out.println(":/");
