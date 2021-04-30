@@ -67,23 +67,27 @@ public class NewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment, container, false);
+        TwitterFilteredStream t1 = new TwitterFilteredStream();
 
         try{
         ArrayList<Tweet> tweets_mainview = new ArrayList<Tweet>();
-        TwitterFilteredStream t1 = new TwitterFilteredStream();
         t1.start();
 
         t1.addListeners(new TweetListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onListener() {
+
                 ScrollView sv = (ScrollView) view.findViewById(R.id.tweet_scroll_view);
                 LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+//               params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//               params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 params.setMargins(10,10,10,10);
+                int count = 0;
                 for (Tweet tweet : t1.getTweets()) {
+                    count++;
                     TextView temp = new TextView(getContext());
                     LinearLayout tweetLayout = new LinearLayout(getContext());
                     temp.post(new Runnable() {
@@ -121,6 +125,11 @@ public class NewsFragment extends Fragment {
                         }
                     });
                 }
+                if(count > 1) {
+                    ImageView iv = (ImageView) view.findViewById(R.id.imageView2);
+                    //iv.setVisibility(View.INVISIBLE);
+                    ll.removeView(iv);
+                }
             }
         });}
         catch (Exception e){
@@ -129,12 +138,7 @@ public class NewsFragment extends Fragment {
             temp.setImageResource(R.drawable.no_internet);
             ll.addView(temp);*/
         }
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
-        if(ll.getChildCount() == 0) {
-            ImageView temp = new ImageView(getContext());
-            temp.setImageResource(R.drawable.no_internet);
-            ll.addView(temp);
-        }
+
         Python python = Python.getInstance();
         PyObject pythonFile = python.getModule("test");
 

@@ -59,8 +59,9 @@ public class TwitterFilteredStream extends Thread{
 //        System.out.println(twitterClient.getTweet("1379295492480380928").getText());
             System.out.println(tweets);
 //            assert(tweets.size() == 20);
-
-            setVar();
+            if(tweets.size()==20) {
+                setVar();
+            }
         }
         catch (Exception e) {
             System.out.println("HITTTTT!");
