@@ -76,8 +76,8 @@ public class NewsFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onListener() {
-                ScrollView sv = (ScrollView) getView().findViewById(R.id.tweet_scroll_view);
-                LinearLayout ll = (LinearLayout) getView().findViewById(R.id.tweet_linear_layout);
+                ScrollView sv = (ScrollView) view.findViewById(R.id.tweet_scroll_view);
+                LinearLayout ll = (LinearLayout) view.findViewById(R.id.tweet_linear_layout);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
 //                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;

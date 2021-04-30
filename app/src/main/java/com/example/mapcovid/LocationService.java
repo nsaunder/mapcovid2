@@ -39,7 +39,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -171,10 +174,70 @@ public class LocationService extends Service {
         Double lat = constants.getCurrentLat();
         Double lon = constants.getCurrentLon();
 
+        //creates new path item for new change in location
         PathItem newCity = new PathItem(time, city, lat, lon);
+        String appID = constants.getAppId();
+
+        //retrieves path for current date or creates new path for current date
+        DayPath path = constants.getDayPath(date);
+        if(path != null) {
+            //TODO: possibly check for sequential duplicates before adding
+            //there is a path that exists for current date => retrieve path
+            List<PathItem> places = path.getPlaces();
+            //add new path item to existing path
+            places.add(newCity);
+            System.out.println(path.toString());
+        } else {
+            //there is no path for current date => create a path with new location detected
+            ArrayList<PathItem> places = new ArrayList<PathItem>();
+            places.add(newCity);
+            DayPath newPath = new DayPath(date, places);
+            if(constants.getPaths() == null) {
+                //happens when there is no file => need to initialize paths
+                ArrayList<DayPath> tempPaths = new ArrayList<DayPath>();
+                tempPaths.add(newPath);
+                constants.setPaths(tempPaths);
+            } else {
+                //we have a file; therefore we have array list
+                //add new path to database
+                constants.getPaths().add(newPath);
+            }
+        } //at this point, database reflects new location change accurately
+
+        try {
+            //converting paths to JSON string
+            Gson gson = new Gson();
+            String data = gson.toJson(constants.getPaths());
+            System.out.println("PATH DATA: " + data);
+            //creates/retrieves file to write to
+//            File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+//            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = getApplicationContext().openFileOutput("paths.json", Context.MODE_PRIVATE);
+            if(fos != null) {
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+            } else {
+                System.out.println("NO PATH!");
+                File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+                fos = new FileOutputStream(file);
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+            }
+
+            //need to reflect changes in ArrayList in Constant.java => changes only occur when location changes
+            constants.setPaths(getApplicationContext());
+
+        } catch(Exception e) {
+            System.out.println("Something went wrong when trying to write to database!");
+            e.printStackTrace();
+        }
 
         //pushes new city location to date's path
-        database.child("paths").child(date).push().setValue(newCity);
+        //database.child(appID).child("paths").child(date).push().setValue(newCity);
     }
 
     public void onLocationChanged(Location location) {

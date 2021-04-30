@@ -45,22 +45,21 @@ public class TwitterFilteredStream extends Thread{
     }
 
     public void run() {
-        TwitterClient twitterClient = new TwitterClient(TwitterCredentials.builder()
-                .accessToken("1576654423-ctIWZ6WsoIyNRPdLu5U3E4thUJ8l1Nvqi6OjpfM")
-                .accessTokenSecret("G6OrLvAMIoK4MS4WRTo6P7cmYRbe3x8t8lYUx4wcW5xGy")
-                .apiKey("2QqmHULXAdmAXmgmJCpANtpP0")
-                .apiSecretKey("vN7afYDUkpQkTQSJh4LWFJgfykgM9yBrrWuMqWlMclxfGehTM8")
-                .build());
-
-        tweets = new ArrayList<Tweet>();
-
-
-        System.out.println(twitterClient.getBearerToken());
-        tweets = (ArrayList<Tweet>) twitterClient.getUserTimeline("1272986459566256128", 20);
-//        System.out.println(twitterClient.getTweet("1379295492480380928").getText());
-        System.out.println(tweets);
-        assert(tweets.size() == 20);
         try {
+            TwitterClient twitterClient = new TwitterClient(TwitterCredentials.builder()
+                    .accessToken("1576654423-ctIWZ6WsoIyNRPdLu5U3E4thUJ8l1Nvqi6OjpfM")
+                    .accessTokenSecret("G6OrLvAMIoK4MS4WRTo6P7cmYRbe3x8t8lYUx4wcW5xGy")
+                    .apiKey("2QqmHULXAdmAXmgmJCpANtpP0")
+                    .apiSecretKey("vN7afYDUkpQkTQSJh4LWFJgfykgM9yBrrWuMqWlMclxfGehTM8")
+                    .build());
+
+            tweets = new ArrayList<Tweet>();
+
+            tweets = (ArrayList<Tweet>) twitterClient.getUserTimeline("1272986459566256128", 20);
+//        System.out.println(twitterClient.getTweet("1379295492480380928").getText());
+            System.out.println(tweets);
+//            assert(tweets.size() == 20);
+
             setVar();
         }
         catch (Exception e) {

@@ -140,21 +140,26 @@ public class TestingFragment extends Fragment {
                                 .color(Color.BLUE));
                     }
 
-                    lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    try {
+                        lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
-                    if(testingMap.containsKey(constants.getCurrentLocation())){
-                        labutton.setVisibility(View.GONE);
-                    }
-                    else {
-                        labutton.setVisibility((View.VISIBLE));
-                    }
-                    lastMarker = mMap.addMarker(new MarkerOptions()
-                            .position(lastLocation)
-                            .title("Current Location")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    lastMarker.showInfoWindow();
+                        if(testingMap.containsKey(constants.getCurrentLocation())){
+                            labutton.setVisibility(View.GONE);
+                        }
+                        else {
+                            labutton.setVisibility((View.VISIBLE));
+                        }
+                        lastMarker = mMap.addMarker(new MarkerOptions()
+                                .position(lastLocation)
+                                .title("Current Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                        lastMarker.showInfoWindow();
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                    } catch(Exception e) {
+                        System.out.println("NO WIFI! :-P");
+                    }
                 }
 
             });

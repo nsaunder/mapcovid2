@@ -331,20 +331,32 @@ public class MapsFragment extends Fragment {
                             ad.show();
                         }
                     } catch(Exception e) {
-                        //TODO: Show Modal
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Please make sure you have access to internet and airplane mode is not disabled. Some features may not be available.")
+                                .setCancelable(false)
+                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(final DialogInterface dialog, final int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        final AlertDialog alert = builder.create();
+                        alert.show();
                     }
 
                 }
             });
             // Create a heat map tile provider, passing it the latlngs of the police stations.
-            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                    .weightedData(latLngs)
-                    .opacity(0.7)
-                    .radius(30)
-                    .maxIntensity(9)
-                    .build();
-            // Add a tile overlay to the map, using the heat map tile provider.
-            TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            if(latLngs != null && !latLngs.isEmpty()) {
+                HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                        .weightedData(latLngs)
+                        .opacity(0.7)
+                        .radius(30)
+                        .maxIntensity(9)
+                        .build();
+                // Add a tile overlay to the map, using the heat map tile provider.
+                TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            }
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.947029, -118.258471), 10f));
         }
     };
