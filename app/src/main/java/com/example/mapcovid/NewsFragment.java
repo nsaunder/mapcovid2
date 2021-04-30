@@ -107,7 +107,7 @@ public class NewsFragment extends Fragment {
 //                            System.out.println(tweet.getCreatedAt().getDayOfMonth()+"/"+tweet.getCreatedAt().getMonth()+"/"+tweet.getCreatedAt().getYear());
                             temp.setPadding(30,30,30,30);
                             temp.setText("@LACovid19Bot"   + "\n\n" + tweet.getText() + "\n\n" + tweet.getCreatedAt().getMonth() + " " + tweet.getCreatedAt().getDayOfMonth()+", "+tweet.getCreatedAt().getYear());
-                            temp.setBackgroundColor(Color.GRAY);
+                            temp.setTextColor(Color.parseColor("#000000"));
                             temp.setBackgroundResource(R.drawable.back);
                             temp.setLayoutParams(params);
                         }

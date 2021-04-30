@@ -3,8 +3,9 @@
     <!-- Bottom 2dp Shadow -->
     <item android:gravity="center">
         <shape  android:shape="rectangle">
-            <solid android:color="#ECECEC" />
-            <corners android:radius="7dp" />
+            <solid android:color="#FFDFD9" />
+            <corners android:radius="10dp" />
+            <size android:width="500dp"/>
         </shape>
     </item>
 
@@ -13,7 +14,14 @@
         <shape  android:shape="rectangle">
             <solid android:color="#FFFFFF" />
             <corners android:radius="7dp" />
-            <size android:height="40dp" android:width="200dp"/>
+            <size android:height="200dp" android:width="500dp"/>
+        </shape>
+    </item>
+    <item android:gravity="center">
+        <shape  android:shape="rectangle">
+            <solid android:color="#FFDFD9" />
+            <corners android:radius="10dp" />
+            <size android:width="500dp"/>
         </shape>
     </item>
 </layer-list>
