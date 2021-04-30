@@ -10,7 +10,7 @@ def get_weather():
     URL = 'https://api.weatherbit.io/v2.0/current?key=a0ef2ad051944a5a90807e09fad0f8c6&units=I&city=Los Angeles&country=US'
     page = requests.get(URL)
     json_data = json.loads(page.text)
-    return json_data['data']['weather']['description'] + "_" + json_data['data']['temp']
+    return (json_data['data'][0]['weather']['description'] + "_" + str(json_data['data'][0]['temp']))
 
 def create_new_file():
     #[GRABBING OLD DATA -- BASELINE DATA IS A DICTIONARY]

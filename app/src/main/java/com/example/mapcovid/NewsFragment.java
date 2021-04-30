@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.example.mapcovid.ui.news.NewsViewModel;
 import com.github.redouane59.twitter.dto.tweet.Tweet;
 
@@ -47,6 +49,19 @@ public class NewsFragment extends Fragment {
         return return_tweets;
     }
 
+    public void printWeather(String weather){
+        try {
+            String[] pieces = weather.split("_");
+            for (String s : pieces) {
+                System.out.println(s);
+            }
+            TextView wet = (TextView) getView().findViewById(R.id.weather_text);
+            wet.setText("Weather in Los Angeles: " + pieces[1] + "°, " + pieces[0] + ".");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -68,8 +83,6 @@ public class NewsFragment extends Fragment {
 //                params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 params.setMargins(10,10,10,10);
                 for (Tweet tweet : t1.getTweets()) {
-                    System.out.println("INSIDE");
-                    System.out.println(tweet.getText());
                     TextView temp = new TextView(getContext());
                     LinearLayout tweetLayout = new LinearLayout(getContext());
                     temp.post(new Runnable() {
@@ -106,7 +119,6 @@ public class NewsFragment extends Fragment {
                             // returnabletweets.add(tweet);
                         }
                     });
-                    System.out.println(tweet.getText());
                 }
             }
         });}
@@ -115,6 +127,16 @@ public class NewsFragment extends Fragment {
             TextView temp = new TextView(getContext());
             temp.setText("Turn on wifi please :(");
             ll.addView(temp);
+        }
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("test");
+
+        try {
+            PyObject weatherString = pythonFile.callAttr("get_weather");
+            printWeather(weatherString.toString());
+        }
+        catch (Exception e){
+            System.out.println(":/");
         }
         return view;
     }

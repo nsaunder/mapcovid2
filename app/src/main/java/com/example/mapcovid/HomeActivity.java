@@ -75,10 +75,9 @@ public class HomeActivity extends AppCompatActivity {
 
         try {
             PyObject helloWorldString = pythonFile.callAttr("create_new_file");
-            PyObject weatherString = pythonFile.callAttr("get_weather");
         } catch (Exception e) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Airplane mode has been enabled. Please disable.")
+            builder.setMessage("Please make sure you have access to internet and airplane mode is not disabled. Some features may not be available.")
                     .setCancelable(false)
                     .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(final DialogInterface dialog, final int id) {

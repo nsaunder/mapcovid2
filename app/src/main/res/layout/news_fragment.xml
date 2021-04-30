@@ -7,17 +7,19 @@
     tools:context=".NewsFragment"
     android:background="?attr/backgroundColor">
 
-
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/weather_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:text="Please enable your internet for weather and news."
+        android:textColor="?attr/textColor"/>
 
     <ScrollView
         android:id="@+id/tweet_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="696dp"
+        android:translationY="35dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
