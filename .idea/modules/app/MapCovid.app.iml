@@ -136,7 +136,7 @@
     <orderEntry type="library" name="Gradle: android.test.mock" level="project" />
     <orderEntry type="library" name="Gradle: android.test.base" level="project" />
     <orderEntry type="library" name="Gradle: android.test.runner" level="project" />
-    <orderEntry type="library" name="Gradle: ./../../../.gradle/caches/modules-2/files-2.1/com.chaquo.python.runtime/chaquopy_java/9.1.0/3ce389fd29a40b6a788df30a5d6a8e3562a7b18b/chaquopy_java-9.1.0.jar" level="project" />
+    <orderEntry type="library" name="Gradle: ./../../../../../.gradle/caches/modules-2/files-2.1/com.chaquo.python.runtime/chaquopy_java/9.1.0/3ce389fd29a40b6a788df30a5d6a8e3562a7b18b/chaquopy_java-9.1.0.jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.redouane59.twitter:twittered:1.21" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.10" level="project" />

@@ -5,6 +5,7 @@ from os.path import dirname, join
 import pickle
 import datetime
 import os
+import math
 
 def get_weather():
     URL = 'https://api.weatherbit.io/v2.0/current?key=a0ef2ad051944a5a90807e09fad0f8c6&units=I&city=Los Angeles&country=US'
@@ -58,8 +59,8 @@ def create_new_file():
                 temp["center_lat"] = city_data[i]["center_lat"]
                 temp["center_long"] = city_data[i]["center_long"]
                 temp["radius"] = city_data[i]["radius"]
-                temp["new_cases"] = int((new_data[city_data[i]["city_name"]][0] - baseline_data[city_data[i]["city_name"]][0])/(day - 11))
-                temp["new_deaths"] = int((new_data[city_data[i]["city_name"]][1] - baseline_data[city_data[i]["city_name"]][1])/(day - 11))
+                temp["new_cases"] = int(math.ceil((new_data[city_data[i]["city_name"]][0] - baseline_data[city_data[i]["city_name"]][0])/float(((30 + day) - 11))))
+                temp["new_deaths"] = int(math.ceil((new_data[city_data[i]["city_name"]][1] - baseline_data[city_data[i]["city_name"]][1])/float(((30 + day) - 11))))
                 temp["total_cases"] = int((new_data[city_data[i]["city_name"]][0]))
                 temp["total_deaths"] = int((new_data[city_data[i]["city_name"]][1]))
                 final_comparison.append(temp)
