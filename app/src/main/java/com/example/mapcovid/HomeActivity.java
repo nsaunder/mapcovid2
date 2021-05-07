@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -280,7 +281,71 @@ public class HomeActivity extends AppCompatActivity {
         return p;
     }
 
-    //when user clicks on button, deletes all path data for user from firebase
+    //when user selects a day, deletes all path data for specific day from database
+    public void deleteDayPath(View view, String day) {
+        AlertDialog ad = new AlertDialog.Builder(this)
+                .create();
+        ad.setCancelable(false);
+        ad.setTitle("ALERT");
+        ad.setMessage("You are about to delete your path history for " + day + "...");
+        boolean tf = false;
+        if(tf == false) {
+            ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    //retrieve file
+                    File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+                    //delete path associated with day if file exists
+                    if(file.exists()) {
+                        //retrieves database
+                        ArrayList<DayPath> paths = constants.getPaths();
+                        DayPath toRemove = null;
+                        //search for path with date that user selected
+                        for(DayPath dp: paths) {
+                            if(dp.getDate().compareTo(day) == 0) {
+                                //if path exists for day, then mark it for removal
+                                toRemove = dp;
+                            }
+                        }
+
+                        if(toRemove != null) {
+                            //delete path from database
+                            paths.remove(toRemove);
+                            //reflect deletion in data file
+                            try {
+                                //converting paths to JSON string
+                                Gson gson = new Gson();
+                                String data = gson.toJson(constants.getPaths());
+                                System.out.println("PATH DATA: " + data);
+                                //creates/retrieves file to write to
+                                FileOutputStream fos = getApplicationContext().openFileOutput("paths.json", Context.MODE_PRIVATE);
+                                //convert JSON string to bytes and write to file
+                                fos.write(data.getBytes());
+                                //save write to file
+                                fos.flush();
+                                //need to reflect changes in ArrayList in Constant.java => changes only occur when location changes
+                                constants.setPaths(getApplicationContext());
+                            } catch(Exception e) {
+                                System.out.println("Something went wrong when trying to write to database - deleteDayPath() in HomeActivity!");
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    //database.child(constants.getAppId()).removeValue();
+                    dialog.dismiss();
+                }
+            });
+            ad.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            tf = true;
+        }
+        ad.show();
+    }
+
+    //when user clicks on button, deletes all path data for user from database
     public void deletePath(View view){
         AlertDialog ad = new AlertDialog.Builder(this)
                 .create();
