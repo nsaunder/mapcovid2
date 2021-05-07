@@ -50,9 +50,13 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +96,40 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             finish();
             return;
         }
+        //checks to see last day we deleted travel tracking data => stored in shared preferences
+        if(preferences.getString("last_day_deleted", null) != null) {
+            try {
+                String lastDay = preferences.getString("last_day_deleted", null);
+                //format of how we store dates in data file
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date lastDayDeleted = dateFormat.parse(lastDay);
+                Date today = Calendar.getInstance().getTime();
+                //calculate the number of days between last day we deleted data and today
+                int diff = daysBetween(lastDayDeleted,today);
+                //get data retention period
+                int period = constants.getDataRetentionPeriod();
+                //exceeded data retention period => delete data
+                if(diff >= period) {
+                    //retrieve file
+                    File file = new File(getApplicationContext().getFilesDir(), "paths.json");
+                    //delete file if it exists + clear database
+                    if(file.exists()) {
+                        file.delete();
+                        constants.getPaths().clear();
+                    }
+                }
+
+            } catch(ParseException pe) {
+                System.out.println("Something went wrong when parsing date for deleting travel data after data retention period!");
+                pe.printStackTrace();
+            }
+        }
+        else {
+            //that means we haven't written any data yet => record that we writing data
+            String today = LocalDate.now().toString();
+            preferences.edit().putString("last_day_deleted", today);
+        }
+        
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
 
@@ -562,5 +600,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public Constant getConstants() {
         return constants;
+    }
+
+    public int daysBetween(Date d1, Date d2){
+        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
 }
