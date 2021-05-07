@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String today = LocalDate.now().toString();
             preferences.edit().putString("last_day_deleted", today);
         }
-        
+
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
 
@@ -151,6 +152,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     constants.setNewLocation(true);
                 }
             });
+        }
+
+        //setup covidAlarm
+        covidAlarm();
+    }
+
+    public void covidAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        //sets alarm to 10 AM
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.getTime().compareTo(new Date()) < 0)
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
     }
 
