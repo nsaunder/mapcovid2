@@ -291,7 +291,6 @@ public class HomeActivity extends AppCompatActivity {
         boolean tf = false;
         if(tf == false) {
             ad.setButton(DialogInterface.BUTTON_POSITIVE, "Accept", new DialogInterface.OnClickListener() {
-
                 public void onClick(DialogInterface dialog, int which) {
                     //retrieve file
                     File file = new File(getApplicationContext().getFilesDir(), "paths.json");
@@ -377,6 +376,10 @@ public class HomeActivity extends AppCompatActivity {
             tf = true;
         }
         ad.show();
+    }
+
+    public void updateDataRetentionPeriod(View view, int num) {
+        constants.setDataRetentionPeriod(num);
     }
 
     //when user clicks on button, send a test notification
