@@ -46,7 +46,7 @@ public class AlarmHelper {
             String msg = current.city_notification_message();
             String title_and_msg = content_title + "\n" + msg;
 
-            mBuilder.setContentTitle("Good Morning!" + LocalTime.now().toString())
+            mBuilder.setContentTitle("Good Morning!")
                     .setContentText(content_title)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(title_and_msg))

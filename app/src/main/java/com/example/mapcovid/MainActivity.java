@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -158,24 +159,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void covidAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        //sets alarm to 10 AM
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 15);
-
-        if (calendar.getTime().compareTo(new Date()) < 0)
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent alarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
 
-        System.out.println(calendar.getTimeInMillis());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmIntent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
+        alarmManager.cancel(pendingIntent);
 
-        if (alarmManager != null) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Calendar alarmStartTime = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        alarmStartTime.set(Calendar.HOUR_OF_DAY, 10);
+        alarmStartTime.set(Calendar.MINUTE, 00);
+        alarmStartTime.set(Calendar.SECOND, 15);
+        if (now.after(alarmStartTime)) {
+            alarmStartTime.add(Calendar.DATE, 1);
         }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmStartTime.getTimeInMillis(), pendingIntent);
+//        Calendar calendar = Calendar.getInstance();
+//        //sets alarm to 10 AM
+//        calendar.set(Calendar.HOUR_OF_DAY, 10);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 15);
+//
+//        if (calendar.getTime().compareTo(new Date()) < 0)
+//            calendar.add(Calendar.DAY_OF_MONTH, 1);
+//
+//        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//        System.out.println(calendar.getTimeInMillis());
+//
+//        if (alarmManager != null) {
+//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//        }
     }
 
     //launches next Activity after user selects 'Launch' button
