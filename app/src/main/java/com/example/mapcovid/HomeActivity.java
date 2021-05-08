@@ -56,8 +56,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -153,6 +156,9 @@ public class HomeActivity extends AppCompatActivity {
         ScrollView sv = (ScrollView) findViewById(R.id.scroll_view);
         LinearLayout ll = (LinearLayout) findViewById(R.id.linear_layout);
 
+
+        int x = constants.getDataRetentionPeriod();
+
         if(dp != null) {
             String day = dp.getDayOfMonth()+"";
             String month = (dp.getMonth()+1)+"";
@@ -163,11 +169,29 @@ public class HomeActivity extends AppCompatActivity {
                 month = "0" + month;
 
             String date = year+"-"+month+"-"+day;
-            Context cc = this;
-            boolean tf = false;
-            if(tf == false) {
-                getInfo(date, cc, ll, false, new ArrayList<PathItem>());
-                tf = true;
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date last = dateFormat.parse(date);
+                Date today = Calendar.getInstance().getTime();
+                int diff = (int)( (today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+                if(diff <= x){
+                    Context cc = this;
+                    boolean tf = false;
+                    if(tf == false) {
+                        getInfo(date, cc, ll, false, new ArrayList<PathItem>());
+                        tf = true;
+                    }
+                }
+                else{
+                    ll.removeAllViews();
+                    TextView temp = new TextView(this);
+                    temp.setGravity(Gravity.CENTER);
+                    temp.setText("Date out of retention period");
+                    ll.addView(temp);
+                }
+            }
+            catch (Exception e){
+
             }
         }
     }

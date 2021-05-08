@@ -73,7 +73,7 @@ public class Constant {
 
 
     //constructor for fragments
-    public Constant() { errorList = new ArrayList<>();}
+    public Constant() { errorList = new ArrayList<>();
         //default data retention period: 21 days
         dataRetentionPeriod = 21;
     }
