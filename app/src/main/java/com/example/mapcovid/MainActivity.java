@@ -296,13 +296,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     if (lastLocation != null) {
                         //only display notifications with relevant Covid-19 info to user when they move within LA County
                         if(constants.inLACounty(currentLocation)) {
-                            System.out.println("Inside LA County: " + currentLocation);
+                            //System.out.println("Inside LA County: " + currentLocation);
                             createNotification();
                         }
                         else {
                             //if user is outside of LA County, then send notification warning them that we cannot
                             //guarantee certain features
-                            System.out.println("Outside LA County: " + currentLocation);
+                            //System.out.println("Outside LA County: " + currentLocation);
                             createWarningNotification();
                         }
                         constants.setNewLocation(true);
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             List<PathItem> places = path.getPlaces();
             //add new path item to existing path
             places.add(newCity);
-            System.out.println(path.toString());
+            //System.out.println(path.toString());
         } else {
             //there is no path for current date => create a path with new location detected
             ArrayList<PathItem> places = new ArrayList<PathItem>();
@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //converting paths to JSON string
             Gson gson = new Gson();
             String data = gson.toJson(constants.getPaths());
-            System.out.println("PATH DATA: " + data);
+            //System.out.println("PATH DATA: " + data);
             //creates/retrieves file to write to
             FileOutputStream fos = getApplicationContext().openFileOutput("paths.json", Context.MODE_PRIVATE);
             if(fos != null) {
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //save write to file
                 fos.flush();
             } else {
-                System.out.println("NO PATH!");
+                //System.out.println("NO PATH!");
                 File file = new File(getApplicationContext().getFilesDir(), "paths.json");
                 fos = new FileOutputStream(file);
                 //convert JSON string to bytes and write to file
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             constants.setPaths(getApplicationContext());
 
         } catch(Exception e) {
-            System.out.println("Something went wrong when trying to write to database!");
+            constants.logError("Error: Could not write to database. " + e.getMessage(), getApplicationContext());
             e.printStackTrace();
         }
     }
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 constants.setCurrentLon(location.getLongitude());
             }
         } catch (IOException ioe) {
-            Log.d(TAG, ioe + "    -   Couldn't retrieve city from updated location coordinates");
+            constants.logError("Error: Could not retrieve city coordinates. " + ioe.getMessage(), getApplicationContext());
         }
     }
 
@@ -425,6 +425,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             String city = getCityByCoordinates(lat, lon);
                             if (city != null) constants.setLastLocation(city);
                         } catch (IOException ioe) {
+                            constants.logError("get last location failed. " + ioe.getMessage(), getApplicationContext());
                             Log.d(TAG, ioe + "  -  getLastLocation() failed");
                         }
 

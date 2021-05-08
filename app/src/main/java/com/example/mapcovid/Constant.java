@@ -3,6 +3,10 @@ package com.example.mapcovid;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -27,6 +31,8 @@ import com.google.gson.reflect.TypeToken;
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -58,10 +64,12 @@ public class Constant {
     private static Double current_lon;
     private static boolean newLocation;
     private static boolean fileDeleted;
+    private static ArrayList<String> errorList;
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
+
 
     //constructor for fragments
     public Constant() { }
@@ -110,7 +118,7 @@ public class Constant {
                         PyObject helloWorldString = pythonFile.callAttr("create_new_file");
                         file = new File(context.getFilesDir(), "final_city_data.json");
                     } catch(Exception e) {
-                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                        errorList.add("Error: when scraping data !");
                     }
                 }
                 is = new FileInputStream(file);
@@ -125,7 +133,7 @@ public class Constant {
                         PyObject helloWorldString = pythonFile.callAttr("create_new_file");
                         is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
                     } catch(Exception e) {
-                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                        errorList.add("Error: when scraping data !");
                     }
                 }
             }
@@ -137,7 +145,7 @@ public class Constant {
             this.cities = gson.fromJson(reader,cityList);
             reader.close();
         } catch(Exception e) {
-            System.err.println(e);
+            errorList.add(e.getMessage());
         }
     }
 
@@ -252,7 +260,7 @@ public class Constant {
         for(DayPath dayPath: paths) {
             if(dayPath.getDate().compareTo(day) == 0) {
                 for(PathItem item: dayPath.getPlaces()) {
-                    System.out.println("PLACE READ: " + item.getCity());
+                    //System.out.println("PLACE READ: " + item.getCity());
                 }
                 return dayPath.getPlaces();
             }
@@ -293,7 +301,7 @@ public class Constant {
                 data = sb.toString();
             }
         } catch(Exception e) {
-            System.out.println("Error when retrieving day path!");
+            errorList.add("Error: when retrieving day path!");
             e.printStackTrace();
         }
         //use gson to recreate list of day paths from data string
@@ -329,5 +337,105 @@ public class Constant {
         //all else fails, return false
         return false;
     }
+    public String getErrors(){
+        String res = "";
+        for(String error: errorList){
+            res+=(error+"\n");
+        }
+        return res;
+    }
+    public void initializeList(Context context){
+        errorList = new ArrayList<>();
+        try {
+            //create input stream with file
+            InputStream is = context.openFileInput("errors.txt");
+            //check to see if InputStream is null
+            if(is != null) {
+                InputStreamReader streamReader = new InputStreamReader(is);
+                BufferedReader bufferedReader = new BufferedReader(streamReader);
+                String received = "";
+                //append lines from buffered reader
+                while((received = bufferedReader.readLine()) != null) {
+                    errorList.add(received);
+                }
+                //close input stream and save stringBuilder as a String
+                is.close();
+            }
+        } catch(Exception e) {
+            errorList.add("Error: when retrieving day path!");
+        }
 
+    }
+
+    public boolean logError(String error, Context cc){
+        if(errorList == null){
+            initializeList(cc);
+        }
+        errorList.add(error);
+
+        try{
+            String data = getErrors();
+            //creates/retrieves file to write to
+            FileOutputStream fos = cc.openFileOutput("errors.txt", Context.MODE_PRIVATE);
+            if(fos != null) {
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+            } else {
+                System.out.println("NO PATH!");
+                File file = new File(cc.getFilesDir(), "errors.txt");
+                fos = new FileOutputStream(file);
+                //convert JSON string to bytes and write to file
+                fos.write(data.getBytes());
+                //save write to file
+                fos.flush();
+                fos.close();
+            }
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+/*
+
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "errors");
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File gpxfile = new File(root, "errorLog");
+            FileWriter writer = new FileWriter(gpxfile);
+            writer.append(error);
+            writer.flush();
+            writer.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }*/
+
+    }
+
+    public void readFile(Context context){
+        try {
+            //create input stream with file
+            InputStream is = context.openFileInput("errors.txt");
+            //check to see if InputStream is null
+            if(is != null) {
+                InputStreamReader streamReader = new InputStreamReader(is);
+                BufferedReader bufferedReader = new BufferedReader(streamReader);
+                String received = "";
+                //append lines from buffered reader
+                int i = 0;
+                while((received = bufferedReader.readLine()) != null) {
+                    i++;
+                    System.out.println(received + "------ ------ ------ ----- ---" + i);
+                }
+                //close input stream and save stringBuilder as a String
+                is.close();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

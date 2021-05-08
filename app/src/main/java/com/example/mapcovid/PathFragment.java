@@ -18,7 +18,7 @@ import com.example.mapcovid.ui.path.PathViewModel;
 public class PathFragment extends Fragment {
     private Button b1;
     private PathViewModel mViewModel;
-
+    Constant c;
     public static PathFragment newInstance() {
         return new PathFragment();
     }
@@ -26,7 +26,8 @@ public class PathFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
+        c = new Constant();
+        c.readFile(getContext());
         return inflater.inflate(R.layout.fragment_path, container, false);
     }
 

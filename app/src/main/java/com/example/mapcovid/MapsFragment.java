@@ -95,9 +95,10 @@ public class MapsFragment extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
             mMap.setMinZoomPreference(10f);
-
+            Marker currentMark = null;
+            LatLng cur = null;
             constants = new Constant();
-
+            constants.logError("New error", getContext());
             HashMap<String, City> citiesMap = new HashMap<>();
 
             String day = LocalDate.now().toString();
@@ -106,23 +107,32 @@ public class MapsFragment extends Fragment {
                 if (path != null) {
                     try {
                         LatLng lastCoordinates = new LatLng(path.get(path.size() - 1).getLat(), path.get(path.size() - 1).getLon());
-
+                        LatLng temp = null;
                         for (int i = path.size() - 2; i >= 0; i--) {
                             PathItem p = path.get(i);
-                            LatLng temp = new LatLng(p.getLat(), p.getLon());
+                            temp = new LatLng(p.getLat(), p.getLon());
                             Polyline line = mMap.addPolyline(new PolylineOptions()
                                     .add(temp, lastCoordinates)
                                     .width(10)
                                     .color(Color.BLUE));
                             lastCoordinates = temp;
                         }
+                        if(temp != null) {
+                            currentMark = mMap.addMarker(new MarkerOptions()
+                                    .position(temp)
+                                    .title("Current Location")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            currentMark.showInfoWindow();
+                            cur = temp;
+                        }
+
                     } catch (Exception e) {
-                        System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
+                        constants.logError("Error: " + e.getMessage(), getContext());
                     }
                 }
             }
             catch (Exception e) {
-                System.out.println("Permissions should be off");
+                constants.logError("Error: Permisssions are off", getContext());
             }
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
@@ -132,10 +142,13 @@ public class MapsFragment extends Fragment {
             ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.currentposbutton);
             ImageButton infobutton = (ImageButton) getView().findViewById(R.id.infoButton);
 
-
+            final Marker mark = currentMark;
+            final LatLng fucr = cur;
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
                 LatLng lastLocation = null;
+                Marker otherMar = mark;
+                LatLng otherCur = fucr;
 
                 @Override
                 public void onCurrentLocationChange() {
@@ -144,10 +157,18 @@ public class MapsFragment extends Fragment {
                     //Follow same logic
                     if (lastMarker != null) {   //If there exists a last location
                         lastMarker.remove();
-                        Polyline line = mMap.addPolyline(new PolylineOptions()
-                                .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                                .width(10)
-                                .color(Color.BLUE));
+                        if(constants.getCurrentLat() != null) {
+                            Polyline line = mMap.addPolyline(new PolylineOptions()
+                                    .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                                    .width(10)
+                                    .color(Color.BLUE));
+                        }
+                    }
+                    else{
+                        if(otherMar != null) {
+                            otherMar.remove();
+
+                        }
                     }
 
                     //lastLocation = new LatLng(34.2, -118.23);
@@ -173,13 +194,13 @@ public class MapsFragment extends Fragment {
 
                     }
                     catch(Exception e){
+                        constants.logError("Error: " + e.getMessage(), getContext());
                     }
                 }
 
             });
             constants.fragmentReady();
 
-            System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
                 labutton.setVisibility(View.VISIBLE);
@@ -217,12 +238,6 @@ public class MapsFragment extends Fragment {
             screenButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-//                    System.out.println("HERERERERE");
-//                    Bitmap bm = getScreenShot(getView());
-//                    System.out.println("MADE IT PAST");
-//                    File myFile = store(bm, "Screenshot.png");
-//                    System.out.println("MADE it one more");
-//                    shareImage(myFile);
                       captureScreen();
                 }
             });
@@ -262,7 +277,6 @@ public class MapsFragment extends Fragment {
             constants.addPermissionListener(new permissionsListener() {
                 @Override
                 public void onPermissionsChange() {
-                    System.out.println(constants.getPermissionsGranted()+"--");
                     if(constants.getPermissionsGranted() == false)
                         button.setVisibility(View.VISIBLE);
                     else
@@ -280,30 +294,17 @@ public class MapsFragment extends Fragment {
             List<WeightedLatLng> latLngs = new ArrayList<>();
             // Get the data: latitude/longitude positions of police stations.
             try {
-//                String path = Environment.getExternalStorageDirectory().toString() + "/final_city_data.json";
-//                System.out.println(path);
-//                System.out.println("FLAG");
+
                 cities = readItems("final_city_data.json");
             } catch (JSONException e) {
-                System.err.println(e);
+                constants.logError("Error: " + e.getMessage(), getContext());
             } catch (IOException e) {
-                System.err.println(e);
+                constants.logError("Error: " + e.getMessage(), getContext());
             }
 
             addCityMarkers(cities, latLngs, citiesMap);
 
 
-//            constants.addFileDeletedListener(new deleteFileListener(){
-//                @Override
-//                public void onDelete() {
-//                    try {
-//                        readItems("final_city_data.json", cities);
-//                    } catch(Exception e){
-//                        System.out.println("Something went wrong figure it out");
-//                    }
-//                    addCityMarkers(cities, latLngs, citiesMap);
-//                }
-//            });
 
 
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -430,7 +431,7 @@ public class MapsFragment extends Fragment {
                         PyObject helloWorldString = pythonFile.callAttr("create_new_file");
                         file = new File(getContext().getFilesDir(), "final_city_data.json");
                     } catch(Exception e) {
-                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                        constants.logError("Error: Could not scrape data turn on internet " + e.getMessage(), getContext());
                     }
                 }
                 is = new FileInputStream(file);
@@ -445,7 +446,7 @@ public class MapsFragment extends Fragment {
                         PyObject helloWorldString = pythonFile.callAttr("create_new_file");
                         is = this.getClass().getClassLoader().getResourceAsStream("final_city_data.json");
                     } catch(Exception e) {
-                        System.out.println("Error with Rescraping Covid Data - TURN YOUR WIFI ON!");
+                        constants.logError("Error: Could not scrape data turn on internet " + e.getMessage(), getContext());
                     }
                 }
             }
@@ -457,11 +458,9 @@ public class MapsFragment extends Fragment {
             cities = gson.fromJson(reader,cityList);
             reader.close();
         } catch(Exception e) {
-            System.err.println(e);
+            constants.logError("Error: " + e.getMessage(), getContext());
         }
-        for (City c: cities) {
-            System.err.println(c.get_city_name());
-        }
+
         return cities;
     }
 
@@ -559,14 +558,12 @@ public class MapsFragment extends Fragment {
                 catch (FileNotFoundException e)
                 {
                     // TODO Auto-generated catch block
-                    Log.d("ImageCapture", "FileNotFoundException");
-                    Log.d("ImageCapture", e.getMessage());
+                    constants.logError("Error: " + e.getMessage(), getContext());
                 }
                 catch (IOException e)
                 {
                     // TODO Auto-generated catch block
-                    Log.d("ImageCapture", "IOException");
-                    Log.d("ImageCapture", e.getMessage());
+                    constants.logError("Error: " + e.getMessage(), getContext());
                 }
 
                 shareImage(file);

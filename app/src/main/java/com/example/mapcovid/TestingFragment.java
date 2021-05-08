@@ -109,12 +109,12 @@ public class TestingFragment extends Fragment {
                             lastCoordinates = temp;
                         }
                     } catch (Exception e) {
-                        System.out.println("RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 1RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 2RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ---------- 3RESTART THE APP PLEASE IT WILL WORK WHEN YOU RESTART ----------");
+                        constants.logError("Error: Could not upload path", getContext());
                     }
                 }
             }
             catch (Exception e) {
-                System.out.println("Permissions should be off");
+                constants.logError("Error: Incorrect Permissions", getContext());
             }
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
@@ -158,7 +158,7 @@ public class TestingFragment extends Fragment {
 
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                     } catch(Exception e) {
-                        System.out.println("NO WIFI! :-P");
+                        constants.logError("Error: Internet not enabled", getContext());
                     }
                 }
 
@@ -166,7 +166,6 @@ public class TestingFragment extends Fragment {
 
             constants.fragmentReady();
 
-            System.out.println(constants.getPermissionsGranted()+"--");
             if(!constants.getPermissionsGranted()) {
                 button.setVisibility(View.VISIBLE);
             }
@@ -210,9 +209,9 @@ public class TestingFragment extends Fragment {
             try {
                 testingLocations = readItems("test_locations-1.json");
             } catch (JSONException e) {
-                System.err.println(e);
+                constants.logError("Error: " + e.getMessage(), getContext());
             } catch (IOException e) {
-                System.err.println(e);
+                constants.logError("Error: " + e.getMessage(), getContext());
             }
 
             addTestingMarkers(testingLocations, testingMap);
@@ -225,7 +224,6 @@ public class TestingFragment extends Fragment {
                     {
                         TestingLocation loc = testingMap.get(marker.getTitle());
                         String endpoint = "https://www.google.com/maps/dir/?api=1&origin ="+currentX+","+currentY+"&destination="+loc.getPosition().latitude+","+loc.getPosition().longitude;
-                        System.out.println(endpoint);
                         AlertDialog ad = new AlertDialog.Builder(getContext())
                                 .create();
                         ad.setCancelable(false);
