@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 
 import com.example.mapcovid.R;
 
@@ -56,15 +57,26 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+//        NumberPicker np = (NumberPicker)getView().findViewById(R.id.numberPicker);
+//        String[] nums = new String[20];
+//        for(int i=0; i<nums.length; i++)
+//            nums[i] = Integer.toString(i);
+//
+//        np.setMinValue(1);
+//        np.setMaxValue(20);
+//        np.setWrapSelectorWheel(false);
+//        np.setDisplayedValues(nums);
+//        np.setValue(1);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_settings, container, false);
+
+
     }
 
 }

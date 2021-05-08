@@ -79,4 +79,3 @@ public class AlarmHelper {
         mNotificationManager.notify(0 /* Request Code */, mBuilder.build());
     }
 }
-}
