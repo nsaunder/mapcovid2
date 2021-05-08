@@ -77,38 +77,103 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="485dp"
+                android:layout_marginBottom="4dp"
                 android:text="Travel Path Data"
                 android:textAlignment="viewStart"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="24sp" />
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/travelPathDataDescription"
                 android:layout_width="385dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="-490dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
                 android:text="One of the app's core feature is to store your travel path across multiple days. If you feel uncomfortable with this data being stored, you can delete your travel path"
                 android:textColor="?attr/textColor"
                 android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/selectDaysText"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Select number of days you want to retain travel path data"
+                android:textColor="?attr/textColor"
+                android:textSize="14sp"/>
+
+            <NumberPicker
+                android:id="@+id/numberPicker"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="320dp"
+                android:layout_marginTop="-70dp" />
+
             <Button
                 android:id="@+id/settings_button"
                 android:layout_width="381dp"
                 android:layout_height="66dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="354dp"
+                android:layout_marginBottom="12dp"
                 android:backgroundTint="?attr/buttonColor"
                 android:onClick="deletePath"
                 android:text="@string/button_text"
                 android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/deleteTravelPathDate"
+                android:layout_width="385dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Delete Travel Path of Select Date"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/deleteDate"
+                android:layout_width="385dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="Delete your path data from a select date"
+                android:textColor="?attr/textColor"
+                android:textSize="14sp" />
+
+            <DatePicker
+                android:id="@+id/deleteDatePicker"
+                android:layout_width="240dp"
+                android:layout_height="140dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:background="?attr/tintColor"
+                android:spinnersShown="true"/>
+
+            <Button
+                android:id="@+id/deleteDayPathButton"
+                android:layout_width="381dp"
+                android:layout_height="66dp"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="?attr/buttonColor"
+                android:onClick="setDeleteDate"
+                android:text="Delete Day Travel Path"
+                android:textColor="@color/white"/>
+
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="385dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="-340dp"
-                android:layout_marginBottom="300dp"
+                android:layout_marginTop="16dp"
                 android:text="Test Notfication"
                 android:textAlignment="viewStart"
                 android:textColor="?attr/colorPrimary"
@@ -118,18 +183,17 @@
                 android:layout_width="385dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="-300dp"
-                android:layout_marginBottom="230dp"
+                android:layout_marginTop="20dp"
                 android:text="The app will send you notifications with relevant Covid-19 information and other important information if you allow it. You can test this feature by sending a test notification"
                 android:textColor="?attr/textColor"
                 android:textSize="14sp" />
+
             <Button
                 android:id="@+id/test_notification_button"
                 android:layout_width="383dp"
                 android:layout_height="72dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="-220dp"
-                android:layout_marginBottom="165dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="?attr/buttonColor"
                 android:onClick="sendTestNotification"
                 android:text="Send Test Notification"
@@ -139,8 +203,7 @@
                 android:layout_width="385dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="-160dp"
-                android:layout_marginBottom="300dp"
+                android:layout_marginTop="20dp"
                 android:text="App Storage"
                 android:textAlignment="viewStart"
                 android:textColor="#ff9984"
@@ -150,8 +213,8 @@
                 android:layout_width="385dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="-300dp"
-                android:layout_marginBottom="230dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:text="-------------"
                 android:textColor="?attr/textColor"
                 android:textSize="14sp" />
@@ -161,8 +224,8 @@
                 android:layout_width="180dp"
                 android:layout_height="72dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="-220dp"
-                android:layout_marginBottom="165dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="?attr/buttonColor"
                 android:onClick="deleteStorage"
                 android:text="Delete Storage"
@@ -173,8 +236,8 @@
                 android:layout_width="180dp"
                 android:layout_height="72dp"
                 android:layout_marginStart="210dp"
-                android:layout_marginTop="-238dp"
-                android:layout_marginBottom="165dp"
+                android:layout_marginTop="-88dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="?attr/buttonColor"
                 android:onClick="showStorage"
                 android:text="Show Storage"
@@ -185,7 +248,8 @@
                 android:layout_height="47dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="300dp"
-                android:layout_marginTop="-140dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="80dp"
                 android:backgroundTint="?attr/buttonColor"
                 android:onClick="showAbout"
                 android:text="About"

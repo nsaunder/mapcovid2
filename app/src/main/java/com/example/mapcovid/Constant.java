@@ -65,6 +65,7 @@ public class Constant {
     private static boolean newLocation;
     private static boolean fileDeleted;
     private static ArrayList<String> errorList;
+    private static Integer dataRetentionPeriod; //how long we keep travel tracking data
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
@@ -73,6 +74,9 @@ public class Constant {
 
     //constructor for fragments
     public Constant() { errorList = new ArrayList<>();}
+        //default data retention period: 21 days
+        dataRetentionPeriod = 21;
+    }
 
     public Constant(Context context) {
         //initialize firebase database reference
@@ -82,9 +86,11 @@ public class Constant {
         //initialize list of paths
         try {
             setPaths(context);
+            dataRetentionPeriod = 21;
         } catch(Exception e){
 
         }
+
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -324,6 +330,14 @@ public class Constant {
         }
         //if we reach here, that means there is no path for date passed in
         return null;
+    }
+
+    public Integer getDataRetentionPeriod() {
+        return dataRetentionPeriod;
+    }
+
+    public void setDataRetentionPeriod(Integer num) {
+        dataRetentionPeriod = num;
     }
 
     //checks if city is in LA County
