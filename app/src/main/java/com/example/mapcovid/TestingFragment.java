@@ -154,24 +154,20 @@ public class TestingFragment extends Fragment {
                                     .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
                                     .width(10)
                                     .color(Color.BLUE));
-                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
                         }
 
                     }
                     else{
                         if(otherMar != null) {
                             otherMar.remove();
-                            lastLocation = otherCur;
+                            //lastLocation = otherCur;
                         }
 
                     }
 
                     //lastLocation = new LatLng(34.2, -118.23);
                     try{
-                        if(lastLocation == null){
-                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
-                        }
-
+                        lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
 
                         if(testingMap.containsKey(constants.getCurrentLocation())){
                             labutton.setVisibility(View.GONE);
