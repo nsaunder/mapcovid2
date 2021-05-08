@@ -172,6 +172,24 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void setDeleteDate(View view){
+        DatePicker dp =(DatePicker) findViewById(R.id.deleteDatePicker);
+
+        if(dp != null) {
+            String day = dp.getDayOfMonth()+"";
+            String month = (dp.getMonth()+1)+"";
+            String year = dp.getYear()+"";
+            if(day.length() == 1)
+                day = "0" + day;
+            if(month.length() == 1)
+                month = "0" + month;
+
+            String date = year+"-"+month+"-"+day;
+
+            deleteDayPath(view, date);
+        }
+    }
+
     public int getInfo(String day, Context cc, LinearLayout ll, final boolean tf, ArrayList<PathItem> p) {
         int count = 0;
         if(!tf) {

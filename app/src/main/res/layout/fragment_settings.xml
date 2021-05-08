@@ -112,6 +112,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="320dp"
                 android:layout_marginTop="-70dp" />
+
             <Button
                 android:id="@+id/settings_button"
                 android:layout_width="381dp"
@@ -145,7 +146,7 @@
                 android:textSize="14sp" />
 
             <DatePicker
-                android:id="@+id/datePicker"
+                android:id="@+id/deleteDatePicker"
                 android:layout_width="240dp"
                 android:layout_height="140dp"
                 android:layout_marginStart="80dp"
@@ -163,7 +164,7 @@
                 android:layout_height="66dp"
                 android:layout_marginStart="8dp"
                 android:backgroundTint="?attr/buttonColor"
-                android:onClick="deletePath"
+                android:onClick="setDeleteDate"
                 android:text="Delete Day Travel Path"
                 android:textColor="@color/white"/>
 

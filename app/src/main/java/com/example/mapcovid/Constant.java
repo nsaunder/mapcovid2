@@ -65,7 +65,10 @@ public class Constant {
     private static List<permissionsListener> permissionsListeners = new ArrayList<permissionsListener>();
 
     //constructor for fragments
-    public Constant() { }
+    public Constant() {
+        //default data retention period: 21 days
+        dataRetentionPeriod = 21;
+    }
 
     public Constant(Context context) {
         //initialize firebase database reference
