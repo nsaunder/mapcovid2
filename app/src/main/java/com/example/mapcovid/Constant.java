@@ -330,7 +330,7 @@ public class Constant {
         //update variable specific to program run
         dataRetentionPeriod = num;
         //update in shared preferences for future program runs
-        preferences.edit().putInt("dataRetentionPeriod", num); 
+        preferences.edit().putInt("dataRetentionPeriod", num).apply();
     }
 
     //checks if city is in LA County

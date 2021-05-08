@@ -103,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MapCovid");
         getSupportActionBar().setHomeActionContentDescription("MapCovid");
 
-        constants = new Constant();
+        constants = new Constant(getApplicationContext());
 
         //create notification channel to send test notification
         createNotificationChannel();
