@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //initialize constant data structures
+        constants = new Constant(getApplicationContext());
         //get shared preferences
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("my_preferences", MODE_PRIVATE);
         //check if onboarding_complete is false
@@ -98,9 +100,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return;
         }
         //checks to see last day we deleted travel tracking data => stored in shared preferences
-        if(preferences.getString("last_day_deleted", null) != null) {
+        String now = LocalDate.now().toString();
+        String lastDay = preferences.getString("last_day_deleted", now);
+
+        if(lastDay != now) {
             try {
-                String lastDay = preferences.getString("last_day_deleted", null);
                 //format of how we store dates in data file
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date lastDayDeleted = dateFormat.parse(lastDay);
@@ -118,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         file.delete();
                         constants.getPaths().clear();
                     }
+                    //update last day data deleted in shared preferences
+                    preferences.edit().putString("last_day_deleted",today.toString()).apply();
                 }
 
             } catch(ParseException pe) {
@@ -125,14 +131,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 pe.printStackTrace();
             }
         }
-        else {
-            //that means we haven't written any data yet => record that we writing data
-            String today = LocalDate.now().toString();
-            preferences.edit().putString("last_day_deleted", today);
-        }
-
-        //initialize constant data structures
-        constants = new Constant(getApplicationContext());
 
         //setup covidAlarm
         covidAlarm();
