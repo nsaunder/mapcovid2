@@ -10,6 +10,9 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class AlarmHelper {
     private Context mContext;
     private static final String NOTIFICATION_CHANNEL_ID = "10001";
@@ -43,7 +46,7 @@ public class AlarmHelper {
             String msg = current.city_notification_message();
             String title_and_msg = content_title + "\n" + msg;
 
-            mBuilder.setContentTitle("Good Morning!")
+            mBuilder.setContentTitle("Good Morning!" + LocalTime.now().toString())
                     .setContentText(content_title)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(title_and_msg))

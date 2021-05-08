@@ -31,6 +31,10 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
+    dataBinding {
+        enabled true
+    }
+
     sourceSets {
         String sharedTestJavaDir = 'src/sharedTest/java'
 

@@ -67,7 +67,7 @@ def create_new_file():
             else:
                 final_comparison.append(city_data[i])
 
-        print (final_comparison)
+        #print (final_comparison)
         with open(os.environ["HOME"] + "/final_city_data.json", 'w') as outfile:
             json.dump(final_comparison, outfile)
     except:

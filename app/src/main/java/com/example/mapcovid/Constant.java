@@ -75,7 +75,7 @@ public class Constant {
     //constructor for fragments
     public Constant() { errorList = new ArrayList<>();
         //default data retention period: 21 days
-        dataRetentionPeriod = 21;
+        if(dataRetentionPeriod==null) dataRetentionPeriod = 21;
     }
 
     public Constant(Context context) {
@@ -86,7 +86,7 @@ public class Constant {
         //initialize list of paths
         try {
             setPaths(context);
-            dataRetentionPeriod = 21;
+            if(dataRetentionPeriod==null) dataRetentionPeriod = 21;
         } catch(Exception e){
 
         }

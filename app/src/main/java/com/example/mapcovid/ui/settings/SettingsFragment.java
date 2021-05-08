@@ -64,4 +64,16 @@ public class SettingsFragment extends Fragment {
         constants = new Constant();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(31);
+        numberPicker.setValue(constants.getDataRetentionPeriod());
+        // Inflate the layout for this fragment
+        return view;
+    }
 }

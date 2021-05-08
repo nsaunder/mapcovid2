@@ -541,5 +541,10 @@ public class HomeActivity extends AppCompatActivity {
         dark = !dark;
     }
 
-
+    public void setRet(View view){
+        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+        System.out.println(constants.getDataRetentionPeriod());
+        constants.setDataRetentionPeriod(np.getValue());
+        System.out.println(constants.getDataRetentionPeriod());
+    }
 }

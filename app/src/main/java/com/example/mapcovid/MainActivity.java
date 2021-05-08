@@ -134,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //initialize constant data structures
         constants = new Constant(getApplicationContext());
 
+        //setup covidAlarm
+        covidAlarm();
         //create GoogleApiClient
         createGoogleApi();
 
@@ -153,9 +155,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
         }
-
-        //setup covidAlarm
-        covidAlarm();
     }
 
     public void covidAlarm() {
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //sets alarm to 10 AM
         calendar.set(Calendar.HOUR_OF_DAY, 10);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.SECOND, 15);
 
         if (calendar.getTime().compareTo(new Date()) < 0)
             calendar.add(Calendar.DAY_OF_MONTH, 1);
