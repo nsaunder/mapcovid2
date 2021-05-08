@@ -66,6 +66,7 @@ public class Constant {
     private static boolean fileDeleted;
     private static ArrayList<String> errorList;
     private static Integer dataRetentionPeriod; //how long we keep travel tracking data
+    private SharedPreferences preferences;
     //LISTENERS//
     private static List<currentLocationChangedListener> currentLocationListeners = new ArrayList<currentLocationChangedListener>();
     private static List<mapFragmentListener> mapFragmentListeners = new ArrayList<mapFragmentListener>();
@@ -84,28 +85,17 @@ public class Constant {
         //initialize list of City Objects
         set_cities(context);
         //initialize list of paths
-        try {
-            setPaths(context);
-            if(dataRetentionPeriod==null) dataRetentionPeriod = 21;
-        } catch(Exception e){
-
-        }
-
-        //get unique ID for application
-        FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-                appId = s;
-            }
-        });
+        setPaths(context);
         //get shared preferences
-        SharedPreferences preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         //check permissions saved from last run
         if(preferences.getBoolean("permissionsGranted", true)) {
             setPermissionsGranted(context, true);
         } else {
             setPermissionsGranted(context, false);
         }
+        //retrieve dataRetentionPeriod => default value = 21
+        dataRetentionPeriod = preferences.getInt("dataRetentionPeriod", 21);
     }
 
     //wrapper for static FirebaseDatabase getInstance()
@@ -337,7 +327,10 @@ public class Constant {
     }
 
     public void setDataRetentionPeriod(Integer num) {
+        //update variable specific to program run
         dataRetentionPeriod = num;
+        //update in shared preferences for future program runs
+        preferences.edit().putInt("dataRetentionPeriod", num); 
     }
 
     //checks if city is in LA County
