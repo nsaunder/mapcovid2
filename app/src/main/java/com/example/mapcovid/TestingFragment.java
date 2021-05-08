@@ -90,6 +90,8 @@ public class TestingFragment extends Fragment {
             mMap = googleMap;
             mMap.setMinZoomPreference(10f);
             constants = new Constant();
+            Marker currentMark = null;
+            LatLng cur = null;
             HashMap<String, TestingLocation> testingMap = new HashMap<>();
 
             String day = LocalDate.now().toString();
@@ -98,23 +100,32 @@ public class TestingFragment extends Fragment {
                 if (path != null) {
                     try {
                         LatLng lastCoordinates = new LatLng(path.get(path.size() - 1).getLat(), path.get(path.size() - 1).getLon());
-
+                        LatLng temp = null;
                         for (int i = path.size() - 2; i >= 0; i--) {
                             PathItem p = path.get(i);
-                            LatLng temp = new LatLng(p.getLat(), p.getLon());
+                            temp = new LatLng(p.getLat(), p.getLon());
                             Polyline line = mMap.addPolyline(new PolylineOptions()
                                     .add(temp, lastCoordinates)
                                     .width(10)
                                     .color(Color.BLUE));
                             lastCoordinates = temp;
                         }
+                        if(temp != null) {
+                            currentMark = mMap.addMarker(new MarkerOptions()
+                                    .position(lastCoordinates)
+                                    .title("Current Location")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            currentMark.showInfoWindow();
+                            cur = lastCoordinates;
+                        }
+
                     } catch (Exception e) {
-                        constants.logError("Error: Could not upload path", getContext());
+                        constants.logError("Error: " + e.getMessage(), getContext());
                     }
                 }
             }
             catch (Exception e) {
-                constants.logError("Error: Incorrect Permissions", getContext());
+                constants.logError("Error: Permisssions are off", getContext());
             }
             //Original: constants.getCurrentLat() would return null causing app to crash
             //This was because we called ^ before we fetched first location...
@@ -123,9 +134,13 @@ public class TestingFragment extends Fragment {
             ImageButton labutton = (ImageButton) getView().findViewById(R.id.test_LACameraButton);
             ImageButton curposbutton = (ImageButton) getView().findViewById(R.id.test_currentposbutton);
 
+            final Marker mark = currentMark;
+            final LatLng fucr = cur;
             constants.addCurrentLocationChangeListener(new currentLocationChangedListener() {
                 Marker lastMarker = null;
                 LatLng lastLocation = null;
+                Marker otherMar = mark;
+                LatLng otherCur = fucr;
 
                 @Override
                 public void onCurrentLocationChange() {
@@ -134,31 +149,48 @@ public class TestingFragment extends Fragment {
                     //Follow same logic
                     if (lastMarker != null) {   //If there exists a last location
                         lastMarker.remove();
-                        Polyline line = mMap.addPolyline(new PolylineOptions()
-                                .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
-                                .width(10)
-                                .color(Color.BLUE));
+                        if(constants.getCurrentLat() != null) {
+                            Polyline line = mMap.addPolyline(new PolylineOptions()
+                                    .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
+                                    .width(10)
+                                    .color(Color.BLUE));
+                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                        }
+
+                    }
+                    else{
+                        if(otherMar != null) {
+                            otherMar.remove();
+                            lastLocation = otherCur;
+                        }
+
                     }
 
-                    try {
-                        lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                    //lastLocation = new LatLng(34.2, -118.23);
+                    try{
+                        if(lastLocation == null){
+                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                        }
+
 
                         if(testingMap.containsKey(constants.getCurrentLocation())){
                             labutton.setVisibility(View.GONE);
                         }
                         else {
-                            labutton.setVisibility((View.VISIBLE));
+                            labutton.setVisibility(View.VISIBLE);
                         }
+
                         lastMarker = mMap.addMarker(new MarkerOptions()
                                 .position(lastLocation)
                                 .title("Current Location")
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
                         lastMarker.showInfoWindow();
 
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
-                    } catch(Exception e) {
-                        constants.logError("Error: Internet not enabled", getContext());
+
+                    }
+                    catch(Exception e){
+                        constants.logError("Error: " + e.getMessage(), getContext());
                     }
                 }
 

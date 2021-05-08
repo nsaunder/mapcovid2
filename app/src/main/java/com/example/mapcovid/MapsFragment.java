@@ -119,11 +119,11 @@ public class MapsFragment extends Fragment {
                         }
                         if(temp != null) {
                             currentMark = mMap.addMarker(new MarkerOptions()
-                                    .position(temp)
+                                    .position(lastCoordinates)
                                     .title("Current Location")
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                             currentMark.showInfoWindow();
-                            cur = temp;
+                            cur = lastCoordinates;
                         }
 
                     } catch (Exception e) {
@@ -162,19 +162,23 @@ public class MapsFragment extends Fragment {
                                     .add(lastLocation, new LatLng(constants.getCurrentLat(), constants.getCurrentLon()))
                                     .width(10)
                                     .color(Color.BLUE));
+                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
                         }
+
                     }
                     else{
                         if(otherMar != null) {
                             otherMar.remove();
-
+                            lastLocation = otherCur;
                         }
+
                     }
 
                     //lastLocation = new LatLng(34.2, -118.23);
                     try{
-                        lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
-
+                        if(lastLocation == null){
+                            lastLocation = new LatLng(constants.getCurrentLat(), constants.getCurrentLon());
+                        }
 
 
                     if(citiesMap.containsKey(constants.getCurrentLocation())){

@@ -72,7 +72,7 @@ public class Constant {
 
 
     //constructor for fragments
-    public Constant() { }
+    public Constant() { errorList = new ArrayList<>();}
 
     public Constant(Context context) {
         //initialize firebase database reference
@@ -80,7 +80,11 @@ public class Constant {
         //initialize list of City Objects
         set_cities(context);
         //initialize list of paths
-        setPaths(context);
+        try {
+            setPaths(context);
+        } catch(Exception e){
+
+        }
         //get unique ID for application
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -301,7 +305,7 @@ public class Constant {
                 data = sb.toString();
             }
         } catch(Exception e) {
-            errorList.add("Error: when retrieving day path!");
+            //errorList.add("Error: when retrieving day path!");
             e.printStackTrace();
         }
         //use gson to recreate list of day paths from data string
